@@ -231,24 +231,31 @@ class Rectangle(object):
 
     @property
     def area(self):
+        """
+        Return the Rectangle area,
+        """
         return abs((self.x_max - self.x_min) * (self.y_max - self.y_min))
 
     def _intersectX(self, other):
-        """判断两个矩形在X轴是否相交"""
+        """
+        Determine whether two rectangles intersect on the X-axis
+        """
         if max(self.x_min, other.x_min) - min(self.x_max, other.x_max) >= 0:
             return False
         else:
             return True
 
     def _intersectY(self, other):
-        """判断两个矩形在Y轴是否相交"""
+        """Determine whether two rectangles intersect on the Y-axis"""
         if max(self.y_min, other.y_min) - min(self.y_max, other.y_max) >= 0:
             return False
         else:
             return True
 
     def _include(self, other, self_max, other_max, self_min, other_min):
-        """判断是否包含，传入x值则表示在x轴方向上，传入y值表示在y轴方向上"""
+        """
+        Determine if it contains, incoming x value represents in the x-axis direction, incoming y value represents in the y-axis direction
+        """
         if self_min >= other_min:
             if self_max <= other_max:
                 flag = other
@@ -264,22 +271,30 @@ class Rectangle(object):
                     return False
 
     def _includeX(self, other):
-        """判断两个矩形的X轴是否存在包含关系"""
+        """
+        Determine if there is an inclusion relationship between the X-axis of two rectangles
+        """
         return self._include(other, self.x_max, other.x_max, self.x_min, other.x_min)
 
     def _includeY(self, other):
-        """判断两个矩形的Y轴是否存在包含关系"""
+        """
+        Determine if there is an inclusion relationship between the Y-axis of two rectangles
+        """
         return self._include(other, self.y_max, other.y_max, self.y_min, other.y_min)
 
     def isIntersect(self, other):
-        """判断两个矩形是否相交"""
+        """
+        Determine whether two rectangles intersect
+        """
         if self._intersectX(other) and self._intersectY(other):
             return True
         else:
             return False
 
     def isInclude(self, other):
-        """判断两个矩形是否包含"""
+        """
+        Determine whether two rectangles contain
+        """
         if not self._includeX(other):
             return False
         else:
@@ -292,6 +307,9 @@ class Rectangle(object):
                     return True
 
     def draw(self, background=None, isShow=False, color=(255, 0, 0)):
+        """
+        draw the rectangle
+        """
         import cv2
         if background is not None:
             _background = background
@@ -309,7 +327,9 @@ class Rectangle(object):
 
 
 class Vector(np.ndarray):
-    """二维平面向量类"""
+    """
+    2D plane vector class
+    """
 
     def __new__(cls, x=None, y=None, shape=(2,), dtype=float, buffer=None, offset=0,
                 strides=None, order=None):
@@ -342,20 +362,26 @@ class Vector(np.ndarray):
 
     @property
     def module(self):
-        """返回向量的模"""
+        """
+        Return the modulus of vector
+        """
         if self.xy is None:
             return 0
         return np.linalg.norm([self.x, self.y])
 
     @property
     def cos(self):
-        """返回向量的余弦值"""
+        """
+        Return the cosine value of vector
+        """
         if not self.xy:
             return None
         return self.x / self.module
 
     def cosSimilar(self, other):
-        """比较两个向量的余弦相似度, 取值范围[-1, 1]"""
+        """
+        Compare the cosine similarity of two vectors, with a range of values [-1, 1]
+        """
         if self.xy is None:
             if other.xy is None:
                 return None
@@ -377,11 +403,15 @@ class Vector(np.ndarray):
         return np.dot(self.xy, other.xy) / (self.module * other.module)
 
     def cosDistance(self, other):
-        """self和other的余弦距离，数值上等于1减去余弦相似度, 取值范围[0, 2]"""
+        """
+        Cosine distance, numerically equal to 1 minus cosine similarity, range of values [0,2]
+        """
         return 1 - self.cosSimilar(other)
 
     def EuclideanDistance(self, other):
-        """返回两个向量的欧氏距离"""
+        """
+        Return the Euclidean distance between two vectors
+        """
         return np.sqrt((abs(self.x - other.x) ** 2 + abs(self.y - other.y) ** 2))
 
     def __len__(self):
@@ -428,7 +458,7 @@ class Vector(np.ndarray):
 
 class Cell(object):
     """
-    定义细胞实例，此类为Tracking的核心类，所有操作的最小单位均为Cell实例，Cell被实现为条件单例模式：
+    定义细胞类，此类为Tracking的核心类，所有操作的最小单位均为Cell实例，Cell被实现为条件单例模式：
     即依据传入的参数不同，生成不同的对象，如果传入的参数相同，则为同一个对象。在定义Cell对象的时候，
     会保证一帧中同一个细胞只有一个Cell实例，而不同帧生成不同的Cell实例
     """
