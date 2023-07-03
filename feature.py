@@ -12,7 +12,7 @@ import numpy as np
 from tifffile import tifffile
 
 import config
-from base import Cell, NoneTypeFileter, Vector
+from base import Cell,  Vector
 
 
 class Mask(object):

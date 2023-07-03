@@ -45,19 +45,24 @@ def warningFilter(func):
 
 
 class MatchStatus(Enum):
-    """匹配状态，包括已匹配，未匹配，丢失匹配三种，是TrackingTree的状态值。"""
+    """Matching status enumeration object,
+    including matched, unmatched, and missing matches,
+    is the status value of TrackingTree."""
+
     Matched = 0
     Unmatched = 1
     LossMatch = 2
 
 
 class TreeStatus(object):
-    """记录当前追踪的细胞当前状态，包括周期情况，分裂情况，匹配情况
-    周期情况：是否进入了有丝分裂期， 哪一帧进入的有丝分裂
-    分裂情况：有无发生有丝分裂事件
-    匹配情况：此细胞有无丢失匹配
+    """
+    Record the state of the tracked cells, including cell phase status, division status, and matching status
+    Phase: whether Mitosis has entered, and which frame has entered Mitosis
+    Division: whether there is Mitosis
+    Matching situation: Is there any loss of matching in this cell
     """
 
+    # TreeStatus all Status properties
     __status_types = ['enter_mitosis', 'enter_mitosis_frame', 'division_event_happen',
                       'division_count', 'exit_mitosis', 'exit_mitosis_frame']
 
@@ -70,9 +75,16 @@ class TreeStatus(object):
             cls._instances[key].__tracking_tree = None
             cls._instances[key].__init_flag = False
             cls._instances[key].enter_mitosis_threshold = 50
+
+            # The cell division window stage, with an initial value of 20, will exit division matching when no cell
+            # division is matched or cell division is completed during this window period. After entering the split
+            # window period, this value will decrease every frame forward.
             cls._instances[key].division_windows_len = 20
+
+            # Starting from the completion of splitting and exiting mitosis, counting, no further entry into mitosis
+            # is allowed within 10 frames, that is, when __exit_mitosis_time < 10, self.__ enter_ mitosis cannot be true
             cls._instances[key].__exit_mitosis_time = cls._instances[key].enter_mitosis_threshold
-            # 从完成分裂退出mitosis开始，计数，10帧之内不可以再进入mitosis，即当此值小于10的时候，self.__enter_mitosis 不可为True
+
         return cls._instances[key]
 
     def __init__(self, tree: 'TrackingTree | None'):
@@ -80,12 +92,15 @@ class TreeStatus(object):
             self.__tracking_tree = tree
             self.__enter_mitosis: bool = False
             self.__enter_mitosis_frame: int | None = None
-            self.__division_event_happen: bool = False  # 此值记录表示细胞至少发生了一次有丝分裂
+            self.__division_event_happen: bool = False  # True indicates that the cell has at least one M    itosis
             self.__division_count: int = 0
             self.__exit_mitosis: bool = False
             self.__exit_mitosis_frame: int | None = None
             self.__match_status = MatchStatus.Unmatched
-            self.__predict_M_count = 0  # 此值记录预测的M期的数量，如果累计超过3次，则认为进入M期, 此时需要在外部调用enter_mitosis()
+
+            # This value records the number of predicted M phase. If > 3, it is considered to have entered M period,
+            # and at this point, enter needs to be called externally_ Mitosis()
+            self.__predict_M_count = 0
             self.__init_flag = True
 
     @property
@@ -94,18 +109,31 @@ class TreeStatus(object):
                         (self.__enter_mitosis, self.__enter_mitosis_frame, self.__division_event_happen,
                          self.__division_count, self.__exit_mitosis, self.__exit_mitosis_frame)))
 
-    def get_status(self, status_type):
+    def get_status(self, status_type: 'str in  __status_types'):
+        """
+        :param status_type: __status_types member
+        :return: member status
+        """
         return self.status.get(status_type)
 
     def check_division_window(self):
+        """
+        Check if the cell is in the division window stage
+        """
         if self.division_windows_len > 0:
             return True
         return False
 
     def reset_division_window(self):
+        """
+        reset the division_windows_len
+        """
         self.division_windows_len = 20
 
     def sub_division_window(self):
+        """
+        When the cell is in the division window stage,  continuously decreases the division_windows_len
+        """
         if self.division_windows_len > 0:
             self.division_windows_len -= 1
 
@@ -168,13 +196,15 @@ class TreeStatus(object):
 
 
 class CellStatus(TreeStatus):
-    """记录细胞的状态，如果细胞参与过精确匹配，则将其排除在其他匹配候选项之外。
-    如果细胞短时间内发生过有丝分裂，则不参与有丝分裂匹配"""
+    """
+    Record the status of cells and exclude them from other matching candidates if they have participated in precise matching.
+    If the cell has undergone Mitosis in a short time, it will not participate in Mitosis matching.
+    """
     pass
 
 
 class SingleInstance(object):
-    """单例模式基类， 如果参数相同，则只会实例化一个对象"""
+    """Singleton pattern base class. If the parameters are the same, only one instance object will be instantiated"""
     _instances = {}
     init_flag = False
 
@@ -190,6 +220,9 @@ class SingleInstance(object):
 
 
 class Rectangle(object):
+    """
+    Rectangular class , used to record the bounding box and available range of cells
+    """
     def __init__(self, x_min, x_max, y_min, y_max):
         self.x_min = x_min
         self.x_max = x_max
