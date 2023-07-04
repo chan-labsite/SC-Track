@@ -77,29 +77,30 @@ def json2box(shapes: dict):
 
 
 if __name__ == '__main__':
-    from tqdm import tqdm
-
-    file = r"G:\20x_dataset\copy_of_xy_01\copy_of_1_xy01.json"
-    image = r'G:\20x_dataset\copy_of_xy_01\tif\mcy\copy_of_1_xy01-0000.tif'
-    base = r'G:\20x_dataset\copy_of_xy_01\tif\mcy'
-    dp = DetectionParser(fname=file)
-    dp.get_frame_names()
-    # rb = dp.get_region_attr(dp.get_regions_by_frame('copy_of_1_xy01-0000.png'))
-    im = cv2.imread(image, -1)
-    bb_list = []
-    videoWriter = cv2.VideoWriter(r'G:\20x_dataset\copy_of_xy_01\development-dir\result-2-multi-bbox.mp4',
-                                  cv2.VideoWriter_fourcc('M', 'P', '4', 'V'),
-                                  5, (2048, 2048), True)
-    for i in tqdm(range(len(dp.get_frame_names()))):
-        fname = dp.get_frame_names()
-        img = cv2.imread(os.path.join(base, fname[i].replace('.png', '.tif')), -1)
-        if i == 0:
-            rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))
-            rb_before = rb
-        else:
-            rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))
-            rb_before = dp.get_region_attr(dp.get_regions_by_frame(fname[i - 1]))
-        tmp = draw_bbox(img, rb_before)
-        ret = draw_bbox(tmp, rb)
-        videoWriter.write(ret)
-    videoWriter.release()
+    pass
+    # from tqdm import tqdm
+    #
+    # file = r"G:\20x_dataset\copy_of_xy_01\copy_of_1_xy01.json"
+    # image = r'G:\20x_dataset\copy_of_xy_01\tif\mcy\copy_of_1_xy01-0000.tif'
+    # base = r'G:\20x_dataset\copy_of_xy_01\tif\mcy'
+    # dp = DetectionParser(fname=file)
+    # dp.get_frame_names()
+    # # rb = dp.get_region_attr(dp.get_regions_by_frame('copy_of_1_xy01-0000.png'))
+    # im = cv2.imread(image, -1)
+    # bb_list = []
+    # videoWriter = cv2.VideoWriter(r'G:\20x_dataset\copy_of_xy_01\development-dir\result-2-multi-bbox.mp4',
+    #                               cv2.VideoWriter_fourcc('M', 'P', '4', 'V'),
+    #                               5, (2048, 2048), True)
+    # for i in tqdm(range(len(dp.get_frame_names()))):
+    #     fname = dp.get_frame_names()
+    #     img = cv2.imread(os.path.join(base, fname[i].replace('.png', '.tif')), -1)
+    #     if i == 0:
+    #         rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))
+    #         rb_before = rb
+    #     else:
+    #         rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))
+    #         rb_before = dp.get_region_attr(dp.get_regions_by_frame(fname[i - 1]))
+    #     tmp = draw_bbox(img, rb_before)
+    #     ret = draw_bbox(tmp, rb)
+    #     videoWriter.write(ret)
+    # videoWriter.release()

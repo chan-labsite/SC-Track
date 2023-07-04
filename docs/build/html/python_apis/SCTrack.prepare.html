@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>SCTrack.prepare module</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="SCTrack.reclassification module" href="SCTrack.reclassification.html" />
+  <link rel="prev" title="SCTrack.generate_tracking_stack module" href="SCTrack.generate_tracking_stack.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#welcome-to-sc-track-s-documentation">Contents:</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../introduction.html" class="reference internal ">README</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../readme_link.html" class="reference internal ">What’s  SC-Track?</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="modules.html" class="reference internal ">SCTrack</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">SCTrack</a> &raquo;</li>
+    
+      <li><a href="SCTrack.html">SCTrack package</a> &raquo;</li>
+    
+    <li>SCTrack.prepare module</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.generate_tracking_stack.html"
+       title="previous chapter">← SCTrack.generate_tracking_stack module</a>
+  </li>
+  <li class="next">
+    <a href="SCTrack.reclassification.html"
+       title="next chapter">SCTrack.reclassification module →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-SCTrack.prepare">
+<span id="sctrack-prepare-module"></span><h1>SCTrack.prepare module<a class="headerlink" href="#module-SCTrack.prepare" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.prepare.DetectionParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.prepare.</span></span><span class="sig-name descname"><span class="pre">DetectionParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/prepare.html#DetectionParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.DetectionParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.prepare.DetectionParser.get_frame_names">
+<span class="sig-name descname"><span class="pre">get_frame_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/prepare.html#DetectionParser.get_frame_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.DetectionParser.get_frame_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.prepare.DetectionParser.get_region_attr">
+<span class="sig-name descname"><span class="pre">get_region_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/prepare.html#DetectionParser.get_region_attr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.DetectionParser.get_region_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>regions: extract from json files, one frame data, it cna be get from function [get_regions_by_frame()]
+Returns: all cells bounding box and phase list,
+like [((x_min, x_max, y_min, y_max), phase), …, ((x_min, x_max, y_min, y_max), phase)]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.prepare.DetectionParser.get_regions_by_frame">
+<span class="sig-name descname"><span class="pre">get_regions_by_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/prepare.html#DetectionParser.get_regions_by_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.DetectionParser.get_regions_by_frame" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.prepare.convert_dtype">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.prepare.</span></span><span class="sig-name descname"><span class="pre">convert_dtype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">__image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/SCTrack/prepare.html#convert_dtype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.convert_dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.prepare.draw_bbox">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.prepare.</span></span><span class="sig-name descname"><span class="pre">draw_bbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions_bounding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/prepare.html#draw_bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.draw_bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.prepare.json2box">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.prepare.</span></span><span class="sig-name descname"><span class="pre">json2box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/prepare.html#json2box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.prepare.json2box" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.generate_tracking_stack.html"
+       title="previous chapter">← SCTrack.generate_tracking_stack module</a>
+  </li>
+  <li class="next">
+    <a href="SCTrack.reclassification.html"
+       title="next chapter">SCTrack.reclassification module →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

@@ -20,10 +20,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 import glob
-
 from tqdm import tqdm
-
-import template
+from SCTrack import template
 
 PHASE_MAP = {
     "G1/G2": 0,
@@ -197,6 +195,7 @@ def mask_tif_to_json(image, xrange=None):
 def mask_to_json(annotation: 'file or folder', xrange=None):
     """
      Convert  mask image to json annotation files
+
     :param annotation: mask filepath.
     :param xrange: The number of conversions, counting from the beginning of the annotation sequence.
     :return: json annotation dict, can be directly dump to the json file.

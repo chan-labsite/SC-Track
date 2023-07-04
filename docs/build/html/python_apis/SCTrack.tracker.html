@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>SCTrack.tracker module</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="SCTrack.utils module" href="SCTrack.utils.html" />
+  <link rel="prev" title="SCTrack.track module" href="SCTrack.track.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#welcome-to-sc-track-s-documentation">Contents:</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../introduction.html" class="reference internal ">README</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../readme_link.html" class="reference internal ">What’s  SC-Track?</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="modules.html" class="reference internal ">SCTrack</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">SCTrack</a> &raquo;</li>
+    
+      <li><a href="SCTrack.html">SCTrack package</a> &raquo;</li>
+    
+    <li>SCTrack.tracker module</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.track.html"
+       title="previous chapter">← SCTrack.track module</a>
+  </li>
+  <li class="next">
+    <a href="SCTrack.utils.html"
+       title="next chapter">SCTrack.utils module →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-SCTrack.tracker">
+<span id="sctrack-tracker-module"></span><h1>SCTrack.tracker module<a class="headerlink" href="#module-SCTrack.tracker" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">CellNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></p>
+<p>Tracking node, including the track_ID, cell_id, branch_id of the cell, and the detailed information of the cell,
+the parent-child node relationship</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.STATUS">
+<span class="sig-name descname"><span class="pre">STATUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ACCURATE',</span> <span class="pre">'ACCURATE-FL',</span> <span class="pre">'INACCURATE',</span> <span class="pre">'INACCURATE-MATCH',</span> <span class="pre">'PREDICTED']</span></em><a class="headerlink" href="#SCTrack.tracker.CellNode.STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.get_branch_id">
+<span class="sig-name descname"><span class="pre">get_branch_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.get_branch_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.get_branch_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.get_children">
+<span class="sig-name descname"><span class="pre">get_children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.get_children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.get_children" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.get_parent">
+<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.get_parent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.get_parent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.get_status">
+<span class="sig-name descname"><span class="pre">get_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.get_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.get_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.get_track_id">
+<span class="sig-name descname"><span class="pre">get_track_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.get_track_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.get_track_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.get_tree_status">
+<span class="sig-name descname"><span class="pre">get_tree_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.get_tree_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.get_tree_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.identifier">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">identifier</span></span><a class="headerlink" href="#SCTrack.tracker.CellNode.identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique ID of a node within the scope of a TrackingTree</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.nid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nid</span></span><a class="headerlink" href="#SCTrack.tracker.CellNode.nid" title="Permalink to this definition">¶</a></dt>
+<dd><p>same as identifier, override treelib related methods</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.set_branch_id">
+<span class="sig-name descname"><span class="pre">set_branch_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">branch_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.set_branch_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.set_branch_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.set_children">
+<span class="sig-name descname"><span class="pre">set_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.set_children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.set_children" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.set_parent">
+<span class="sig-name descname"><span class="pre">set_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.set_parent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.set_parent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.set_status">
+<span class="sig-name descname"><span class="pre">set_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.set_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.set_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.set_track_id">
+<span class="sig-name descname"><span class="pre">set_track_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.set_track_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.set_track_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.CellNode.set_tree_status">
+<span class="sig-name descname"><span class="pre">set_tree_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.TreeStatus" title="SCTrack.base.TreeStatus"><span class="pre">TreeStatus</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#CellNode.set_tree_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.CellNode.set_tree_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.tracker.Checker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">Checker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Checker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Checker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A checker that checks whether the cells participating in the match can calculate.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Checker.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Checker.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Checker.check" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">Match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Matcher, matches targets based on previous and next frames and assigns IDs in the current frame.
+Mainly used for feature matching and calculating similarity.
+The unit of operation is frames.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.calcAreaSimilar">
+<span class="sig-name descname"><span class="pre">calcAreaSimilar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.calcAreaSimilar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.calcAreaSimilar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the area similarity of two cells
+Return value range: float[0, 1]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.calcCosDistance">
+<span class="sig-name descname"><span class="pre">calcCosDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.calcCosDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.calcCosDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the cosine distance of two cells
+Return value range: float[0, 2]
+The smaller the distance, the more similar it is, scaled to [0, 1) by the arctangent function
+The return value is the cosine value after normalization [0, π/2]. The smaller the return value, the lower the similarity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.calcCosSimilar">
+<span class="sig-name descname"><span class="pre">calcCosSimilar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.calcCosSimilar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.calcCosSimilar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the cosine similarity of the center points of two cells
+Return value range: float[0, 1]
+The larger the value, the more similar
+The return value is the sine value after normalization [0, π/2]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.calcEuclideanDistance">
+<span class="sig-name descname"><span class="pre">calcEuclideanDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.calcEuclideanDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.calcEuclideanDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Euclidean distance between two cell center points
+Return value range: float(0,∞)
+The smaller the distance, the more similar it is, scaled to [0, 1) by the arctangent function
+The return value is the cosine value after normalization [0, π/2]. The smaller the return value, the lower the similarity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.calcIoU">
+<span class="sig-name descname"><span class="pre">calcIoU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.calcIoU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.calcIoU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate IoU of two cells.
+return value range: float(0-1)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.calcIoU_roughly">
+<span class="sig-name descname"><span class="pre">calcIoU_roughly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.calcIoU_roughly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.calcIoU_roughly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate IoU of two cell bounding boxes.
+return value range: float(0-1)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.compareDicSimilar">
+<span class="sig-name descname"><span class="pre">compareDicSimilar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.compareDicSimilar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.compareDicSimilar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare dic similarity
+Return value range: float(0, 1)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.compareMcySimilar">
+<span class="sig-name descname"><span class="pre">compareMcySimilar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.compareMcySimilar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.compareMcySimilar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare mcy similarity
+Return value range: float(0, 1)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.compareShapeSimilar">
+<span class="sig-name descname"><span class="pre">compareShapeSimilar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.compareShapeSimilar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.compareShapeSimilar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the contour similarity of two cells
+Return value range: float(0, 1)
+The smaller the score value, the greater the similarity, and the inversion operation can be performed
+The return value is the cosine value after normalization [0, π/2]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Match.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1.5707963267948966)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Match.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Match.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforming the value to the range of [0, π/2].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">Matcher</span></span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A matcher that realizes the association of front and back frame objects.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.add_child_node">
+<span class="sig-name descname"><span class="pre">add_child_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.add_child_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.add_child_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.calc_similar">
+<span class="sig-name descname"><span class="pre">calc_similar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.calc_similar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.calc_similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the similarity of two cells</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.calc_sorted_value">
+<span class="sig-name descname"><span class="pre">calc_sorted_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">matched_cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.calc_sorted_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.calc_sorted_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the sorting value of a Cell object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.check_iou">
+<span class="sig-name descname"><span class="pre">check_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similar_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.check_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.check_iou" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the IoU to provide a basis for determining cell division. If there are less than 2 matching options
+with IoU &gt; 0, return False. Otherwise, return these two cells.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.draw_bbox">
+<span class="sig-name descname"><span class="pre">draw_bbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.draw_bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.draw_bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.get_similar_sister">
+<span class="sig-name descname"><span class="pre">get_similar_sister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">matched_cells_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_size_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.get_similar_sister"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.get_similar_sister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the two most similar cells among multiple candidates as the daughter cells.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.is_mitosis_start">
+<span class="sig-name descname"><span class="pre">is_mitosis_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_leaves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_size_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.is_mitosis_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.is_mitosis_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether a cell enters the M phase. The basic criterion is that when a cell enters mitosis, its volume
+increases and the number of candidate regions increases. If the cell successfully enters the M phase, return a
+dict containing information about the last frame of G2 and the first frame of M. Otherwise, return False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.match_candidates">
+<span class="sig-name descname"><span class="pre">match_candidates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">before_cell_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.match_candidates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.match_candidates" title="Permalink to this definition">¶</a></dt>
+<dd><p>match candidates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.match_duplicate_child">
+<span class="sig-name descname"><span class="pre">match_duplicate_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unmatched_child_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.match_duplicate_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.match_duplicate_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match multiple candidates. Calling this function means that there is more than one candidate, and this method
+calculates the matching degree of each candidate
+The return value is a dictionary in the form of {Cell: similar_dict}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.match_one">
+<span class="sig-name descname"><span class="pre">match_one</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predict_child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.match_one"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.match_one" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.match_similar">
+<span class="sig-name descname"><span class="pre">match_similar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.match_similar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.match_similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the similarity of two cells, do not include the image information.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.match_single_cell">
+<span class="sig-name descname"><span class="pre">match_single_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.TrackingTree" title="SCTrack.tracker.TrackingTree"><span class="pre">TrackingTree</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.match_single_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.match_single_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>The implementation logic for tracking a single cell.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.predict_next_position">
+<span class="sig-name descname"><span class="pre">predict_next_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.predict_next_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.predict_next_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>According to the speed, the possible position of the daughter cell is predicted, and the predicted daughter cell
+is used to participate in the matching. speed=0 is equivalent to not enabling prediction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.select_mitosis_cells">
+<span class="sig-name descname"><span class="pre">select_mitosis_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidates_child_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_size_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.select_mitosis_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.select_mitosis_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>If cell division occurs, select two daughter cells. When calling this method, make sure that cell division is
+highly likely to occur. If the return value is cell division, then it is necessary to check whether the areas
+of the two daughter cells are normal. If the area of one daughter cell is too large, it is considered a FP.</p>
+<p>:return ([cell_1, cell2], ‘match status’)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Matcher.select_single_child">
+<span class="sig-name descname"><span class="pre">select_single_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Matcher.select_single_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Matcher.select_single_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>For multiple IOU matching options, choose the one with a higher similarity. This is to distinguish overlapping
+cells rather than cell division. Note: the results of this method are not necessarily accurate and may result
+in mismatches due to cell crossing, which needs to be resolved in subsequent steps. In addition, if one cell is
+accurately matched, and the other cell has no match (i.e., not detected in the next frame during recognition),
+it should be filled as a predicted cell.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">Tracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracker object, which is the controller of the tracking process. It reads images frame by frame,
+initializes and updates the TrackingTree, performs matching and assigns various IDs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.add_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.check_track">
+<span class="sig-name descname"><span class="pre">check_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fe2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fe3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.check_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.check_track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the track results to see if there are any wrong matches and omissions,
+and update the matching status at the same time</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.draw_bbox">
+<span class="sig-name descname"><span class="pre">draw_bbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.draw_bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.draw_bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.get_current_tree">
+<span class="sig-name descname"><span class="pre">get_current_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.get_current_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.get_current_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the TrackingTree where the current parent cell is located</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.handle_duplicate_match">
+<span class="sig-name descname"><span class="pre">handle_duplicate_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicate_match_cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.handle_duplicate_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.handle_duplicate_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve a cell is repeatedly matched by multiple cells</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.id_distributor">
+<span class="sig-name descname"><span class="pre">id_distributor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.id_distributor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.id_distributor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.init_tracking_tree">
+<span class="sig-name descname"><span class="pre">init_tracking_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.init_tracking_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.init_tracking_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize TrackingTree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.rematch">
+<span class="sig-name descname"><span class="pre">rematch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fe2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.rematch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.rematch" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the loss detection cells, re-match the upper and lower frames with the cache frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.track">
+<span class="sig-name descname"><span class="pre">track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read image frames sequentially and start tracking</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.track_near_frame">
+<span class="sig-name descname"><span class="pre">track_near_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fe2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.track_near_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.track_near_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>match adjacent frames</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.track_near_frame_mult_thread">
+<span class="sig-name descname"><span class="pre">track_near_frame_mult_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fe2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.feature.html#SCTrack.feature.FeatureExtractor" title="SCTrack.feature.FeatureExtractor"><span class="pre">FeatureExtractor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.track_near_frame_mult_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.track_near_frame_mult_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match Adjacent Frames, Multithreaded Beta</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.track_tree_to_json">
+<span class="sig-name descname"><span class="pre">track_tree_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.track_tree_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.track_tree_to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.update_speed">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Cell" title="SCTrack.base.Cell"><span class="pre">Cell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.base.html#SCTrack.base.Vector" title="SCTrack.base.Vector"><span class="pre">Vector</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.update_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.update_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update cell movement speed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.visualize_single_tree">
+<span class="sig-name descname"><span class="pre">visualize_single_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_filename_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.visualize_single_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.visualize_single_tree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.Tracker.visualize_to_tif">
+<span class="sig-name descname"><span class="pre">visualize_to_tif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">background_mcy_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_tif_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#Tracker.visualize_to_tif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.Tracker.visualize_to_tif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize the tracking results, you can choose to save as a single tif file or multiple tif sequences
+:param background_mcy_image: background image for visualization
+:param output_tif_path: output file path
+:param tree_list: TrackingTree list to visualize
+:param xrange: visualization range
+:param single: Whether to choose to save as a single file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">TrackingTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Tree</span></code></p>
+<p>The core structure of tracking implement. All tracking results are stored in the instance of this class.
+Each TrackingTree instance represents the cell line of a cell, and the TrackingTree branch represents cell division.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new CellNode object to the TrackingTree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.auto_update_last_layer">
+<span class="sig-name descname"><span class="pre">auto_update_last_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.auto_update_last_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.auto_update_last_layer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.branch_id_distributor">
+<span class="sig-name descname"><span class="pre">branch_id_distributor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.branch_id_distributor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.branch_id_distributor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to assign a branch_id to each branch in a TrackingTree object.
+The branch_id is incremented in a non-reversible and non-reusable manner.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.change_mitosis_flag">
+<span class="sig-name descname"><span class="pre">change_mitosis_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.change_mitosis_flag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.change_mitosis_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the cell enters mitosis for the first time, self.mitosis_start_flag is set to True,
+and when the cell completes division, it is reset to false</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.get_childs">
+<span class="sig-name descname"><span class="pre">get_childs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.get_childs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.get_childs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the child CellNode of a node</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.get_parent">
+<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.get_parent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.get_parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parent CellNode of a node</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.last_layer">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_layer</span></span><a class="headerlink" href="#SCTrack.tracker.TrackingTree.last_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all CellNodes in the last layer of TrackingTree</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.last_layer_cell">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_layer_cell</span></span><a class="headerlink" href="#SCTrack.tracker.TrackingTree.last_layer_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>cells contained in the node}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Return a dict of {leaf node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.tracker.TrackingTree.update_last_layer">
+<span class="sig-name descname"><span class="pre">update_last_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#TrackingTree.update_last_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.TrackingTree.update_last_layer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.tracker.get_cell_line_from_tree">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.tracker.</span></span><span class="sig-name descname"><span class="pre">get_cell_line_from_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#SCTrack.tracker.TrackingTree" title="SCTrack.tracker.TrackingTree"><span class="pre">TrackingTree</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcy_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/tracker.html#get_cell_line_from_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.tracker.get_cell_line_from_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain a complete cell sequence from the track tree, including cell images, dic and mcy dual channels, and cycles,
+and the generated file name is named track_id-branch_id-frame-phase.tif</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.track.html"
+       title="previous chapter">← SCTrack.track module</a>
+  </li>
+  <li class="next">
+    <a href="SCTrack.utils.html"
+       title="next chapter">SCTrack.utils module →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

@@ -6,8 +6,8 @@ from enum import Enum
 from shapely.geometry import Polygon
 import numpy as np
 from functools import lru_cache
-from utils import convert_dtype
-import config
+from SCTrack.utils import convert_dtype
+from SCTrack import config
 
 
 def NoneTypeFilter(func):
@@ -98,7 +98,7 @@ class TreeStatus(object):
                         (self.__enter_mitosis, self.__enter_mitosis_frame, self.__division_event_happen,
                          self.__division_count, self.__exit_mitosis, self.__exit_mitosis_frame)))
 
-    def get_status(self, status_type: 'str in  __status_types'):
+    def get_status(self, status_type: str):
         """
         :param status_type: __status_types member
         :return: member status
@@ -499,9 +499,7 @@ class Cell(object):
     def change_mitosis_flag(self, flag: bool):
         """
         When the cell enters mitosis for the first time, self.mitosis_start_flag is set to True, and when the cell
-         completes division, it is reset to false
-        :param flag: mitosis flag
-        :return: None
+         completes division, it is reset to false.
         """
         self.mitosis_start_flag = flag
 

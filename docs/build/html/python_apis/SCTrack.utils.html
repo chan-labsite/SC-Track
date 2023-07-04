@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>SCTrack.utils module</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="prev" title="SCTrack.tracker module" href="SCTrack.tracker.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#welcome-to-sc-track-s-documentation">Contents:</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../introduction.html" class="reference internal ">README</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../readme_link.html" class="reference internal ">What’s  SC-Track?</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="modules.html" class="reference internal ">SCTrack</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">SCTrack</a> &raquo;</li>
+    
+      <li><a href="SCTrack.html">SCTrack package</a> &raquo;</li>
+    
+    <li>SCTrack.utils module</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.tracker.html"
+       title="previous chapter">← SCTrack.tracker module</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-SCTrack.utils">
+<span id="sctrack-utils-module"></span><h1>SCTrack.utils module<a class="headerlink" href="#module-SCTrack.utils" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.convert_dtype">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">convert_dtype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">__image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/SCTrack/utils.html#convert_dtype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.convert_dtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert image format from uint16 to uint8
+:param __image: uint16 image ndarray
+:return: uint8 image ndarray</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.mask_seq_to_json">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">mask_seq_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#mask_seq_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.mask_seq_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert mask sequence files to json annotation files.
+:param mask_dir: The folder path for the mask image sequence location
+:param xrange: The number of conversions, counting from the beginning of the mask sequence.
+:return: json annotation dict, can be directly dump to the json file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.mask_tif_to_json">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">mask_tif_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#mask_tif_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.mask_tif_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Multi-frame TIF mask image to json annotation files.
+:param image: The TIF filepath for mask location
+:param xrange: The number of conversions, counting from the beginning of the mask.
+:return: json annotation dict, can be directly dump to the json file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.mask_to_coords">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">mask_to_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#mask_to_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.mask_to_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert mask to contour coordinates. For the mask of an image, each different instance requires the same and unique
+pixel values within its range, and the pixel values of different instances are different. This requirement is only
+for instances within the same frame of image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask</strong> – mask grayscale image, np.ndarray</p></li>
+<li><p><strong>filename</strong> – filename for the mask</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a region tmp dict for each mask, the format see template.py</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.mask_to_json">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">mask_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">file</span> <span class="pre">or</span> <span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#mask_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.mask_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Convert  mask image to json annotation files</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotation</strong> – mask filepath.</p></li>
+<li><p><strong>xrange</strong> – The number of conversions, counting from the beginning of the annotation sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>json annotation dict, can be directly dump to the json file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.readTif">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">readTif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#readTif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.readTif" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generator, from a multi-frame tif file, read frame by frame and return the image and filename of each frame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.tif2png">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">tif2png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">png_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#tif2png"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.tif2png" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – TIF image filepath</p></li>
+<li><p><strong>png_dir</strong> – storing pngs dir</p></li>
+<li><p><strong>gamma</strong> – image γ coefficient</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.utils.time_it">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.utils.</span></span><span class="sig-name descname"><span class="pre">time_it</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/utils.html#time_it"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.utils.time_it" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator used to record the execution time of a function, using a log to output the execution time
+:param logger: Python logger
+:param using: bool flag, whether the decorator function enabled.
+:return: decorator</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.tracker.html"
+       title="previous chapter">← SCTrack.tracker module</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

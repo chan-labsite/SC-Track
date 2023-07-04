@@ -1,13 +1,4 @@
-"""
-定义追踪树，追踪节点
-每个追踪树root节点起始于第一帧的细胞
-起始追踪初始化第一帧识别的细胞数量个树实例
 
-定义树节点， 每个节点包含细胞的详细信息。
-以及追踪信息，帧数，分裂信息等
-
-
-"""
 from __future__ import annotations
 
 import csv
@@ -16,39 +7,30 @@ import sys
 import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
-
 import shapely
-from libtiff import TIFF
 
-import config
 
 sys.path.append('.')
 sys.path.append('..')
 sys.path.append('../../')
 
-import dataclasses
-import enum
-from copy import deepcopy
 from functools import wraps, lru_cache
-
 import warnings
 from typing import List
-import heapq
-
-import matplotlib.pyplot as plt
 import tifffile
 import numpy as np
 import cv2
-import json
 
 import treelib
 from treelib import Tree, Node
 from tqdm import tqdm
 
-from utils import convert_dtype, readTif
-from base import Cell, Rectangle, Vector, TreeStatus, CellStatus
-from t_error import InsertError, MitosisError, NodeExistError, ErrorMatchMitosis, StatusError
-from feature import FeatureExtractor, feature_extract
+from SCTrack.utils import convert_dtype, readTif
+from SCTrack.base import Cell, Rectangle, Vector, TreeStatus, CellStatus
+from SCTrack.t_error import InsertError, MitosisError, NodeExistError, ErrorMatchMitosis, StatusError
+from SCTrack.feature import FeatureExtractor, feature_extract
+from SCTrack import config
+
 
 TEST = False
 TEST_INDEX = None

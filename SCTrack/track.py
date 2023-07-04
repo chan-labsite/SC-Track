@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import logging
 import os.path
-import reclassification
-from utils import mask_to_json
+from SCTrack import reclassification
+from SCTrack.utils import mask_to_json
 
 
 def start_track(fannotation: str | dict, fout, basename, track_range=None, fimage=None, fbf=None,

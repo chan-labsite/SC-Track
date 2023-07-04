@@ -6,14 +6,9 @@ from typing import List
 import json
 import random
 import pickle
-
 import pandas as pd
-
-from base import Cell
-from tracker import Tracker, CellNode, TrackingTree
-
-
-# TODO 对解析好的信息，生成统计信息
+from SCTrack.base import Cell
+from SCTrack.tracker import Tracker, CellNode, TrackingTree
 
 
 class TreeParser(object):
@@ -437,6 +432,7 @@ def track_tree_to_table(tracker: Tracker, filepath):
             s = pd.Series(dict(zip(track_detail_columns, col)))
             series_list.append(s)
         return series_list, new_nodes
+
     parser_dict = tracker.parser_dict
     for tree in parser_dict:
         parser = parser_dict[tree]

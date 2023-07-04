@@ -8,7 +8,7 @@ from typing import Tuple, List
 import matplotlib.pyplot as plt
 import openpyxl as px
 import tifffile
-from prepare import convert_dtype
+from SCTrack.prepare import convert_dtype
 
 
 class Stack(object):

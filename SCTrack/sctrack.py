@@ -6,12 +6,12 @@
 
 
 import argparse
-import track
 import logging
 import os
 import sys
 import time
 import imagesize
+from SCTrack import track
 
 
 logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", datefmt="%Y-%M-%d %H:%M:%S", level=logging.INFO)

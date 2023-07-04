@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tifffile import tifffile
 
-import config
-from base import Cell,  Vector
+from SCTrack import config
+from SCTrack.base import Cell, Vector
 
 
 class Mask(object):
@@ -73,8 +73,6 @@ class Feature(object):
         self.frame_id = frame
 
 
-
-
 class FeatureExtractor(object):
     """Extract available features for each cell in a single image"""
     _instances = {}
@@ -88,7 +86,8 @@ class FeatureExtractor(object):
             cls._instances[key].__cells = None
         return cls._instances[key]
 
-    def __init__(self, image_dic: np.ndarray | None = None, image_mcy: np.ndarray | None = None, annotation: dict = None,
+    def __init__(self, image_dic: np.ndarray | None = None, image_mcy: np.ndarray | None = None,
+                 annotation: dict = None,
                  *args, **kwargs):
         """
         image_dic: np.ndarray dic image information 2048x2048
@@ -98,7 +97,7 @@ class FeatureExtractor(object):
         if not self._init_flag:
             # config.USING_IMAGE_FOR_TRACKING = config.USING_IMAGE_FOR_TRACKING
             self.frame_id = None
-            if (image_mcy is not None) and  (image_dic is not None):
+            if (image_mcy is not None) and (image_dic is not None):
                 if type(image_mcy) != np.uint8:
                     self.mcy = self.convert_dtype(image_mcy)
                 else:
@@ -125,12 +124,11 @@ class FeatureExtractor(object):
         contours = np.array(points)
         return contours
 
-    def coordinate2mask(self, coords: np.ndarray | list | tuple, shape, value: int = 255) -> \
-            List[Mask]:
+    def coordinate2mask(self, coords: np.ndarray | list | tuple, shape, value: int = 255) -> List[np.ndarray]:
         """
         Draw the mask according to the contour coordinates. If you only pass in a set of contour coordinate values,
         be sure to put them in the list and pass in the function.
-         For example, coord = ([x1 x2 ... xn], [y1 y2 ... yn]), please call it according to coordinate2mask([coord])
+        For example, coord = ([x1 x2 ... xn], [y1 y2 ... yn]), please call it according to coordinate2mask([coord])
         """
         results = []
         for coord in coords:
@@ -161,7 +159,6 @@ class FeatureExtractor(object):
             triArea = (p1.x * p2.y - p2.x * p1.y) / 2
             area += triArea
         return abs(area)
-
 
     def area(self, cell):
         """cell area"""
@@ -258,7 +255,6 @@ class FeatureExtractor(object):
             cell.dic = dic
             cell.mcy = mcy
         return cell
-
 
     @property
     @lru_cache(maxsize=None)
@@ -394,7 +390,6 @@ def feature_extract(mcy, dic, jsonfile: str | dict):
         current_fe = get_fe(current_frame_index, current_frame_name, using_image=using_image)
         after_fe = get_fe(after_frame_index, after_frame_name, using_image=using_image)
         yield before_fe, current_fe, after_fe
-
 
 
 if __name__ == '__main__':
