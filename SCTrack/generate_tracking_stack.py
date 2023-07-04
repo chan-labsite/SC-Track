@@ -8,8 +8,6 @@ from typing import Tuple, List
 import matplotlib.pyplot as plt
 import openpyxl as px
 import tifffile
-from libtiff import TIFF
-import os
 from prepare import convert_dtype
 
 
@@ -28,7 +26,9 @@ class Stack(object):
             return len(self.center_info)
 
     def __str__(self):
-        return f"start frame: {self.start_frame}, end frame: {self.end_frame}, total: {self.end_frame - self.start_frame + 1}, len: {len(self.center_info)} \ncenter info: {self.center_info}"
+        return f"start frame: {self.start_frame}, end frame: {self.end_frame}, total: " \
+               f"{self.end_frame - self.start_frame + 1}, len: {len(self.center_info)} " \
+               f"\ncenter info: {self.center_info}"
 
     def __repr__(self):
         return self.__str__()
@@ -167,9 +167,6 @@ class Mask(object):
 
 def coordinate2mask(coords: np.ndarray | list | tuple, value: int = 255, image_size: Tuple[int, int] = None) -> \
         List[Mask]:
-    """根据轮廓坐标绘制mask, 如果只传入一组轮廓坐标值，请务必将其置于列表中传入函数，
-    例如， coord = ([x1 x2 ... xn], [y1 y2 ... yn]),调用时请按照coordinate2mask([coord])调用
-    """
     results = []
     for coord in coords:
         if image_size is None:
@@ -222,10 +219,11 @@ def link(json_file, refined_file):
 
 def extractRoiFromImg(images: str | np.ndarray, mask: np.ndarray) -> np.ndarray:
     """
-    根据掩膜提取原始图像中的区域, 注意只能是单通道图，如果是rgb，请先转化为灰度图
-    :param images: 原始图像
-    :param mask: 掩膜文件
-    :return: 单个细胞图像数据
+    Extract the area in the original image according to the mask. Note that it can only be a single-channel image.
+    If it is rgb, please convert it to a grayscale image first.
+    :param images: original images
+    :param mask: mask file
+    :return: single cell image data
     """
     if type(images) is str:
         src = cv2.imread(images, -1)
@@ -277,77 +275,4 @@ def csv2mask(jsonfile, excelfile, mask_filename):
 
 
 if __name__ == '__main__':
-    file = r"G:\20x_dataset\copy_of_xy_16\copy_of_1_xy16.json"
-    ref_file = r'G:\20x_dataset\copy_of_xy_16\refined.xlsx'
-    base_save_dir_mask = r"G:\20x_dataset\copy_of_xy_01\development-dir\single_cell\copy_of_1_xy01-mask"
-    base_save_dir_raw = r"G:\20x_dataset\copy_of_xy_01\development-dir\single_cell\copy_of_1_xy01-raw"
-    raw_tif_dir = r"G:\20x_dataset\copy_of_xy_16\tif\mcy"
-    # csv2mask(file, ref_file, r"G:\20x_dataset\copy_of_xy_16\development-dir\single-cell\copy_of_1_xy16-mask.tif")
-
-    # jp = JsonParser(file)
-    # stack_id = 0
-    image = cv2.imread(r'G:\20x_dataset\copy_of_xy_01\tif\mcy\copy_of_1_xy01-0000.tif', -1)
-    tif = tifffile.imread(r'G:\20x_dataset\copy_of_xy_01\raw\mcy\copy_of_1_xy01.tif')
-    i = 0
-    countersA = []
-    countersB = []
-    for masks in link(file, ref_file):
-        for m in masks:
-            # print(m.coord)
-            # print(m.frame_index)
-            counter = coord2counter(m.coord)
-            # image = convert_dtype(tif[m.frame_index])
-            image = np.zeros(shape=(2048, 2048))
-            cv2.drawContours(image, [counter], 0, [255, 0, 0], 3)
-            plt.imshow(image)
-            plt.show()
-            if i == 0:
-                countersA.append(counter)
-            elif i == 1:
-                countersB.append(counter)
-        i +=1
-        if i > 2:
-            break
-
-    for i in zip(countersA, countersB):
-        value = cv2.matchShapes(i[0], i[1], 1, 0)
-        print("match score at different cell: ", value)
-
-    for j in range(len(countersB)):
-        value = cv2.matchShapes(countersB[j], countersB[j+1], 1, 0)
-        print("match score at same cell: ", value)
-        if j+1 == len(countersB)-1:
-            break
-        # index = 0
-        # smdir = os.path.join(base_save_dir_mask, str(stack_id))
-        # srdir = os.path.join(base_save_dir_raw, str(stack_id))
-        # for m in masks:
-        #     if not os.path.exists(smdir):
-        #         os.makedirs(smdir)
-        #     if not os.path.exists(srdir):
-        #         os.makedirs(srdir)
-        #     tif_fname = os.path.join(raw_tif_dir, jp.get_frame_name_by_index(m.frame_index).replace('.png', '.tif'))
-        #     print(tif_fname)
-        #     raw_roi = extractRoiFromImg(tif_fname, m.mask)
-        #     plt.imsave(os.path.join(smdir, f"copy_of_1_xy01-{stack_id}-{index}-mask.png"), m.mask, cmap='gray')
-        #     plt.imsave(os.path.join(srdir, f"copy_of_1_xy01-{stack_id}-{index}-raw.png"), raw_roi, cmap='gray')
-        # plt.imsave(fname, m.mask, cmap='gray')
-    #         index += 1
-    #     stack_id += 1
-    # if stack_id > 2:
-    #     break
-    # refined = RefinedParser(ref_file)
-    # refined.get_stack()
-
-    # print(jp.get_coords_by_frame_index(0))
-    # print(jp.get_coords_by_frame_name('copy_of_1_xy01-0000.png'))
-    # for i in parse_json(file):
-    #     masks = coordinate2mask(i)
-    #     index = 0
-    #     for m in masks:
-    #         plt.imshow(m.mask, cmap='gray')
-    #         # cv2.imwrite(rf'G:\20x_dataset\copy_of_xy_01\development-dir\single_cell\copy_of_1_xy01-0000-{index}.tif', m.mask)
-    #         plt.imsave(rf'G:\20x_dataset\copy_of_xy_01\development-dir\single_cell\copy_of_1_xy01-0000-{index}.png', m.mask, cmap='gray')
-    #         plt.show()
-    #         print(m.center)
-    #         index += 1
+    pass

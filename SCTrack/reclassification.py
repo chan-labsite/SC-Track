@@ -1,4 +1,3 @@
-# 对于一个完整的tracking tree：追踪其周期变化过程， 如果周期出现错误，尝试依据细胞分裂的过程来纠正细胞的周期准确性
 import logging
 import os.path
 import sys
@@ -18,7 +17,7 @@ from tracker import Tracker, CellNode, TrackingTree
 
 
 class TreeParser(object):
-    """解析TrackingTree"""
+    """parse TrackingTree"""
 
     def __init__(self, track_tree: TrackingTree):
         self.tree = track_tree
@@ -38,14 +37,15 @@ class TreeParser(object):
         return self.__division_count
 
     def get_child(self, parent: CellNode) -> List[CellNode]:
-        """根据父节点返回全部子节点，只包含直系子节点"""
+        """Return all child nodes according to the parent node, including only direct child nodes"""
         return self.tree.children(parent.identifier)
 
     def search_root_node(self):
         """
-        寻找细胞每一代的根节点，即TrackingTree每一个分支的第一个节点
-        此方法是为了处理发生有丝分裂的情况, 即tree开始出现分支
-        当细胞开始发生有丝分裂的时候，tree会产生分裂，此时记录该节点，并回溯，作为一代细胞
+        Find the root node of each generation of cells, that is, the first node of each branch of TrackingTree
+        This method is to deal with the situation where mitosis occurs, that is, the tree begins to branch
+        When the cell begins to undergo mitosis, the tree will split, record the node at this time, and backtrack
+        as a generation of cells
         """
         branch_id = 0
         root_node = self.tree.nodes.get(self.tree.root)
@@ -55,7 +55,7 @@ class TreeParser(object):
             return
         else:
             loop_queue = [root_node]
-            while loop_queue:  # 主循环
+            while loop_queue:
                 current = loop_queue.pop(0)
                 ch = self.get_child(current)
                 for next_node in ch:
@@ -74,10 +74,10 @@ class TreeParser(object):
         self.parse_root_flag = True
 
     def parse_lineage(self, root_node):
-        """获取每一个分支所包含的细胞node序列"""
+        """Get the cell node sequence contained in each branch"""
         loop_queue = [root_node]
         last_node = None
-        while loop_queue:  # 主循环
+        while loop_queue:
             current_node = loop_queue.pop(0)
             last_node = current_node
             ch = self.get_child(current_node)
@@ -98,13 +98,13 @@ class TreeParser(object):
         return self.lineage_dict
 
     def bfs(self):
-        """按照广度优先遍历TrackingTree"""
+        """Traverse TrackingTree according to breadth first"""
         root_node = self.tree.nodes.get(self.tree.root)
         if self.tree.root is None:
             return
         else:
             loop_queue = [root_node]
-            while loop_queue:  # 主循环
+            while loop_queue:
                 current = loop_queue.pop(0)
                 ch = self.get_child(current)
                 for loop_node in ch:
@@ -113,9 +113,12 @@ class TreeParser(object):
 
     @staticmethod
     def check_mitosis_start(start_index, lineage_cell, area_size_t=0.9, mitosis_gap=20, m_predict_threshold=5):
-        """检查M期进入的情况，如果面积符合条件，则检查下一帧，如果下一帧面积过小，则不认为进入了，判定为分割误判,
-        如果检查通过，则随机检查接下来3-6帧，如果预测为M期的数量大于等于2，则判定进入M期通过，否则，判定失败
-        如果离上一次进入M期间隔过短，同样认为是误判。
+        """
+        Check the entry of the M period, if the area meets the conditions, check the next frame, if the area of the next
+        frame is too small, it is not considered to have entered, and it is judged as a segmentation misjudgment.
+        If the check is passed, check the next 6 frames. If the number of M phases is predicted to be greater than or
+        equal to the threshold, it is judged to enter the M phase to pass, otherwise, the judgment fails.
+        If the interval from the last entry to M is too short, it is also considered a misjudgment
         """
         predict_enter_cell = lineage_cell[start_index]
         next_cell = lineage_cell[start_index + 1]
@@ -138,9 +141,10 @@ class TreeParser(object):
     @staticmethod
     def check_s_start(start_index, linage_cell, threshold=6):
         """
-        检查S期的进入，如果该细胞预测为S期，则随机往后检查5帧，
-        剩余帧数不满5帧，则检查全部剩余帧数，如果累计预测S期大于threshold，
-        则判定成功，否则，判定失败
+        Check the entry of S phase, if the cell is predicted to be in S phase, check 10 frames later at random,
+        If the number of remaining frames is less than 10 frames, check all the remaining frames.
+        If the cumulative predicted S period is greater than the threshold,
+        If the judgment succeeds, otherwise, the judgment fails
         """
         s_count = 0
         if linage_cell[start_index].cell.phase == 'S':
@@ -153,7 +157,10 @@ class TreeParser(object):
 
     @staticmethod
     def check_s_exit(end_index, linage_cell, threshold=6):
-        """判断S期退出，判断原理同进入S期，如果细胞开始退出S期，则往后检查"""
+        """
+        To judge the exit of S phase, the judgment principle is the same as entering S phase,
+        if the cells start to exit S phase, check later
+        """
         non_s_count = 0
         if linage_cell[end_index].cell.phase != 'S':
             for i in range(min(10, len(linage_cell) - end_index)):
@@ -165,9 +172,9 @@ class TreeParser(object):
 
     def parse_mitosis(self, lineage: dict, root: CellNode, lineage_index=None):
         """
-        解析mitosis的进入和退出
+        Parse entry and exit of mitosis
         """
-        area_size_t = 1.4  # 判断M期的进入
+        area_size_t = 1.4
         cell_node_line = lineage.get('cells')
         mitosis_start_index = None
         exist_m_frame = 0
@@ -186,7 +193,6 @@ class TreeParser(object):
                     mitosis_start_index = i
                     break
         if mitosis_start_index is None:
-            # 两种情况， 第一种是细胞进入M期之后才开始追踪， 第二种是细胞已经完成分裂但是还没有进入到下一个M期
             if len(cell_node_line) < 5:
                 if exist_m_frame >= 3:
                     for cell_node in cell_node_line:
@@ -198,14 +204,13 @@ class TreeParser(object):
                         cell_node.cell.phase = 'M'
                     lineage['m1_start'] = 0
         else:
-            # 细胞正常从G1-G2的任意时期进入M期
             for m_index in range(mitosis_start_index, len(cell_node_line)):
                 cell_node_line[m_index].cell.phase = 'M'
             lineage['m2_start'] = mitosis_start_index
         self.parse_mitosis_flag[root] = True
 
     def parse_s(self, lineage: dict, root: CellNode, lineage_index=None):
-        """判断S期的进入"""
+        """To judge the entry of S phase"""
         cell_node_line = lineage.get('cells')
         s_start_index = None
         s_exit_index = None
@@ -237,7 +242,7 @@ class TreeParser(object):
         self.parse_s_flag[root] = True
 
     def parse_g1_g2(self, lineage: dict, root: CellNode, lineage_index=None):
-        """将G1/G2准确区分为G1，G2"""
+        """Accurately distinguish G1/G2 into G1, G2"""
         cell_node_line = lineage.get('cells')
         g1_start_index = None
         g1_exit_index = None
@@ -247,10 +252,10 @@ class TreeParser(object):
         m2_start = lineage.get('m2_start')
         if not self.parse_s_flag[root]:
             self.parse_s(lineage, root)
-        if lineage.get('s_start') is not None:  # 细胞进入了S期
-            # 1. track从s期开始的
-            # 2. track从G1期开始的
-            # 3. track从M1期开始的
+        if lineage.get('s_start') is not None:
+            # 1. track starts from  S
+            # 2. track starts from G1 phase
+            # 3. The track starts from the M1
             g1_exit_index = lineage.get('s_start')
             if m1_start is not None:
                 g1_start_index = 3
@@ -263,24 +268,25 @@ class TreeParser(object):
                 else:
                     g2_exit_index = len(cell_node_line)
 
-        else:  # 细胞没有经历S期
-            # 1. track从M1期开始，没有进入S期
-            # 2. track从G1期开始， 没有进入S期
-            # 3. track从G2期开始, 进入M2期
-            # 3. track从G2期开始, 没有进入M2期
+        else:
+            # cells are not in S phase
+            # 1. The track starts from the M1 period and does not enter the S phase
+            # 2. The track starts from the G1 phase and does not enter the S phase
+            # 3. The track starts from the G2 period and enters the M2 phase
+            # 3. The track starts from the G2 period and does not enter the M2 phase
             if m2_start is not None:
-                if len(cell_node_line) > 5:  # 细胞进入M期，还没有分裂，此时定义为M2期
+                if len(cell_node_line) > 5:
                     g2_start_index = 0
                     g2_exit_index = m2_start
-            elif m1_start is not None:  # 细胞已经完成分裂，还没退出M期， 此时定义为M1期
+            elif m1_start is not None:
                 g1_start_index = 3
                 g1_exit_index = len(cell_node_line)
             else:
                 if len(cell_node_line) > 10:
-                    if lineage_index == 0:  # 初代细胞
+                    if lineage_index == 0:
                         g1_start_index = 0
                         g1_exit_index = len(cell_node_line)
-                    else:  # 次代细胞
+                    else:
                         g2_start_index = 0
                         g2_exit_index = len(cell_node_line)
                 else:
@@ -305,7 +311,10 @@ class TreeParser(object):
                 cell_node_line[cell_node_index_g2].cell.phase = 'G2'
 
     def parse_mitosis_error(self, lineage: dict, root: CellNode, lineage_index=None):
-        """如果没有匹配到分裂后的两个子细胞，会导致后续细胞全部处于M期，此时应该在一定时间内将其更正为G1"""
+        """
+        If the two daughter cells after division are not matched, all subsequent cells will be in the M phase.
+        At this time, it should be corrected to G1 within a certain period of time.
+        """
         cell_node_line = lineage.get('cells')
         m1_start = lineage.get('m1_start')
         m2_start = lineage.get('m2_start')
@@ -384,7 +393,7 @@ def run_track(annotation, track_range=None, dic=None, mcy=None, speed_filename=N
 
 
 def track_tree_to_table(tracker: Tracker, filepath):
-    """导出track result到table中"""
+    """Export track result to table"""
     track_detail_columns = ['frame_index', 'track_id', 'cell_id', 'parent_id', 'center_x', 'center_y', 'phase',
                             'mask_of_x_points', 'mask_of_y_points']
     track_detail_dataframe = pd.DataFrame(columns=track_detail_columns)
@@ -442,7 +451,7 @@ def track_tree_to_table(tracker: Tracker, filepath):
 
 
 def track_trees_to_json(tracker: Tracker, output_fname, xrange, basename=None):
-    """track结果导出到json文件中"""
+    """Export track result to json file"""
     from config import RAW_INPUT_IMAGE_SIZE
     if basename is None:
         prefix = 'mcy'
@@ -491,7 +500,7 @@ def track_trees_to_json(tracker: Tracker, output_fname, xrange, basename=None):
 
 
 def track_tree_to_MOT(tracker: Tracker, output_fname, xrange, basename=None):
-    """将追踪结果导为MOT格式，MOT无法追踪有丝分裂，因此只用于衡量追踪的稳定性"""
+    """Export track result as MOT format"""
     parser_dict = tracker.parser_dict
     for tree in parser_dict:
         parser = parser_dict[tree]

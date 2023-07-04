@@ -10,17 +10,16 @@ def start_track(fannotation: str | dict, fout, basename, track_range=None, fimag
                 export_visualization=True,
                 track_to_json=True):
     """
-
-    :param track_range: Track帧数范围
-    :param visualize_background_image: track背景图
-    :param basename:
-    :param fannotation: 分割输出结果，json文件或者dict
-    :param fout:  tracking输出文件夹路径
-    :param fimage: pcna图像路径， 可为空
-    :param fbf:  明场图像路径，可为空
-    :param export_visualization: 是否导出tracking可视化文件，如果是，会导出一个多帧tif文件
-    :param track_to_json:  是否将tracking结果写入到fjson中，如果是，会生成一个新的json文件
-    :return: None
+     :param track_range: Track frame number range
+     :param visualize_background_image: track background image
+     :param basename:
+     :param fannotation: segmentation output result, json file or dict
+     :param fout: Tracking output folder path
+     :param fimage: raw image path, can be empty
+     :param fbf: Bright field image path, can be empty
+     :param export_visualization: Whether to export the tracking visualization file, if yes, it will export a multi-frame tif file
+     :param track_to_json: Whether to write the tracking result into fjson, if yes, a new json file will be generated
+     :return: None
     """
 
     if type(fannotation) is str:

@@ -1,17 +1,11 @@
 from __future__ import annotations
 
-import dataclasses
-import queue
 import math
-from abc import ABC, abstractmethod
 import warnings
-from typing import List, Tuple
 from enum import Enum
 from shapely.geometry import Polygon
 import numpy as np
 from functools import lru_cache
-from numba import jit
-from matplotlib import pyplot as plt
 from utils import convert_dtype
 import config
 
@@ -38,9 +32,11 @@ def warningFilter(func):
 
 
 class MatchStatus(Enum):
-    """Matching status enumeration object,
+    """
+    Matching status enumeration object,
     including matched, unmatched, and missing matches,
-    is the status value of TrackingTree."""
+    is the status value of TrackingTree.
+    """
 
     Matched = 0
     Unmatched = 1
@@ -676,7 +672,7 @@ class Cell(object):
     @property
     @lru_cache(maxsize=None)
     def bbox(self):
-        """bounding box坐标"""
+        """bounding box coordinates"""
         x0 = math.floor(np.min(self.position[0])) if math.floor(np.min(self.position[0])) > 0 else 0
         x1 = math.ceil(np.max(self.position[0]))
         y0 = math.floor(np.min(self.position[1])) if math.floor(np.min(self.position[1])) > 0 else 0
@@ -685,9 +681,9 @@ class Cell(object):
 
     def move(self, speed: Vector, time: int = 1):
         """
-        :param speed: 移动速度， Vector对象实例
-        :param time: 移动时间，单位为帧
-        :return: 移动后新的Cell实例
+        :param speed: move speed， Vector object instance
+        :param time: move time，frame
+        :return: New Cell instance after moving
         """
         new_position = [tuple([i + speed.x * time for i in self.position[0]]),
                         tuple([j + speed.y * time for j in self.position[1]])]
@@ -696,7 +692,7 @@ class Cell(object):
         return new_cell
 
     def set_feature(self, feature):
-        """设置Feature对象"""
+        """set Feature object for cell"""
         self.__feature = feature
         self.__feature_flag = True
 
@@ -708,7 +704,7 @@ class Cell(object):
             raise ValueError("No available feature! ")
 
     def set_track_id(self, __track_id, status: 0 | 1):
-        """为细胞设置track id， 如果status为0表示追踪不精确，可以被修改，如果status为1，表示追踪精确，不允许被修改"""
+        """Set the track_id for the cell"""
         if self.__is_track_id_changeable:
             if status == 1:
                 self.__track_id = __track_id
@@ -726,7 +722,9 @@ class Cell(object):
 
     @property
     def is_be_matched(self):
-        """如果参与过匹配，则返回match status， 否则，为False"""
+        """I
+        f participated in the match, return match status, otherwise, False
+        """
         return self.__match_status
 
     @is_be_matched.setter
@@ -743,6 +741,7 @@ class Cell(object):
         self.__branch_id = branch_id
 
     def update_region(self, **kwargs):
+        """update annotation region information ,add the tracking results."""
         new_region = self.region
         if new_region:
             if 'branch_id' in kwargs:
@@ -757,7 +756,7 @@ class Cell(object):
 
     @property
     def cell_id(self):
-        """细胞id， 母细胞和子细胞拥有不同的id"""
+        """Cell id, parent cell and daughter cell have different value"""
         return self.__id
 
     @property
@@ -810,13 +809,3 @@ class Cell(object):
 
     def __hash__(self):
         return id(self)
-
-
-class CacheData(object):
-    """
-    缓存对象，用来缓存匹配过的帧，包括之前匹配过的结果
-    缓存内容包括：
-        已经配过的帧索引
-
-    """
-

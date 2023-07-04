@@ -46,7 +46,7 @@ from treelib import Tree, Node
 from tqdm import tqdm
 
 from utils import convert_dtype, readTif
-from base import Cell, Rectangle, Vector, SingleInstance, CacheData, MatchStatus, TreeStatus, CellStatus
+from base import Cell, Rectangle, Vector, TreeStatus, CellStatus
 from t_error import InsertError, MitosisError, NodeExistError, ErrorMatchMitosis, StatusError
 from feature import FeatureExtractor, feature_extract
 
@@ -55,29 +55,10 @@ TEST_INDEX = None
 CELL_NUM = 0
 
 
-class Filter(SingleInstance):
-    """
-    过滤一帧中距离较远的细胞，降低匹配候选数量
-    基本操作数为帧
-    过滤依据：bbox的坐标
-    参数：
-    """
-
-    def __init__(self):
-        super(Filter, self).__init__()
-
-    def filter(self, current: Cell, cells: List[Cell]):
-        """
-
-        :param current: 待匹配的细胞
-        :param cells: 候选匹配项
-        :return: 筛选过的候选匹配项
-        """
-        return [cell for cell in cells if cell in current]
-
-
 class Checker(object):
-    """检查器，检查参与匹配的细胞是否能够计算"""
+    """
+    A checker that checks whether the cells participating in the match can calculate.
+    """
     _protocols = [None, 'calcIoU', 'calcCosDistance', 'calcCosSimilar', 'calcEuclideanDistance',
                   'compareDicSimilar', 'compareMcySimilar', 'compareShapeSimilar']
 
@@ -122,7 +103,8 @@ class Checker(object):
 
 class CellNode(Node):
     """
-    追踪节点，包含细胞的tracking ID，以及细胞自身的详细信息，和父子节点关系
+    Tracking node, including the track_ID, cell_id, branch_id of the cell, and the detailed information of the cell,
+    the parent-child node relationship
     """
     _instance_ = {}
     STATUS = ['ACCURATE', 'ACCURATE-FL', 'INACCURATE', 'INACCURATE-MATCH', 'PREDICTED']
@@ -151,10 +133,12 @@ class CellNode(Node):
 
     @property
     def identifier(self):
+        """The unique ID of a node within the scope of a TrackingTree"""
         return str(id(self.cell))
 
     @property
     def nid(self):
+        """same as identifier, override treelib related methods"""
         return self.identifier
 
     def _set_identifier(self, nid):
@@ -172,10 +156,10 @@ class CellNode(Node):
     def get_parent(self):
         return self.parent
 
-    def set_childs(self, child: CellNode):
+    def set_children(self, child: CellNode):
         self.childs.append(child)
 
-    def get_childs(self):
+    def get_children(self):
         return self.childs
 
     def set_tree_status(self, status: TreeStatus):
@@ -223,7 +207,10 @@ class CellNode(Node):
 
 
 class TrackingTree(Tree):
-    """追踪树，起始的时候初始化根节点，逐帧扫描的时候更新left子节点，发生分裂的时候添加right子节点"""
+    """
+    The core structure of tracking implement. All tracking results are stored in the instance of this class.
+    Each TrackingTree instance represents the cell line of a cell, and the TrackingTree branch represents cell division.
+    """
 
     def __init__(self, root: CellNode = None, track_id=None):
         super().__init__()
@@ -240,28 +227,35 @@ class TrackingTree(Tree):
         return item.identifier in self._nodes
 
     def change_mitosis_flag(self, flag: bool):
-        """当细胞首次进入mitosis的时候，self.mitosis_start_flag设置为True， 当细胞完成分裂的时候，重新设置为false"""
+        """
+        When the cell enters mitosis for the first time, self.mitosis_start_flag is set to True,
+        and when the cell completes division, it is reset to false
+        """
         self.mitosis_start_flag = flag
 
     def add_node(self, node: CellNode, parent: CellNode = None):
+        """Add a new CellNode object to the TrackingTree"""
         node.set_parent(parent)
-        if parent != None:
+        if parent is not None:
             parent.childs.append(node)
         super().add_node(node, parent)
 
     def get_parent(self, node: CellNode):
+        """Returns the parent CellNode of a node"""
         return node.get_parent()
 
     def get_childs(self, node: CellNode):
-        return node.get_childs()
+        """Returns the child CellNode of a node"""
+        return node.get_children()
 
     @property
     def last_layer(self):
+        """Return all CellNodes in the last layer of TrackingTree"""
         return self.__last_layer
 
     @property
     def last_layer_cell(self):
-        """返回{叶节点：节点包含的细胞}字典"""
+        """Return a dict of {leaf node: cells contained in the node}."""
         cells = {}
         for node in self.leaves():
             cells[node.cell] = node
@@ -274,6 +268,10 @@ class TrackingTree(Tree):
         self.__last_layer = self.leaves()
 
     def branch_id_distributor(self):
+        """
+        Used to assign a branch_id to each branch in a TrackingTree object.
+        The branch_id is incremented in a non-reversible and non-reusable manner.
+        """
         if self._available_branch_id not in self._exist_branch_id:
             self._exist_branch_id.append(self._available_branch_id)
             self._available_branch_id += 1
@@ -289,9 +287,9 @@ class TrackingTree(Tree):
 
 class Match(object):
     """
-    匹配器，根据前后帧及当前帧来匹配目标并分配ID
-    主要用来进行特征比对，计算出相似性
-    操作单位：帧
+    Matcher, matches targets based on previous and next frames and assigns IDs in the current frame.
+    Mainly used for feature matching and calculating similarity.
+    The unit of operation is frames.
     """
     _instances = {}
 
@@ -302,13 +300,13 @@ class Match(object):
         return cls._instances[key]
 
     def normalize(self, x, _range=(0, np.pi / 2)):
-        """将值变换到区间[0, π/2]"""
+        """Transforming the value to the range of [0, π/2]."""
         return _range[0] + (_range[1] - _range[0]) * x
 
     def calcIoU_roughly(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞的交并比
-        返回值范围: float(0-1)
+        Calculate IoU of two cell bounding boxes.
+        return value range: float(0-1)
         """
         rect1 = Rectangle(*cell_1.bbox)
         rect2 = Rectangle(*cell_2.bbox)
@@ -326,18 +324,16 @@ class Match(object):
 
     def calcIoU(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞的交并比
-        返回值范围: float(0-1)
+        Calculate IoU of two cells.
+        return value range: float(0-1)
         """
         poly1 = cell_1.polygon
         poly2 = cell_2.polygon
 
-        # 计算两个多边形的交集
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 intersection = poly1.intersection(poly2)
-                # 计算两个多边形的并集
                 union = poly1.union(poly2)
         except shapely.errors.GEOSException:
             return self.calcIoU_roughly(cell_1, cell_2)
@@ -350,37 +346,37 @@ class Match(object):
 
     def calcCosDistance(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞的余弦距离
-        返回值范围: float[0, 2]
-        距离越小越相似，通过反正切函数缩放到[0, 1)
-        返回值为归一化[0, π/2]之后的余弦值，返回值越小，表示相似度越低
+        Calculate the cosine distance of two cells
+        Return value range: float[0, 2]
+        The smaller the distance, the more similar it is, scaled to [0, 1) by the arctangent function
+        The return value is the cosine value after normalization [0, π/2]. The smaller the return value, the lower the similarity
         """
         dist = cell_1.vector.cosDistance(cell_2.vector)
         return np.cos(np.arctan(dist) / (np.pi / 2))
 
     def calcCosSimilar(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞的中心点的余弦相似度
-        返回值范围: float[0, 1]
-        值越大越相似
-        返回值为归一化[0, π/2]后的正弦值
+        Calculate the cosine similarity of the center points of two cells
+        Return value range: float[0, 1]
+        The larger the value, the more similar
+        The return value is the sine value after normalization [0, π/2]
         """
         score = cell_1.vector.cosSimilar(cell_2.vector)
         return np.sin(self.normalize(score))
 
     def calcAreaSimilar(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞的面积相似度
-        返回值范围: float[0, 1]
+        Calculate the area similarity of two cells
+        Return value range: float[0, 1]
         """
         return min(cell_1.area, cell_2.area) / max(cell_1.area, cell_2.area)
 
     def calcEuclideanDistance(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞中心点的欧氏距离
-        返回值范围: float(0,∞)
-        距离越小越相似，通过反正切函数缩放到[0, 1)
-        返回值为归一化[0, π/2]之后的余弦值，返回值越小，表示相似度越低
+        Calculate the Euclidean distance between two cell center points
+        Return value range: float(0,∞)
+        The smaller the distance, the more similar it is, scaled to [0, 1) by the arctangent function
+        The return value is the cosine value after normalization [0, π/2]. The smaller the return value, the lower the similarity
         """
         dist = cell_1.vector.EuclideanDistance(cell_2.vector)
         # return np.cos(np.arctan(dist) / (np.pi / 2))
@@ -388,8 +384,8 @@ class Match(object):
 
     def compareDicSimilar(self, cell_1: Cell, cell_2: Cell):
         """
-        比较dic相似度
-        返回值范围: float(0, 1)
+        Compare dic similarity
+        Return value range: float(0, 1)
         """
         dic1 = Vector(cell_1.feature.dic_intensity, cell_1.feature.dic_variance)
         dic2 = Vector(cell_2.feature.dic_intensity, cell_2.feature.dic_variance)
@@ -400,8 +396,8 @@ class Match(object):
 
     def compareMcySimilar(self, cell_1: Cell, cell_2: Cell):
         """
-        比较mcy相似度
-        返回值范围: float(0, 1)
+        Compare mcy similarity
+        Return value range: float(0, 1)
         """
         mcy1 = Vector(cell_1.feature.mcy_intensity, cell_1.feature.mcy_variance)
         mcy2 = Vector(cell_2.feature.mcy_intensity, cell_2.feature.mcy_variance)
@@ -412,10 +408,10 @@ class Match(object):
 
     def compareShapeSimilar(self, cell_1: Cell, cell_2: Cell):
         """
-        计算两个细胞的轮廓相似度
-        返回值范围: float(0, 1)
-        score值越小表示相似度越大，可进行取反操作
-        返回值为归一化[0, π/2]后的余弦值
+        Calculate the contour similarity of two cells
+        Return value range: float(0, 1)
+        The smaller the score value, the greater the similarity, and the inversion operation can be performed
+        The return value is the cosine value after normalization [0, π/2]
         """
         score = cv2.matchShapes(cell_1.contours, cell_2.contours, 1, 0.0)
         # return np.cos(self.normalize(score))
@@ -426,7 +422,9 @@ class Match(object):
 
 
 class Matcher(object):
-    """选定当前帧细胞，匹配前一帧最佳选项，根据下一帧匹配上一帧"""
+    """
+    A matcher that realizes the association of front and back frame objects.
+    """
 
     def __init__(self):
         self.matcher = Match()
@@ -444,12 +442,16 @@ class Matcher(object):
         return im_rgb1
 
     def predict_next_position(self, parent: Cell):
-        """根据速度预测子细胞可能出现的位置，利用预测的子细胞参与匹配"""
+        """
+        According to the speed, the possible position of the daughter cell is predicted, and the predicted daughter cell
+        is used to participate in the matching. speed=0 is equivalent to not enabling prediction.
+        """
         # new_cell = parent.move(parent.move_speed, 1)
         new_cell = parent
         return new_cell
 
     def _filter(self, child: Cell, cells: List[Cell]):
+        """filter candidates"""
 
         # filtered_candidates = [cell for cell in cells if cell in child]
         filtered_candidates = []
@@ -462,10 +464,11 @@ class Matcher(object):
         return filtered_candidates
 
     def match_candidates(self, child: Cell, before_cell_list: List[Cell]):
-        """匹配候选项"""
+        """match candidates"""
         return self._filter(child, before_cell_list)
 
     def calc_similar(self, parent, child_cell):
+        """Calculate the similarity of two cells"""
         similar = [self.matcher.calcIoU(parent, child_cell),
                    self.matcher.calcAreaSimilar(parent, child_cell),
                    self.matcher.compareShapeSimilar(parent, child_cell),
@@ -479,6 +482,7 @@ class Matcher(object):
 
     @lru_cache(maxsize=None)
     def match_similar(self, cell_1: Cell, cell_2: Cell):
+        """Calculate the similarity of two cells, do not include the image information."""
         similar = {'IoU': self.matcher.calcIoU(cell_1, cell_2),
                    'shape': self.matcher.compareShapeSimilar(cell_1, cell_2),
                    'area': self.matcher.calcAreaSimilar(cell_1, cell_2),
@@ -488,8 +492,9 @@ class Matcher(object):
 
     def match_duplicate_child(self, parent, unmatched_child_list):
         """
-        调用这个函数，意味着候选项中不止一个，此方法计算每个候选项的匹配度
-        返回值为{Cell: similar_dict}形式的字典
+        Match multiple candidates. Calling this function means that there is more than one candidate, and this method
+        calculates the matching degree of each candidate
+        The return value is a dictionary in the form of {Cell: similar_dict}
         """
         matched = {}
         for i in unmatched_child_list:
@@ -501,9 +506,11 @@ class Matcher(object):
         return matched
 
     def is_mitosis_start(self, pre_parent: Cell, last_leaves: List[Cell], area_size_t=1.5, iou_t=0.5):
-        """判断细胞是否进入M期，依据是细胞进入Mitosis的时候，体积会变大
-        :returns 如果成功进入M期，返回包含最后一帧的G2和第一帧M的字典信息， 否则，返回False
         """
+        Determine whether a cell enters the M phase. The basic criterion is that when a cell enters mitosis, its volume
+        increases and the number of candidate regions increases. If the cell successfully enters the M phase, return a
+        dict containing information about the last frame of G2 and the first frame of M. Otherwise, return False.
+         """
         match_score = {}
         for i in last_leaves:
             if self.match_similar(pre_parent, i).get('IoU') >= iou_t:
@@ -517,7 +524,7 @@ class Matcher(object):
 
     def get_similar_sister(self, parent: Cell, matched_cells_dict: dict, area_t=0.7, shape_t=0.03, area_size_t=1.3,
                            iou_t=0.1):
-        """在多个候选项中找到最相似的两个细胞作为子细胞"""
+        """Find the two most similar cells among multiple candidates as the daughter cells."""
         cell_dict_keys = list(matched_cells_dict.keys())
         cell_dict_keys.sort(key=lambda cell: cell.area, reverse=True)
 
@@ -553,10 +560,12 @@ class Matcher(object):
     def select_mitosis_cells(self, parent: Cell, candidates_child_list: List[Cell], area_t=0.7, shape_t=0.05,
                              area_size_t=1.3):
         """
-        如果发生有丝分裂，选择两个子细胞， 调用这个方法的时候，确保大概率发生了分裂事件
-        如果返回值为有丝分裂，则需要检查两个子细胞的面积是否正常，如果某一个子细胞的面积过大，则认为是误判
+        If cell division occurs, select two daughter cells. When calling this method, make sure that cell division is
+        highly likely to occur. If the return value is cell division, then it is necessary to check whether the areas
+        of the two daughter cells are normal. If the area of one daughter cell is too large, it is considered a FP.
 
         :return ([cell_1, cell2], 'match status')
+
         """
 
         matched_candidates = self.match_duplicate_child(parent, candidates_child_list)
@@ -601,14 +610,16 @@ class Matcher(object):
 
     def select_single_child(self, score_dict):
         """
-        对于有多个IOU匹配的选项，选择相似度更大的那一个, 此处是为了区分发生重叠的细胞，而非发生有丝分裂.
-        注意：这个方法匹配出来的结果不一定是准确的，有可能因为细胞交叉导致发生错配，需要在后面的流程中解决
-        另外，如果一个细胞被精确匹配后，另一个细胞在没有匹配项的时候（即在识别过程中，下一帧没有识别上，可能会出现重复匹配）
-        这种情况原本应该填充预测细胞。
+        For multiple IOU matching options, choose the one with a higher similarity. This is to distinguish overlapping
+        cells rather than cell division. Note: the results of this method are not necessarily accurate and may result
+        in mismatches due to cell crossing, which needs to be resolved in subsequent steps. In addition, if one cell is
+        accurately matched, and the other cell has no match (i.e., not detected in the next frame during recognition),
+        it should be filled as a predicted cell.
 
         """
 
         def calc_weight(candidate_score_dict):
+            """Compute and dynamically update matching weights and matching results."""
             result = {}
             # for cell in candidate_score_dict:
             #     score_dict = candidate_score_dict[cell]
@@ -620,32 +631,34 @@ class Matcher(object):
             threshold = 0.5
             iou_above_threshold = False
 
-            # 遍历match字典中的每个cell和score_dict
             for cell, score_dict in candidate_score_dict.items():
                 iou = score_dict['IoU']
                 distance = score_dict['distance']
 
-                # 如果iou大于阈值，更新最大iou和选取的cell，并将iou_above_threshold设置为True
+                # If iou is greater than the threshold, update the maximum iou and the selected cell,
+                # and set iou_above_threshold to True
                 if iou > threshold:
                     iou_above_threshold = True
                     if distance < min_distance:
                         selected_cell = cell
                         min_distance = distance
                         max_iou = iou
-                # 如果iou不大于阈值，但是大于当前最大iou，则更新最大iou和选取的cell
+
+                # If the iou is not greater than the threshold, but greater than the current maximum iou,
+                # update the maximum iou and the selected cell
                 elif iou > max_iou:
                     selected_cell = cell
                     max_iou = iou
                     min_distance = distance
 
-            # 如果没有任何一个score_dict的iou大于阈值，则选取iou值最大的那个cell
+            # If the iou is not greater than the threshold, but greater than the current maximum iou,
+            # update the maximum iou and the selected cell
             if not iou_above_threshold:
                 for cell, score_dict in candidate_score_dict.items():
                     iou = score_dict['IoU']
                     if iou > max_iou:
                         selected_cell = cell
                         max_iou = iou
-            # 返回选取的cell
             return selected_cell
             # return max(result, key=result.get)
 
@@ -654,18 +667,14 @@ class Matcher(object):
             if score_dict[cell].get('IoU') > 0.5:
                 candidates[cell] = score_dict[cell]
         if not candidates:
-            # print("第二分支，重新选择")
             for cell in score_dict:
                 if score_dict[cell].get('IoU') > 0.1:
                     candidates[cell] = score_dict[cell]
         if not candidates:
-            # print("第二分支，重新选择")
             for cell in score_dict:
                 if score_dict[cell].get('IoU') > 0.0:
                     candidates[cell] = score_dict[cell]
-
         if not candidates:
-            # print("第三分支，重新选择")
             for cell in score_dict:
                 candidates[cell] = sum(score_dict[cell].values())
             try:
@@ -677,7 +686,7 @@ class Matcher(object):
         return best
 
     def match_one(self, predict_child, candidates):
-        if len(candidates) == 1:  # 只有一个候选项，判断应该为准确匹配
+        if len(candidates) == 1:
             # print('matched single:', self.calc_similar(parent, filtered_candidates[0]))
             score = self.calc_similar(predict_child, candidates[0])
             if score[0] > 0.5:
@@ -690,7 +699,10 @@ class Matcher(object):
             return False
 
     def check_iou(self, similar_dict):
-        """检查IoU，为判断进入有丝分裂提供依据，如果拥有IoU>0的匹配项少于2，返回False，否则，返回这两个细胞"""
+        """
+        Check the IoU to provide a basis for determining cell division. If there are less than 2 matching options
+        with IoU > 0, return False. Otherwise, return these two cells.
+        """
         matched = {}
         for cell in similar_dict:
             score = similar_dict[cell]
@@ -702,7 +714,8 @@ class Matcher(object):
             return matched
 
     def _match(self, parent: Cell, filter_candidates_cells: List[Cell], cell_track_status: TreeStatus):
-        """比较两个细胞的综合相似度
+        """
+        Compare the overall similarity of two cells.
         """
         # predict_child = self.predict_next_position(parent)
         predict_child = parent
@@ -744,7 +757,7 @@ class Matcher(object):
                 return {'matched_cell': self.match_one(predict_child, filtered_candidates), 'status': cell_track_status}
 
     def calc_sorted_value(self, parent: Cell, matched_cell):
-        """计算Cell对象的排序值"""
+        """Calculate the sorting value of a Cell object."""
 
         match_score = self.match_similar(parent, matched_cell)
         sort_value = match_score['IoU'] + 1 / (match_score['distance'] + 1e-5)
@@ -762,7 +775,8 @@ class Matcher(object):
             pass
 
     def match_single_cell(self, tree: TrackingTree, current_frame: FeatureExtractor):
-        """追踪单个细胞的变化情况"""
+        """The implementation logic for tracking a single cell."""
+
         cells = current_frame.cells
         parents = tree.last_layer_cell
         m_counter = 5
@@ -773,7 +787,7 @@ class Matcher(object):
                 min_parent = min(parent_dict, key=parent_dict.get)
                 parents.pop(min_parent)
         for parent in parents:
-            # 分裂后的两个细胞或者多个细胞
+            # Two or more cells after cell division.
             # print(f'\nparent cell math status: {parent.is_be_matched}')
             tree.m_counter -= 1
             if not tree.m_counter:
@@ -846,7 +860,10 @@ class Matcher(object):
 
 
 class Tracker(object):
-    """Tracker对象，负责逐帧扫描图像，进行匹配并分配track id，初始化并更新TrackingTree"""
+    """
+    Tracker object, which is the controller of the tracking process. It reads images frame by frame,
+    initializes and updates the TrackingTree, performs matching and assigns various IDs.
+    """
 
     def __init__(self, annotation, mcy=None, dic=None):
         self.matcher = Matcher()
@@ -879,7 +896,7 @@ class Tracker(object):
                 i += 1
 
     def init_tracking_tree(self, fe: FeatureExtractor):
-        """初始化Tracking Tree"""
+        """Initialize TrackingTree"""
         # trees = []
         for i in fe.cells:
             tree = TrackingTree(track_id=self.id_distributor())
@@ -931,19 +948,15 @@ class Tracker(object):
 
     @staticmethod
     def update_speed(parent: Cell, child: Cell, default: Vector = None):
-        """更新细胞的移动速度"""
+        """Update cell movement speed"""
         if default:
             child.update_speed(Vector(0, 0))
         else:
             speed = (child.vector - parent.vector)
             child.update_speed(speed)
 
-    def update_tree_map(self, cell_key, tree_value):
-        """更新tree_map"""
-        # 废弃的参数，不再依赖tree_map
-
     def get_current_tree(self, parent_cell: Cell):
-        """获取当前母细胞存在的TrackingTree"""
+        """Get the TrackingTree where the current parent cell is located"""
         exist_trees = []  # 细胞可能存在的tree
         for tree in self.trees:
             if parent_cell in tree.last_layer_cell:
@@ -959,7 +972,7 @@ class Tracker(object):
             raise NodeExistError(child_node)
 
     def track_near_frame(self, fe1: FeatureExtractor, fe2: FeatureExtractor):
-        """匹配临近帧"""
+        """match adjacent frames"""
         cells = sorted(fe1.cells, key=lambda cell: cell.sort_value, reverse=True)
         for parent in cells:
             # print(parent)
@@ -968,7 +981,7 @@ class Tracker(object):
                 self.matcher.match_single_cell(tree, fe2)
 
     def track_near_frame_mult_thread(self, fe1: FeatureExtractor, fe2: FeatureExtractor):
-        """多线程测试版"""
+        """Match Adjacent Frames, Multithreaded Beta"""
 
         def work(__parent: Cell):
             trees = self.get_current_tree(__parent)
@@ -983,7 +996,7 @@ class Tracker(object):
         thread_pool_executor.shutdown(wait=True)
 
     def handle_duplicate_match(self, duplicate_match_cell):
-        """解决一个细胞被多个细胞重复匹配"""
+        """Solve a cell is repeatedly matched by multiple cells"""
         child_node = CellNode(duplicate_match_cell)
         tmp = self.get_current_tree(duplicate_match_cell)
         parent0 = tmp[0].parent(child_node.nid)
@@ -1016,7 +1029,7 @@ class Tracker(object):
         return {error_parent: tree_dict[error_parent]}
 
     def rematch(self, fe1: FeatureExtractor, fe2: FeatureExtractor):
-        """对于发生漏检的细胞，将其上下帧与缓存帧进行重新匹配"""
+        """For the loss detection cells, re-match the upper and lower frames with the cache frame"""
         unmatched_list = [cell for cell in fe1.cells if cell.is_be_matched is False]
         if not unmatched_list:
             return
@@ -1035,7 +1048,7 @@ class Tracker(object):
                             match_result = self.matcher.match_similar(last_layer_cell, cell)
                             if match_result['IoU'] > 0 or match_result['distance'] < cell.d_long:
                                 wait_dict[last_layer_cell] = match_result['IoU'] + 10 / (
-                                            match_result['distance'] + 1e-5)
+                                        match_result['distance'] + 1e-5)
                                 wait_tree_map[last_layer_cell] = tree
                                 handle_flag = True
                     if (not handle_flag):
@@ -1045,7 +1058,7 @@ class Tracker(object):
                                     match_result = self.matcher.match_similar(last_layer_cell, cell)
                                     if match_result['distance'] < 50:
                                         wait_dict[last_layer_cell] = match_result['IoU'] + 10 / (
-                                                    match_result['distance'] + 1e-5)
+                                                match_result['distance'] + 1e-5)
                                         wait_tree_map[last_layer_cell] = tree
                                         handle_flag = True
                             else:
@@ -1053,7 +1066,7 @@ class Tracker(object):
                                     match_result = self.matcher.match_similar(last_layer_cell, cell)
                                     if match_result['distance'] < 50:
                                         wait_dict[last_layer_cell] = match_result['IoU'] + 10 / (
-                                                    match_result['distance'] + 1e-5)
+                                                match_result['distance'] + 1e-5)
                                         wait_tree_map[last_layer_cell] = tree
                                         handle_flag = True
                 if wait_dict:
@@ -1089,46 +1102,11 @@ class Tracker(object):
                     cell.is_be_matched = True
                     self.matcher.match_single_cell(tree, fe2)
 
-    def calc_weight(self, candidate_score_dict):
-        result = {}
-        # for cell in candidate_score_dict:
-        #     score_dict = candidate_score_dict[cell]
-        # value =  score_dict['IoU'] * self.WEIGHT.get('IoU') + \
-        #        score_dict['shape'] * self.WEIGHT.get('shape') + score_dict['area'] * self.WEIGHT.get('area')
-        selected_cell = None
-        max_iou = 0.0
-        min_distance = 100
-        threshold = 0.6
-        iou_above_threshold = False
-        # 遍历match字典中的每个cell和score_dict
-        for cell, score_dict in candidate_score_dict.items():
-            iou = score_dict['IoU']
-            distance = score_dict['distance']
-            # 如果iou大于阈值，更新最大iou和选取的cell，并将iou_above_threshold设置为True
-            if iou > threshold:
-                iou_above_threshold = True
-                if distance < min_distance:
-                    selected_cell = cell
-                    min_distance = distance
-                    max_iou = iou
-            # 如果iou不大于阈值，但是大于当前最大iou，则更新最大iou和选取的cell
-            elif iou > max_iou:
-                selected_cell = cell
-                max_iou = iou
-                min_distance = distance
-        # 如果没有任何一个score_dict的iou大于阈值，则选取iou值最大的那个cell
-        if not iou_above_threshold:
-            for cell, score_dict in candidate_score_dict.items():
-                iou = score_dict['IoU']
-                if iou > max_iou:
-                    selected_cell = cell
-                    max_iou = iou
-        # 返回选取的cell
-        return selected_cell
-        # return max(result, key=result.get)
-
     def check_track(self, fe1: FeatureExtractor, fe2: FeatureExtractor, fe3: FeatureExtractor):
-        """检查track结果，查看是否有错误匹配和遗漏， 同时更新匹配状态"""
+        """
+        Check the track results to see if there are any wrong matches and omissions,
+        and update the matching status at the same time
+        """
         cells = sorted(fe2.cells, key=lambda cell: cell.sort_value, reverse=True)
         self.rematch(fe1, fe2)
         for cell in cells:
@@ -1137,7 +1115,7 @@ class Tracker(object):
                 self.handle_duplicate_match(duplicate_match_cell=cell)
 
     def track(self, range=None, speed_filename=None):
-        """顺序读取图像帧，开始追踪"""
+        """Read image frames sequentially and start tracking"""
         global writer, speed_f
         index = 0
         if speed_filename:
@@ -1195,6 +1173,15 @@ class Tracker(object):
             cv2.imwrite(fname, i[1])
 
     def visualize_to_tif(self, background_mcy_image: str, output_tif_path, tree_list, xrange=None, single=False):
+        """
+        Visualize the tracking results, you can choose to save as a single tif file or multiple tif sequences
+        :param background_mcy_image: background image for visualization
+        :param output_tif_path: output file path
+        :param tree_list: TrackingTree list to visualize
+        :param xrange: visualization range
+        :param single: Whether to choose to save as a single file
+        """
+
         def adjust_gamma(__image, gamma=1.0):
             image = convert_dtype(__image)
             brighter_image = np.array(np.power((image / 255), 1 / gamma) * 255, dtype=np.uint8)
@@ -1248,7 +1235,9 @@ class Tracker(object):
 
 
 def get_cell_line_from_tree(tree: TrackingTree, dic_path: str, mcy_path: str, savepath):
-    """从track tree中获取完整的细胞序列，包括细胞图像，dic和mcy双通道，以及周期，生成的文件名以track_id-branch_id-frame-phase.tif命名"""
+    """
+    Obtain a complete cell sequence from the track tree, including cell images, dic and mcy dual channels, and cycles,
+    and the generated file name is named track_id-branch_id-frame-phase.tif"""
     if not os.path.exists(savepath):
         os.makedirs(savepath)
     save_mcy = os.path.join(savepath, 'mcy')
@@ -1282,27 +1271,3 @@ if __name__ == '__main__':
     for i in enumerate(tracker.trees):
         get_cell_line_from_tree(i[1], dic_img, mcy_img,
                                 fr'G:\20x_dataset\evaluate_data\copy_of_1_xy19\cell_lines\{i[0]}')
-    # tracker.track_tree_to_json(r'G:\20x_dataset\copy_of_xy_01\development-dir\track_tree\tree5')
-    # tracker.save_visualize(200)
-    # for i in tracker.trees:
-    #     print(i)
-    #     print(i.nodes)
-    #     node_r = i.nodes[list(i.nodes.keys())[0]]
-    #     print(node_r)
-    #     node_n = CellNode(i.nodes[list(i.nodes.keys())[0]].cell)
-    #     print(node_n)
-    #     break
-
-    # track_jiaqi()
-    # test()
-
-    # c1 = CellNode(Cell(position=([1, 2], [3, 4])))
-    # c2 = CellNode(Cell(position=([1, 3], [3, 4])))
-    # c3 = CellNode(Cell(position=([1, 1], [3, 4])))
-    # tree = TrackingTree()
-    # tree.add_node(c1)
-    # tree.add_node(c2, parent=c1)
-    # tree.add_node(c3, parent=c1)
-    # print(tree)
-    # print(len(tree))
-    # print(tree.nodes)

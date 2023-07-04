@@ -36,7 +36,7 @@ def time_it(logger: logging.Logger = None, using=False):
     """
     Decorator used to record the execution time of a function, using a log to output the execution time
     :param logger: Python logger
-    :param using: bool flag, is the decorator function enabled?
+    :param using: bool flag, whether the decorator function enabled.
     :return: decorator
     """
 

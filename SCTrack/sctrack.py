@@ -6,7 +6,6 @@
 
 
 import argparse
-import json
 import track
 import logging
 import os

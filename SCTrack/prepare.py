@@ -4,7 +4,6 @@ import os.path
 
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 
 
 class DetectionParser:
@@ -28,11 +27,9 @@ class DetectionParser:
 
     def get_region_attr(self, regions):
         """
-
-        Args:
-            regions: extract from json files, one frame data, it cna be get from function [get_regions_by_frame()]
-
-        Returns: all cells bounding box and phase list, like [((x_min, x_max, y_min, y_max), phase), ..., ((x_min, x_max, y_min, y_max), phase)]
+        regions: extract from json files, one frame data, it cna be get from function [get_regions_by_frame()]
+        Returns: all cells bounding box and phase list,
+        like [((x_min, x_max, y_min, y_max), phase), ..., ((x_min, x_max, y_min, y_max), phase)]
 
         """
         attrs = []
@@ -49,7 +46,6 @@ class DetectionParser:
 
 
 def convert_dtype(__image: np.ndarray) -> np.ndarray:
-    """将图像从uint16转化为uint8"""
     min_16bit = np.min(__image)
     max_16bit = np.max(__image)
     image_8bit = np.array(np.rint(255 * ((__image - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
@@ -57,7 +53,7 @@ def convert_dtype(__image: np.ndarray) -> np.ndarray:
 
 
 def draw_bbox(image: np.ndarray, regions_bounding: list):
-    if len(image.shape)>2:
+    if len(image.shape) > 2:
         im_rgb = image
     else:
         im_rgb = cv2.cvtColor(convert_dtype(image), cv2.COLOR_GRAY2RGB)
@@ -72,9 +68,7 @@ def draw_bbox(image: np.ndarray, regions_bounding: list):
         cv2.rectangle(im_rgb, (i[0][0], i[0][2]), (i[0][1], i[0][3]), color, 2)
         cv2.putText(im_rgb, str(_id), (i[0][0], i[0][2]), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 1)
         _id += 1
-    # cv2.imwrite(r'G:\20x_dataset\copy_of_xy_01\development-dir\copy_of_1_xy01-0000-2.png', im_rgb)
-    # plt.imshow(im_rgb, cmap='gray')
-    # plt.show()
+
     return im_rgb
 
 
@@ -84,6 +78,7 @@ def json2box(shapes: dict):
 
 if __name__ == '__main__':
     from tqdm import tqdm
+
     file = r"G:\20x_dataset\copy_of_xy_01\copy_of_1_xy01.json"
     image = r'G:\20x_dataset\copy_of_xy_01\tif\mcy\copy_of_1_xy01-0000.tif'
     base = r'G:\20x_dataset\copy_of_xy_01\tif\mcy'
@@ -103,9 +98,8 @@ if __name__ == '__main__':
             rb_before = rb
         else:
             rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))
-            rb_before = dp.get_region_attr(dp.get_regions_by_frame(fname[i-1]))
+            rb_before = dp.get_region_attr(dp.get_regions_by_frame(fname[i - 1]))
         tmp = draw_bbox(img, rb_before)
         ret = draw_bbox(tmp, rb)
         videoWriter.write(ret)
     videoWriter.release()
-
