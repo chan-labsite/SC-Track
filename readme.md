@@ -33,12 +33,13 @@ SC-Track is not only suitable for small timelapse analysis, but also suitable fo
 
 ### How to use SC-Track?
 
-```
-To use SC-Track, please follow the Installation steps first. It does not require too many settings during its use. When you only have a single-channel segmentation result, we require that your segmentation result must be a mask grayscale file in the form of 2D+t in tiff format. The cells in each mask need to guarantee their pixel values. is unique; or a JSON comment file. The specific format can refer to our example.
+```markdown
+To use SC-Track, please follow the Installation steps first. It does not require too many settings during its use. When you only have a </br>single-channel segmentation result, we require that your segmentation result must be a mask grayscale file in the form of 2D+t in </br>tiff format. The cells in each mask need to guarantee their pixel values. is unique; or a JSON comment file. The specific format can </br>refer to our example.
 
-When the segmentation result is a mask, please run: sctrack -p image.tif -a mask.tif.
-When the segmentation result is an annotation json file, please run: sctrack -p image.tif -a annotation.json.
-Where image.tif is the original image, mask.tif, and annotation.json are annotation files. The original image may not be provided, but if the original image is not provided, the visualization result cannot be output.
+When the segmentation result is a mask, please run: `sctrack -p image.tif -a mask.tif`.
+When the segmentation result is an annotation json file, please run: `sctrack -p image.tif -a annotation.json`.
+Where image.tif is the original image, mask.tif, and annotation.json are annotation files. The original image may not be provided, 
+but if the original image is not provided, the visualization result cannot be output.
 ```
 
 
@@ -50,7 +51,6 @@ Requirement: Python >= 3.7
 
 Windows: pip isntall SC-Track
 Linux/Macos: pip3 isntall SC-Track
-
 ```
 
 -   Note： On `Windows`, the requirement package `pylibtiff `cannot directly install by pip, please install with this command:
@@ -68,7 +68,8 @@ Linux/Macos: pip3 isntall SC-Track
 ### Usage
 
 ```python
-We provide a command line tool, you only need to run the sctrack tool on the command line. To automate batch processing of a large number of files, please refer to our source code documentation.
+We provide a command line tool, you only need to run the sctrack tool on the command line. To automate 
+batch processing of a large number of files, please refer to our source code documentation.
 Its basic usage is:
     
 from SCTrack import strat_track
