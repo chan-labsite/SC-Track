@@ -2,7 +2,7 @@
 
 ### What's  SC-Track?
 
-```
+
 SC-Track is an efficient algorithm for dynamic tracking of single cells on different time-lapse microscope images. 
 It can use the segmentation results of various models to efficiently track single cells and reconstruct cell lines. 
 It can track multi-generational cell division events without any additional information, only using the outline information of cells; 
@@ -15,7 +15,7 @@ JSON file containing tracking information (which can be imported into VGG image 
 and a collection of TrackingTree structure tree files. Users can perform more detailed downstream analysis on the track table, 
 view the tracking results through visualized results, and modify the track table or track json file to manually correct tracking errors. 
 SC-Track is not only suitable for small timelapse analysis, but also suitable for long time and high cell density timelapse analysis of thousands of frames.
-```
+
 
 
 
