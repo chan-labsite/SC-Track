@@ -17,6 +17,14 @@ sys.path.append('..')
 sys.path.append('../../')
 # sys.path.insert(0, os.path.abspath(project_path))
 
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinxcontrib.apidoc',
+    'sphinx.ext.viewcode',
+    'm2r2'
+]
+
 apidoc_module_dir = project_path
 apidoc_output_dir = 'python_apis'
 # apidoc_excluded_paths = ['tests']
@@ -33,13 +41,6 @@ master_doc = 'index'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinxcontrib.apidoc',
-    'sphinx.ext.viewcode',
-    'm2r2'
-]
 
 source_suffix = ['.rst', '.md']
 
