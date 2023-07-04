@@ -1,6 +1,6 @@
 
 
-<div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/frozenleaves/SC-Track>SC-Track :  Tracking  for  Single  Cell</a></b></div>
+## <div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/frozenleaves/SC-Track>SC-Track :  Tracking  for  Single  Cell</a></b></div>
 
 <div align="center"> <img src="docs/icon/license.svg" width = 220 /> <img src="docs/icon/wheel.svg" width = 70 />  <img src="docs/icon/docs.svg" width = 80 /> <img src="docs/icon/Python-version.svg" width = 200 /> </div> 
 
