@@ -28,6 +28,7 @@ author = 'Li Chengxin'
 release = '0.0.1 alpha'
 
 master_doc = 'index'
+root_doc = 'contents'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
