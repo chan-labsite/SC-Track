@@ -9,7 +9,7 @@
 
 import os
 import sys
-import sphinx_press_theme
+
 
 project_path = '../../SCTrack'
 sys.path.append('.')
