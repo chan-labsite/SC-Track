@@ -11,8 +11,6 @@ import os
 import sys
 import sphinx_press_theme
 
-
-
 project_path = '../../SCTrack'
 sys.path.append('.')
 sys.path.append('..')
@@ -24,12 +22,12 @@ apidoc_output_dir = 'python_apis'
 # apidoc_excluded_paths = ['tests']
 apidoc_separate_modules = True
 
-
-
 project = 'SC-Track'
 copyright = '2023, Li Chengxin'
 author = 'Li Chengxin'
 release = '0.0.1 alpha'
+
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,12 +40,10 @@ extensions = [
     'm2r2'
 ]
 
-source_suffix = ['.rst', '.md'] 
+source_suffix = ['.rst', '.md']
 
 templates_path = ['_templates']
 exclude_patterns = []
-
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -58,5 +54,3 @@ exclude_patterns = []
 html_theme = "press"
 
 html_static_path = ['_static']
-
-master_doc = 'index'

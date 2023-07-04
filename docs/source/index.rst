@@ -13,6 +13,10 @@ Welcome to SC-Track's documentation!
    introduction.md
    readme_link
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API References:
+
    python_apis/modules
 
 
