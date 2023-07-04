@@ -16,7 +16,7 @@ pylibtiff >=0.4.2
 Sphinx
 sphinxcontrib-napoleon
 sphinxcontrib-apidoc
-sphinxcontrib.apidoc
+docutils
 m2r
 m2r2
 sphinx-press-theme
