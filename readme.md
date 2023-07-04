@@ -1,7 +1,10 @@
 
 
-### What's  SC-Track?
+<center> <big><b><a href=https://github.com/frozenleaves/SC-Track>SC-Track :  Tracking  for  Single  Cell</a></b></big></center>
 
+<div align="center"> <img src="docs/icon/license.svg" width = 200 /> <img src="docs/icon/wheel.svg" width = 70 />  <img src="docs/icon/docs.svg" width = 80 /> <img src="docs/icon/Python-version.svg" width = 200 /> </div> 
+
+### What's  SC-Track?
 
 SC-Track is an efficient algorithm for dynamic tracking of single cells on different time-lapse microscope images. 
 It can use the segmentation results of various models to efficiently track single cells and reconstruct cell lines. 

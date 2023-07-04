@@ -6,7 +6,7 @@
 
 import setuptools
 
-with open('readme.md', 'r') as f:
+with open('readme.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 with open('requirements.txt', 'r') as fr:
@@ -21,10 +21,11 @@ setuptools.setup(
     author="Li Chengxin",
     author_email="914814442@qq.com",
     url="https://github.com/frozenleaves/SC-Track",
+    license="GNU General Public License v3.0",
     version=VERSION,
     description='single cell tracking package',
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),
     zip_safe=False,
     python_requires=">=3.7",

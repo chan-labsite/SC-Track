@@ -7,6 +7,8 @@ import json
 import random
 import pickle
 import pandas as pd
+
+import config
 from SCTrack.base import Cell
 from SCTrack.tracker import Tracker, CellNode, TrackingTree
 from SCTrack.config import RAW_INPUT_IMAGE_SIZE
@@ -518,12 +520,15 @@ def run(annotation, output_dir, basename, track_range=None, save_visualize=True,
         xrange = len(data)
     else:
         xrange = track_range + 2
-    speed_output_filename = os.path.join(output_dir, 'track_speed.csv')
+    if config.RECORD_SPEED:
+        speed_output_filename = os.path.join(output_dir, 'track_speed.csv')
+    else:
+        speed_output_filename = None
     tracker = run_track(annotation, track_range=xrange - 2, dic=dic, mcy=mcy, speed_filename=speed_output_filename)
     track_table_fname = os.path.join(output_dir, 'track.csv')
     track_visualization_fname = os.path.join(output_dir, 'track_visualization.tif')
     track_json_fname = os.path.join(output_dir, 'result_with_track.json')
-    tracktree_save_path = os.path.join(output_dir, 'tracktree')
+    tracktree_save_path = os.path.join(output_dir, 'TrackTree')
     track_tree_to_table(tracker, track_table_fname)
     tracker.track_tree_to_json(tracktree_save_path)
     if track_to_json:
