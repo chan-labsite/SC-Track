@@ -1,0 +1,1 @@
+The original image size exceeds GitHub's limit, so only the annotation files are included here.
