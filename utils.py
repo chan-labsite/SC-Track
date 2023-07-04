@@ -7,19 +7,21 @@
 from __future__ import annotations
 
 import logging
+import sys
 import time
 import os
 from copy import deepcopy
 from functools import wraps
 import skimage.exposure as exposure
 from skimage.util import img_as_ubyte
-import json
 from libtiff import TIFF
 import tifffile
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 import glob
+
+from tqdm import tqdm
 
 import template
 
@@ -37,6 +39,7 @@ def time_it(logger: logging.Logger = None, using=False):
     :param using: bool flag, is the decorator function enabled?
     :return: decorator
     """
+
     def switch(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -53,9 +56,8 @@ def time_it(logger: logging.Logger = None, using=False):
     return switch
 
 
-def tif2png(img: str|os.PathLike, png_dir, gamma=0.1):
+def tif2png(img: str | os.PathLike, png_dir, gamma=0.1):
     """
-
     :param img: TIF image filepath
     :param png_dir: storing pngs dir
     :param gamma: image γ coefficient
@@ -74,6 +76,10 @@ def tif2png(img: str|os.PathLike, png_dir, gamma=0.1):
 
 
 def readTif(filepath):
+    """
+    A generator, from a multi-frame tif file, read frame by frame and return the image and filename of each frame.
+
+    """
     tif = tifffile.TiffFile(filepath)
     num = len(tif.pages)
     if num <= 1:
@@ -90,7 +96,11 @@ def readTif(filepath):
 
 
 def convert_dtype(__image: np.ndarray) -> np.ndarray:
-    """将图像从uint16转化为uint8"""
+    """
+    Convert image format from uint16 to uint8
+    :param __image: uint16 image ndarray
+    :return: uint8 image ndarray
+    """
     min_16bit = np.min(__image)
     max_16bit = np.max(__image)
     image_8bit = np.array(np.rint(255 * ((__image - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
@@ -98,6 +108,15 @@ def convert_dtype(__image: np.ndarray) -> np.ndarray:
 
 
 def mask_to_coords(mask: np.ndarray | os.PathLike, filename):
+    """
+    Convert mask to contour coordinates. For the mask of an image, each different instance requires the same and unique
+    pixel values within its range, and the pixel values of different instances are different. This requirement is only
+    for instances within the same frame of image.
+
+    :param mask: mask grayscale image, np.ndarray
+    :param filename: filename for the mask
+    :return: a region tmp dict for each mask, the format see template.py
+    """
     if type(mask) is str:
         mask = tifffile.imread(mask)
     mask_values = np.delete(np.unique(mask), np.where(np.unique(mask) == 0))
@@ -126,18 +145,71 @@ def mask_to_coords(mask: np.ndarray | os.PathLike, filename):
     return frame_tmp
 
 
-def mask_seq_to_json(mask_dir):
+def mask_seq_to_json(mask_dir, xrange=None):
+    """
+    Convert mask sequence files to json annotation files.
+    :param mask_dir: The folder path for the mask image sequence location
+    :param xrange: The number of conversions, counting from the beginning of the mask sequence.
+    :return: json annotation dict, can be directly dump to the json file.
+    """
     tif_files = glob.glob(os.path.join(mask_dir, '*.tif'))
     json_result = {}
-    for file in tif_files:
+    if xrange is None:
+        xrange = len(tif_files)
+    elif xrange > len(tif_files) - 1:
+        xrange = len(tif_files)
+    for file in tqdm(tif_files[:xrange + 1], desc='convert process'):
         filename = os.path.basename(file).replace('.tif', '.png')
         ret = mask_to_coords(file, filename)
         json_result[filename] = ret
     return json_result
 
 
+def mask_tif_to_json(image, xrange=None):
+    """
+    Convert Multi-frame TIF mask image to json annotation files.
+    :param image: The TIF filepath for mask location
+    :param xrange: The number of conversions, counting from the beginning of the mask.
+    :return: json annotation dict, can be directly dump to the json file.
+    """
+    if not (image.endswith('.tif') or image.endswith('.tiff')):
+        logging.error(f'image {image} must be a tif/tiff file !')
+        sys.exit(-1)
+    json_result = {}
+    count = 0
+    with tifffile.TiffFile(image) as tif:
+        num_frames = len(tif.pages)
+    if xrange is None or xrange > num_frames:
+        it = num_frames
+    else:
+        it = xrange
+    for img, frame_name in tqdm(readTif(image), total=it, desc='convert process'):
+        filename = frame_name.replace('.tif', '.png')
+        ret = mask_to_coords(img, filename)
+        json_result[filename] = ret
+        if xrange:
+            if count >= xrange:
+                break
+        count += 1
+    return json_result
+
+
+def mask_to_json(annotation: 'file or folder', xrange=None):
+    """
+     Convert  mask image to json annotation files
+    :param annotation: mask filepath.
+    :param xrange: The number of conversions, counting from the beginning of the annotation sequence.
+    :return: json annotation dict, can be directly dump to the json file.
+    """
+    if os.path.isdir(annotation):
+        return mask_seq_to_json(annotation, xrange)
+    elif os.path.isfile(annotation):
+        return mask_tif_to_json(annotation, xrange)
+
+
 if __name__ == '__main__':
-    filedir = r'G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\SEG'
-    jsons = mask_seq_to_json(filedir)
-    with open(r'G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\test.json', 'w') as f:
-        json.dump(jsons, f)
+    # filedir = r'G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\SEG'
+    # jsons = mask_seq_to_json(filedir)
+    # with open(r'G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\test.json', 'w') as f:
+    #     json.dump(jsons, f)
+    mask_tif_to_json(r'G:\paper\evaluate_data\copy_of_1_xy10\mcy.tif')

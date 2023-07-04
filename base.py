@@ -12,18 +12,11 @@ import numpy as np
 from functools import lru_cache
 from numba import jit
 from matplotlib import pyplot as plt
+from utils import convert_dtype
 import config
 
 
-def convert_dtype(__image: np.ndarray) -> np.ndarray:
-    """将图像从uint16转化为uint8"""
-    min_16bit = np.min(__image)
-    max_16bit = np.max(__image)
-    image_8bit = np.array(np.rint(255 * ((__image - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
-    return image_8bit
-
-
-def NoneTypeFileter(func):
+def NoneTypeFilter(func):
     def _filter(self, *args, **kwargs):
         ret = func(self, *args, **kwargs)
         cells = []
@@ -223,6 +216,7 @@ class Rectangle(object):
     """
     Rectangular class , used to record the bounding box and available range of cells
     """
+
     def __init__(self, x_min, x_max, y_min, y_max):
         self.x_min = x_min
         self.x_max = x_max
@@ -458,9 +452,13 @@ class Vector(np.ndarray):
 
 class Cell(object):
     """
-    定义细胞类，此类为Tracking的核心类，所有操作的最小单位均为Cell实例，Cell被实现为条件单例模式：
-    即依据传入的参数不同，生成不同的对象，如果传入的参数相同，则为同一个对象。在定义Cell对象的时候，
-    会保证一帧中同一个细胞只有一个Cell实例，而不同帧生成不同的Cell实例
+    Define the cell class, which is the core class of SC-Track. The smallest unit of all operations is the Cell instance,
+    and the Cell is implemented as a conditional singleton mode: that is, different objects are generated according to
+    the parameters passed in. If the parameters passed in are the same , only one object is instantiated. When defining
+    the Cell object, Cell class can be guaranteed that there is only one Cell instance for the same cell in one frame,
+    and differentCell instances are generated in different frames.
+    If you want to instantiate a Cell object, at least its position information needs to be passed in, that is, all the
+    xy coordinate points that constitute the outline of the cell.
     """
     _instances = {}
 
@@ -490,7 +488,7 @@ class Cell(object):
         self.phase = phase
         self.__id = None
         self.frame = frame_index
-        self.__parent = None  # 如果细胞发生分裂，则记录该细胞的父细胞的__id
+        self.__parent = None  # If a cell divides, record the __id of the cell's parent
         self.__move_speed = Vector(0, 0)
         self.polygon = Polygon([xy for xy in zip(*self.position)])
 
@@ -503,12 +501,21 @@ class Cell(object):
         #     return
 
     def change_mitosis_flag(self, flag: bool):
-        """当细胞首次进入mitosis的时候，self.mitosis_start_flag设置为True， 当细胞完成分裂的时候，重新设置为false"""
+        """
+        When the cell enters mitosis for the first time, self.mitosis_start_flag is set to True, and when the cell
+         completes division, it is reset to false
+        :param flag: mitosis flag
+        :return: None
+        """
         self.mitosis_start_flag = flag
 
     @property
     @lru_cache(maxsize=None)
     def contours(self):
+        """
+        Convert the list of xy coordinate points into contour points list
+        :return: if successful, return contours, else return None
+        """
         points = []
         if self.position:
             for j in range(len(self.position[0])):
@@ -522,12 +529,25 @@ class Cell(object):
 
     @property
     def move_speed(self) -> Vector:
+        """
+        :return:  moving speed of the cell, the Vector object type
+        """
         return self.__move_speed
 
     def update_speed(self, speed: Vector):
+        """
+        :param speed: new speed of the cell, Vector instance.
+        :return: None
+        """
         self.__move_speed = speed
 
-    def polygon_centroid(self, vertex_coordinates):
+    @staticmethod
+    def polygon_centroid(vertex_coordinates):
+        """
+        Calculate the physical center of gravity of the cell counters.
+        :param vertex_coordinates: list of cell outline coordinate points, the format is [[x1, x2,...xn], [y1, y2,..yn]]
+        :return: physical center of gravity
+        """
         x_coords = vertex_coordinates[0]
         y_coords = vertex_coordinates[1]
         n = len(x_coords)
@@ -551,14 +571,21 @@ class Cell(object):
     @property
     @lru_cache(maxsize=None)
     def center(self):
+        """
+        :return: cell physical center
+        """
         # return np.mean(self.position[0]), np.mean(self.position[1])
         return self.polygon_centroid(self.position)
 
     @property
     @lru_cache(maxsize=None)
-    def available_range(self):
-        """指定前后两帧的可匹配范围，默认为细胞横纵坐标的两倍"""
-        mult = config.CANDIDATE_RANGE_COEFFICIENT
+    def available_range(self) -> Rectangle:
+        """
+        Define the matchable range of the two frames before and after, the default is twice the horizontal and vertical
+        coordinates of the cell
+        :return: Rectangle instance
+        """
+        mult = config.AVAILABLE_RANGE_COEFFICIENT
 
         x_len = self.bbox[3] - self.bbox[2]
         y_len = self.bbox[1] - self.bbox[0]
@@ -570,32 +597,58 @@ class Cell(object):
 
     @property
     def r_long(self):
+        """
+        :return: Cell bounding box long side radius
+        """
         return max((self.bbox[3] - self.bbox[2]) / 2, (self.bbox[1] - self.bbox[0]) / 2)
 
     @property
     def r_short(self):
+        """
+        :return: Cell bounding box short side radius
+        """
         return min((self.bbox[3] - self.bbox[2]) / 2, (self.bbox[1] - self.bbox[0]) / 2)
 
     @property
     def d_long(self):
+        """
+        :return: Long side diameter of cell bounding box
+        """
         return 2 * self.r_long
 
     @property
     def d_short(self):
+        """
+        :return: Short side diameter of cell bounding box
+        """
         return 2 * self.r_short
 
     @staticmethod
     @lru_cache(maxsize=None)
     def polygon_area(x, y):
+        """
+        Calculate cell area
+
+        :param x: A list of x-coordinates of all points of the cell counters
+        :param y: A list of y-coordinates of all points of the cell counters
+        :return: Area of cell
+        """
         return 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
 
     @property
     @lru_cache(maxsize=None)
-    def vector(self):
+    def vector(self) -> Vector:
+        """
+        Returns the cell center point vector, starting from the upper left corner of the image as the origin.
+        :return: Vector instance
+        """
         return Vector(*self.center)
 
     @property
     def area(self):
+        """
+        :return: Area of a cell
+        """
         return self.polygon_area(tuple(self.position[0]), tuple(self.position[1]))
 
     def set_region(self, region):
@@ -765,31 +818,5 @@ class CacheData(object):
     缓存内容包括：
         已经配过的帧索引
 
-
     """
 
-# class Base(ABC):
-#     """
-#     定义一些图像的基本操作，包括读写图像，显示图像等
-#     """
-#
-#     @staticmethod
-#     @abstractmethod
-#     def show(image):
-#         plt.imshow(image, cmap='gray')
-#         plt.show()
-#
-#     @abstractmethod
-#     def convert_dtype(self, __image: np.ndarray) -> np.ndarray:
-#         """将图像从uint16转化为uint8"""
-#         min_16bit = np.min(__image)
-#         max_16bit = np.max(__image)
-#         image_8bit = np.array(np.rint(255 * ((__image - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
-#         return image_8bit
-#
-#     def save(self, cell: Cell):
-#         """保存图像"""
-#         pass
-#
-#     def read(self, file):
-#         pass

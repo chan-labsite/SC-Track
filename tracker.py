@@ -1151,6 +1151,7 @@ class Tracker(object):
             # self.track_near_frame_mult_thread(fe_before, fe_current)
             self.fe_cache.append(fe_before)
             self.check_track(fe_before, fe_current, fe_next)
+            del fe_before
 
             end_time = time.time()
             if speed_filename:
