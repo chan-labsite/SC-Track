@@ -34,7 +34,13 @@ SC-Track is not only suitable for small timelapse analysis, but also suitable fo
 ### How to use SC-Track?
 
 ```markdown
-To use SC-Track, please follow the Installation steps first. It does not require too many settings during its use. When you only have a </br>single-channel segmentation result, we require that your segmentation result must be a mask grayscale file in the form of 2D+t in </br>tiff format. The cells in each mask need to guarantee their pixel values. is unique; or a JSON comment file. The specific format can </br>refer to our example.
+To use SC-Track, please follow the Installation steps first. It does not require too many settings during its use. When you only have a 
+
+single-channel segmentation result, we require that your segmentation result must be a mask grayscale file in the form of 2D+t in 
+
+tiff format. The cells in each mask need to guarantee their pixel values. is unique; or a JSON comment file. The specific format can 
+
+refer to our example.
 
 When the segmentation result is a mask, please run: `sctrack -p image.tif -a mask.tif`.
 When the segmentation result is an annotation json file, please run: `sctrack -p image.tif -a annotation.json`.
