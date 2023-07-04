@@ -19,7 +19,7 @@ and a collection of TrackingTree structure tree files. Users can perform more de
 view the tracking results through visualized results, and modify the track table or track json file to manually correct tracking errors. 
 SC-Track is not only suitable for small timelapse analysis, but also suitable for long time and high cell density timelapse analysis of thousands of frames.
 
-
+----------
 
 
 ### Why using  SC-Track?
@@ -30,6 +30,8 @@ SC-Track is not only suitable for small timelapse analysis, but also suitable fo
 - SC-Track is implemented in Python, which has strong scalability, convenient and quick installation, and low dependency.
 
 
+
+-------
 
 ### How to use SC-Track?
 
@@ -50,6 +52,8 @@ but if the original image is not provided, the visualization result cannot be ou
 
 
 
+----------
+
 ### Installation
 
 ```
@@ -69,7 +73,7 @@ Linux/Macos: pip3 isntall SC-Track
 
 
 
-
+-----------------------
 
 ### Usage
 
@@ -93,11 +97,11 @@ start_track(fannotation=annotation_json, fimage=image)
 
 
 
+------
+
 ### API  Documentation
 
-```
-For more information, please see the [reference documents](https://sc-track.readthedocs.io/en/latest/)
-```
+For more information, please see the [reference documents](https://sc-track.readthedocs.io/en/latest/).
 
 
 
