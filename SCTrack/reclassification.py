@@ -9,6 +9,7 @@ import pickle
 import pandas as pd
 from SCTrack.base import Cell
 from SCTrack.tracker import Tracker, CellNode, TrackingTree
+from SCTrack.config import RAW_INPUT_IMAGE_SIZE
 
 
 class TreeParser(object):
@@ -441,14 +442,13 @@ def track_tree_to_table(tracker: Tracker, filepath):
             series_list, new_node_list = generate_series(cell_lineage)
 
             for series in series_list:
-                track_detail_dataframe = track_detail_dataframe.append(series, ignore_index=True)
+                track_detail_dataframe = track_detail_dataframe._append(series, ignore_index=True)
     fname = filepath
     track_detail_dataframe.to_csv(fname, index=False)
 
 
 def track_trees_to_json(tracker: Tracker, output_fname, xrange, basename=None):
     """Export track result to json file"""
-    from config import RAW_INPUT_IMAGE_SIZE
     if basename is None:
         prefix = 'mcy'
     else:
