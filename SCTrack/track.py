@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from __future__ import annotations
 
 import logging
@@ -38,5 +40,10 @@ def start_track(fannotation: str | dict, fout, basename, track_range=None, fimag
                          mcy=fimage,
                          save_visualize=export_visualization, visualize_background_image=fimage,
                          track_to_json=track_to_json, basename=basename)
-#
-# start_track(r'G:\20x_dataset\evaluate_data\src01\result-GT.json',r'G:\20x_dataset\evaluate_data\src01', 'mcy', 40, fpcna=r'G:\20x_dataset\evaluate_data\src01\mcy.tif')
+
+if __name__ == '__main__':
+    annotation = r'G:\杂项\example\example-annotation.json'
+    mcy_img = r'G:\杂项\example\example-image.tif'
+    dic_img = r'G:\杂项\example\example-bf.tif'
+    start_track(annotation, r'G:\杂项\example', 'mcy', 30,
+                mcy_img)

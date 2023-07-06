@@ -5,12 +5,29 @@
 # @Time: 2023/6/30 22:12
 
 
-AVAILABLE_RANGE_COEFFICIENT = 1.5
+# Global configuration variables. If you are not sure what these parameters are, please do not modify them,
+# except for those marked with *
 
-RAW_INPUT_IMAGE_SIZE = (2048, 2048)
 
-GAP_WINDOW_LEN = 20
+from typing import List, Tuple
 
-USING_IMAGE_FOR_TRACKING = False
+AVAILABLE_RANGE_COEFFICIENT: float = 1.5  # The available range coefficient of candidate screening for matching algorithms
 
-RECORD_SPEED = False
+RAW_INPUT_IMAGE_SIZE: Tuple = (2048, 2048)   # * image size (width, height)
+
+GAP_WINDOW_LEN = 20  # Maximum number of lost track
+
+USING_IMAGE_FOR_TRACKING = False   # * Using additional image information for tracking
+
+RECORD_SPEED: bool = False    # *  Record tracking speed
+
+SMOOTH_WINDOW_LEN = 10  # Window length of smooth classification algorithm
+
+TRACKING_CHECK_WINDOW_LEN: int = 20  # Tracking algorithm backtracking window length
+
+PROB_THRESHOLD: float = 0.6  # Probability threshold of smooth classification algorithm
+
+N_CLASS = 4    # *  Number of annotation categories
+
+CLASS_NAME: List | None = ['G1', 'S', 'G2', 'M']   # *  Class name list
+# CLASS_NAME = None

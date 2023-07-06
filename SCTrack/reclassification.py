@@ -1,6 +1,7 @@
 import logging
 import os.path
 import sys
+from collections import Counter
 from copy import deepcopy
 from typing import List
 import json
@@ -12,6 +13,8 @@ import config
 from SCTrack.base import Cell
 from SCTrack.tracker import Tracker, CellNode, TrackingTree
 from SCTrack.config import RAW_INPUT_IMAGE_SIZE
+from SCTrack.config import N_CLASS, CLASS_NAME
+from SCTrack import config
 
 
 class TreeParser(object):
@@ -27,6 +30,7 @@ class TreeParser(object):
         self.parse_root_flag = False
         self.parse_mitosis_flag = {}
         self.parse_s_flag = {}
+        self.smooth_flag = {}
 
         self.__division_count = 0
 
@@ -115,12 +119,12 @@ class TreeParser(object):
         Check the entry of the M period, if the area meets the conditions, check the next frame, if the area of the next
         frame is too small, it is not considered to have entered, and it is judged as a segmentation misjudgment.
         If the check is passed, check the next 6 frames. If the number of M phases is predicted to be greater than or
-        equal to the threshold, it is judged to enter the M phase to pass, otherwise, the judgment fails.
+        equal to the threshold, it is judged to enter the M cell_type to pass, otherwise, the judgment fails.
         If the interval from the last entry to M is too short, it is also considered a misjudgment
         """
         predict_enter_cell = lineage_cell[start_index]
         next_cell = lineage_cell[start_index + 1]
-        if lineage_cell[0].cell.phase == 'M' and start_index < mitosis_gap:
+        if lineage_cell[0].cell.cell_type == 'M' and start_index < mitosis_gap:
             return False
         elif next_cell.cell.area / predict_enter_cell.cell.area < area_size_t:
             return False
@@ -129,7 +133,7 @@ class TreeParser(object):
             if len(lineage_cell) - start_index < 5:
                 return True
             for i in range(min(8, len(lineage_cell) - start_index)):
-                if lineage_cell[start_index + i].cell.phase == 'M':
+                if lineage_cell[start_index + i].cell.cell_type == 'M':
                     predict_m_count += 1
             if predict_m_count >= m_predict_threshold:
                 return True
@@ -137,34 +141,34 @@ class TreeParser(object):
                 return False
 
     @staticmethod
-    def check_s_start(start_index, linage_cell, threshold=6):
+    def check_ctype_start(type_name, start_index, linage_cell, threshold=config.PROB_THRESHOLD * config.SMOOTH_WINDOW_LEN):
         """
-        Check the entry of S phase, if the cell is predicted to be in S phase, check 10 frames later at random,
+        Check the entry of cell_type, if the cell is predicted to be in indicate cell_type, check 10 frames later,
         If the number of remaining frames is less than 10 frames, check all the remaining frames.
-        If the cumulative predicted S period is greater than the threshold,
+        If the cumulative predicted indicate cell type is greater than the threshold,
         If the judgment succeeds, otherwise, the judgment fails
         """
-        s_count = 0
-        if linage_cell[start_index].cell.phase == 'S':
-            for i in range(min(10, len(linage_cell) - start_index)):
-                if linage_cell[start_index + i].cell.phase == 'S':
-                    s_count += 1
-        if s_count >= threshold:
+        count = 0
+        if linage_cell[start_index].cell.cell_type == type_name:
+            for i in range(min(config.SMOOTH_WINDOW_LEN, len(linage_cell) - start_index)):
+                if linage_cell[start_index + i].cell.cell_type == type_name:
+                    count += 1
+        if count >= threshold:
             return True
         return False
 
     @staticmethod
-    def check_s_exit(end_index, linage_cell, threshold=6):
+    def check_ctype_exit(type_name, end_index, linage_cell, threshold=config.PROB_THRESHOLD * config.SMOOTH_WINDOW_LEN):
         """
-        To judge the exit of S phase, the judgment principle is the same as entering S phase,
-        if the cells start to exit S phase, check later
+        To judge the exit of cell_type, the judgment principle is the same as entering  cell_type,
+        if the cells start to exit cell_type, check later
         """
-        non_s_count = 0
-        if linage_cell[end_index].cell.phase != 'S':
-            for i in range(min(10, len(linage_cell) - end_index)):
-                if linage_cell[end_index + i].cell.phase != 'S':
-                    non_s_count += 1
-            if non_s_count >= threshold:
+        non_type_count = 0
+        if linage_cell[end_index].cell.cell_type != type_name:
+            for i in range(min(config.SMOOTH_WINDOW_LEN, len(linage_cell) - end_index)):
+                if linage_cell[end_index + i].cell.cell_type != type_name:
+                    non_type_count += 1
+            if non_type_count >= threshold:
                 return True
             return False
 
@@ -180,35 +184,35 @@ class TreeParser(object):
             before_cell_node = cell_node_line[i]
             current_cell_node = cell_node_line[i + 1]
             # print(f'{current_cell_node.cell.area / before_cell_node.cell.area:.2f}')
-            if before_cell_node.cell.phase == 'M':
+            if before_cell_node.cell.cell_type == 'M':
                 exist_m_frame += 1
             if current_cell_node.cell.area / before_cell_node.cell.area >= area_size_t:
-                if self.check_mitosis_start(i, cell_node_line):
+                if self.check_mitosis_start(i, cell_node_line, m_predict_threshold=config.PROB_THRESHOLD * config.SMOOTH_WINDOW_LEN):
                     mitosis_start_index = i + 1
                     break
-            elif before_cell_node.cell.phase == 'M' and current_cell_node.cell.area / before_cell_node.cell.area < area_size_t:
-                if self.check_mitosis_start(i, cell_node_line, m_predict_threshold=5):
+            elif before_cell_node.cell.cell_type == 'M' and current_cell_node.cell.area / before_cell_node.cell.area < area_size_t:
+                if self.check_mitosis_start(i, cell_node_line, m_predict_threshold=config.PROB_THRESHOLD * config.SMOOTH_WINDOW_LEN):
                     mitosis_start_index = i
                     break
         if mitosis_start_index is None:
             if len(cell_node_line) < 5:
                 if exist_m_frame >= 3:
                     for cell_node in cell_node_line:
-                        cell_node.cell.phase = 'M'
+                        cell_node.cell.cell_type = 'M'
                     lineage['m2_start'] = 0
             else:
                 if lineage_index != 0:
                     for cell_node in cell_node_line[: 3]:
-                        cell_node.cell.phase = 'M'
+                        cell_node.cell.cell_type = 'M'
                     lineage['m1_start'] = 0
         else:
             for m_index in range(mitosis_start_index, len(cell_node_line)):
-                cell_node_line[m_index].cell.phase = 'M'
+                cell_node_line[m_index].cell.cell_type = 'M'
             lineage['m2_start'] = mitosis_start_index
         self.parse_mitosis_flag[root] = True
 
     def parse_s(self, lineage: dict, root: CellNode, lineage_index=None):
-        """To judge the entry of S phase"""
+        """To judge the entry of S cell_type"""
         cell_node_line = lineage.get('cells')
         s_start_index = None
         s_exit_index = None
@@ -219,14 +223,14 @@ class TreeParser(object):
         else:
             check_start = 0
         for cell_node_index in range(check_start, len(cell_node_line)):
-            if cell_node_line[cell_node_index].cell.phase == 'S':
-                if self.check_s_start(cell_node_index, cell_node_line):
+            if cell_node_line[cell_node_index].cell.cell_type == 'S':
+                if self.check_ctype_start('S', cell_node_index, cell_node_line):
                     lineage['s_start'] = s_start_index = cell_node_index
                     break
         if s_start_index is not None:
             for cell_node_index_2 in range(s_start_index, len(cell_node_line)):
-                if cell_node_line[cell_node_index_2].cell.phase != 'S':
-                    if self.check_s_exit(cell_node_index_2, cell_node_line):
+                if cell_node_line[cell_node_index_2].cell.cell_type != 'S':
+                    if self.check_ctype_exit('S', cell_node_index_2, cell_node_line):
                         lineage['s_exit'] = s_exit_index = cell_node_index_2
                         break
 
@@ -236,7 +240,7 @@ class TreeParser(object):
             else:
                 end = len(cell_node_line)
             for cell_node_index_s in range(s_start_index, end):
-                cell_node_line[cell_node_index_s].cell.phase = 'S'
+                cell_node_line[cell_node_index_s].cell.cell_type = 'S'
         self.parse_s_flag[root] = True
 
     def parse_g1_g2(self, lineage: dict, root: CellNode, lineage_index=None):
@@ -252,7 +256,7 @@ class TreeParser(object):
             self.parse_s(lineage, root)
         if lineage.get('s_start') is not None:
             # 1. track starts from  S
-            # 2. track starts from G1 phase
+            # 2. track starts from G1 cell_type
             # 3. The track starts from the M1
             g1_exit_index = lineage.get('s_start')
             if m1_start is not None:
@@ -267,11 +271,11 @@ class TreeParser(object):
                     g2_exit_index = len(cell_node_line)
 
         else:
-            # cells are not in S phase
-            # 1. The track starts from the M1 period and does not enter the S phase
-            # 2. The track starts from the G1 phase and does not enter the S phase
-            # 3. The track starts from the G2 period and enters the M2 phase
-            # 3. The track starts from the G2 period and does not enter the M2 phase
+            # cells are not in S cell_type
+            # 1. The track starts from the M1 period and does not enter the S cell_type
+            # 2. The track starts from the G1 cell_type and does not enter the S cell_type
+            # 3. The track starts from the G2 period and enters the M2 cell_type
+            # 3. The track starts from the G2 period and does not enter the M2 cell_type
             if m2_start is not None:
                 if len(cell_node_line) > 5:
                     g2_start_index = 0
@@ -298,7 +302,7 @@ class TreeParser(object):
             else:
                 end = len(cell_node_line)
             for cell_node_index_g1 in range(g1_start_index, end):
-                cell_node_line[cell_node_index_g1].cell.phase = 'G1'
+                cell_node_line[cell_node_index_g1].cell.cell_type = 'G1'
         if g2_start_index is not None:
             lineage['g2_start'] = g2_start_index
             if g2_exit_index is not None:
@@ -306,11 +310,11 @@ class TreeParser(object):
             else:
                 end_2 = len(cell_node_line)
             for cell_node_index_g2 in range(g2_start_index, end_2):
-                cell_node_line[cell_node_index_g2].cell.phase = 'G2'
+                cell_node_line[cell_node_index_g2].cell.cell_type = 'G2'
 
     def parse_mitosis_error(self, lineage: dict, root: CellNode, lineage_index=None):
         """
-        If the two daughter cells after division are not matched, all subsequent cells will be in the M phase.
+        If the two daughter cells after division are not matched, all subsequent cells will be in the M cell_type.
         At this time, it should be corrected to G1 within a certain period of time.
         """
         cell_node_line = lineage.get('cells')
@@ -324,16 +328,16 @@ class TreeParser(object):
         else:
             return
         for index in range(m_start, len(cell_node_line)):
-            if cell_node_line[index].cell.phase == 'M':
+            if cell_node_line[index].cell.cell_type == 'M':
                 m_count -= 1
                 if m_count < 0:
-                    cell_node_line[index].cell.phase = 'G1'
+                    cell_node_line[index].cell.cell_type = 'G1'
 
-    def set_cell_id(self, lineage: dict, root: CellNode, linage_index):
+    def set_cell_id(self, lineage: dict, root: CellNode, lineage_index):
         cell_node_line = lineage.get('cells')
-        branch_id = linage_index
+        branch_id = lineage_index
         cell_id = str(self.tree.track_id) + '_' + str(branch_id)
-        if linage_index == 0:
+        if lineage_index == 0:
             root.cell.set_cell_id(cell_id)
             root.cell.set_branch_id(branch_id)
             lineage['parent'] = root
@@ -358,18 +362,79 @@ class TreeParser(object):
     def parse_lineage_branch_id(self, lineage, branch_id):
         pass
 
+    def smooth_type(self, cell_lineage, root, lineage_index):
+        if N_CLASS and CLASS_NAME:
+            if len(CLASS_NAME) != N_CLASS:
+                logging.error('The number of category names and category numbers is not equal, '
+                              'try to change N_CLASS OR CLASS_NAME')
+                return
+        if CLASS_NAME:
+            if CLASS_NAME == ['G1', 'S', 'G2', 'M']:
+                self.parse_lineage_phase(cell_lineage, root, lineage_index)
+                return
+            else:
+                class_name = CLASS_NAME
+        elif N_CLASS:
+            class_name = set()
+            for cell in cell_lineage.get('cells'):
+                class_name.add(cell.cell.cell_type)
+        else:
+            logging.info('N_CLASS and CLASS_NAME not provided, ignore the whole process')
+            return
+        resolved_index_map = {}
+        for ctype in class_name:
+            cell_node_line = cell_lineage.get('cells')
+            check_start = 0
+            start_index = None
+            exit_index = None
+            for cell_node_index in range(check_start, len(cell_node_line)):
+                if cell_node_line[cell_node_index].cell.cell_type == ctype:
+                    if self.check_ctype_start(ctype, cell_node_index, cell_node_line):
+                        cell_lineage[f'{ctype}_start'] = start_index = cell_node_index
+                        break
+            if start_index is not None:
+                for cell_node_index_2 in range(start_index, len(cell_node_line)):
+                    if cell_node_line[cell_node_index_2].cell.cell_type != ctype:
+                        if self.check_ctype_exit(ctype, cell_node_index_2, cell_node_line):
+                            cell_lineage[f'{ctype}_exit'] = exit_index = cell_node_index_2 + 1
+                            break
+            if start_index is not None:
+                if exit_index is not None:
+                    end = exit_index
+                else:
+                    end = len(cell_node_line)
+                resolved_index_map[ctype] = start_index
+                for cell_node_index in range(start_index, end):
+                    cell_node_line[cell_node_index].cell.cell_type = ctype
+        if 0 not in resolved_index_map.values():
+            if not resolved_index_map:
+                type_count = []
+                for cell in cell_lineage.get('cells'):
+                    type_count.append(cell.cell.cell_type)
+                counter = Counter(type_count)
+                resolved_type = counter.most_common(1)[0][0]
+                for cell in cell_lineage.get('cells'):
+                    cell.cell.cell_type = resolved_type
+            else:
+                resolved_type = min(resolved_index_map, key=resolved_index_map.get)
+                for cell in cell_lineage.get('cells')[:min(resolved_index_map.values())]:
+                    cell.cell.cell_type = resolved_type
+        self.smooth_flag[root] = True
+
 
 def pares_single_tree(tree: TrackingTree):
     parser = TreeParser(tree)
     parser.search_root_node()
     parser.get_lineage_dict()
-
     for node_index in range(len(parser.root_parent_list)):
         cell_lineage = parser.lineage_dict.get(parser.root_parent_list[node_index])
-        if tree.get_node(tree.root).cell.phase is None:
-            parser.set_cell_id(cell_lineage, root=parser.root_parent_list[node_index], linage_index=node_index)
+        if tree.get_node(tree.root).cell.cell_type is None:
+            parser.set_cell_id(cell_lineage, root=parser.root_parent_list[node_index], lineage_index=node_index)
         else:
-            parser.parse_lineage_phase(cell_lineage, root=parser.root_parent_list[node_index], linage_index=node_index)
+            # parser.parse_lineage_phase(cell_lineage, root=parser.root_parent_list[node_index], linage_index=node_index)
+            parser.smooth_type(cell_lineage, root=parser.root_parent_list[node_index], lineage_index=node_index)
+            parser.set_cell_id(cell_lineage, root=parser.root_parent_list[node_index], lineage_index=node_index)
+            # print(cell_lineage)
     return parser
 
 
@@ -381,18 +446,15 @@ def run_track(annotation, track_range=None, dic=None, mcy=None, speed_filename=N
         tracker.track()
     parser_dict = {}
     for tree in tracker.trees:
-        try:
-            parser = pares_single_tree(tree)
-            parser_dict[tree] = parser
-        except:
-            continue
+        parser = pares_single_tree(tree)
+        parser_dict[tree] = parser
     tracker.parser_dict = parser_dict
     return tracker
 
 
 def track_tree_to_table(tracker: Tracker, filepath):
     """Export track result to table"""
-    track_detail_columns = ['frame_index', 'track_id', 'cell_id', 'parent_id', 'center_x', 'center_y', 'phase',
+    track_detail_columns = ['frame_index', 'track_id', 'cell_id', 'parent_id', 'center_x', 'center_y', 'cell_type',
                             'mask_of_x_points', 'mask_of_y_points']
     track_detail_dataframe = pd.DataFrame(columns=track_detail_columns)
 
@@ -411,7 +473,8 @@ def track_tree_to_table(tracker: Tracker, filepath):
                 for frame in range(before_node.cell.frame + 1, current_node.cell.frame):
                     # gap_cell = deepcopy(before_node.cell)
                     # gap_cell.frame = frame
-                    gap_cell = Cell(position=before_node.cell.position, phase=before_node.cell.phase, frame_index=frame)
+                    gap_cell = Cell(position=before_node.cell.position, cell_type=before_node.cell.cell_type,
+                                    frame_index=frame)
                     gap_cell.set_track_id(before_node.cell.track_id, 1)
                     gap_cell.set_cell_id(before_node.cell.cell_id)
                     gap_cell.set_branch_id(before_node.cell.branch_id)
@@ -430,7 +493,7 @@ def track_tree_to_table(tracker: Tracker, filepath):
             col = [node.cell.frame, node.cell.track_id,
                    node.cell.cell_id, parent.cell.cell_id,
                    node.cell.center[0], node.cell.center[1],
-                   node.cell.phase,
+                   node.cell.cell_type,
                    node.cell.position[0], node.cell.position[1]]
             s = pd.Series(dict(zip(track_detail_columns, col)))
             series_list.append(s)
@@ -459,10 +522,10 @@ def track_trees_to_json(tracker: Tracker, output_fname, xrange, basename=None):
     def update_region(node):
         # print(type(node))
         region = node.cell.region
-        phase = node.cell.phase
+        phase = node.cell.cell_type
         track_id = node.cell.track_id
         cell_id = node.cell.cell_id
-        region['region_attributes']['phase'] = phase
+        region['region_attributes']['cell_type'] = phase
         region['region_attributes']['track_id'] = track_id
         region['region_attributes']['cell_id'] = cell_id
         region['region_attributes']['id'] = track_id
@@ -538,20 +601,21 @@ def run(annotation, output_dir, basename, track_range=None, save_visualize=True,
 
 
 if __name__ == '__main__':
-    annotation = r'G:\paper\evaluate_data\copy_of_1_xy10\result-GT.json'
-    mcy_img = r'G:\paper\evaluate_data\copy_of_1_xy10\mcy.tif'
-    dic_img = r'G:\paper\evaluate_data\copy_of_1_xy10\dic.tif'
-    table = r'G:\paper\evaluate_data\copy_of_1_xy10\track-table-test.csv'
-    visual = r'G:\paper\evaluate_data\copy_of_1_xy10\tracking_visualize-test.tif'
-    tracker = run_track(r'G:\paper\evaluate_data\copy_of_1_xy10\result-GT.json', track_range=300)
+    annotation = r'G:\杂项\example\example-annotation.json'
+    mcy_img = r'G:\杂项\example\example-image.tif'
+    dic_img = r'G:\杂项\example\example-bf.tif'
+    # tracker = run_track(r'G:\paper\evaluate_data\copy_of_1_xy10\result-GT.json', track_range=10)
+    tracker = run_track(annotation, track_range=30)
     background_filename_list = [os.path.join(r'G:\paper\evaluate_data\copy_of_1_xy10\tif-seq', i) for i in
                                 os.listdir(r'G:\paper\evaluate_data\copy_of_1_xy10\tif-seq')]
     # print(background_filename_list)
-    print(tracker.trees[9])
-    tracker.visualize_single_tree(tree=tracker.trees[51],
-                                  save_dir=r'G:\paper\evaluate_data\copy_of_1_xy10\single_tree_visualize',
-                                  background_filename_list=background_filename_list, xrange=300)
+    for i in tracker.trees:
+        print(i)
+    # tracker.visualize_single_tree(tree=tracker.trees[51],
+    #                               save_dir=r'G:\paper\evaluate_data\copy_of_1_xy10\single_tree_visualize',
+    #                               background_filename_list=background_filename_list, xrange=10)
 
-    # run(annotation=fjson, output_dir=result_save_path, track_range=track_range, dic=fbf, mcy=fpcna,
-    #                 save_visualize=export_visualization, visualize_background_image=fpcna,
-    #                 track_to_json=track_to_json, basename=basename)
+    # run(annotation=annotation, output_dir=r'G:\杂项\example\tracking_output',
+    #     track_range=10, dic=None, mcy=mcy_img,
+    #     save_visualize=True, visualize_background_image=mcy_img,
+    #     track_to_json=True, basename=r'example')

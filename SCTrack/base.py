@@ -45,7 +45,7 @@ class MatchStatus(Enum):
 
 class TreeStatus(object):
     """
-    Record the state of the tracked cells, including cell phase status, division status, and matching status
+    Record the state of the tracked cells, including cell cell_type status, division status, and matching status
     Phase: whether Mitosis has entered, and which frame has entered Mitosis
     Division: whether there is Mitosis
     Matching situation: Is there any loss of matching in this cell
@@ -87,7 +87,7 @@ class TreeStatus(object):
             self.__exit_mitosis_frame: int | None = None
             self.__match_status = MatchStatus.Unmatched
 
-            # This value records the number of predicted M phase. If > 3, it is considered to have entered M period,
+            # This value records the number of predicted M cell_type. If > 3, it is considered to have entered M period,
             # and at this point, enter needs to be called externally_ Mitosis()
             self.__predict_M_count = 0
             self.__init_flag = True
@@ -476,12 +476,12 @@ class Cell(object):
             cls._instances[key].__match_status = False  # 匹配状态，如果参与匹配则设置为匹配状态，从未匹配则设置为False
         return cls._instances[key]
 
-    def __init__(self, position=None, mcy=None, dic=None, phase=None, frame_index=None, flag=None):
+    def __init__(self, position=None, mcy=None, dic=None, cell_type=None, frame_index=None, flag=None):
         # if  Cell.init_flag is False:
         self.position = position  # [(x1, x2 ... xn), (y1, y2 ... yn)]
         self.mcy = mcy
         self.dic = dic
-        self.phase = phase
+        self.cell_type = cell_type
         self.__id = None
         self.frame = frame_index
         self.__parent = None  # If a cell divides, record the __id of the cell's parent
@@ -685,7 +685,7 @@ class Cell(object):
         """
         new_position = [tuple([i + speed.x * time for i in self.position[0]]),
                         tuple([j + speed.y * time for j in self.position[1]])]
-        new_cell = Cell(position=new_position, mcy=self.mcy, dic=self.dic, phase=self.phase, frame_index=self.frame)
+        new_cell = Cell(position=new_position, mcy=self.mcy, dic=self.dic, cell_type=self.cell_type, frame_index=self.frame)
         new_cell.set_track_id(self.__track_id, 0)
         return new_cell
 
@@ -787,7 +787,7 @@ class Cell(object):
 
     def __str__(self):
         if self.position:
-            return f" Cell at ({self.center[0]: .2f},{self.center[1]: .2f}), frame {self.frame}, {self.phase}, branch {self.__branch_id}"
+            return f" Cell at ({self.center[0]: .2f},{self.center[1]: .2f}), frame {self.frame}, {self.cell_type}, branch {self.__branch_id}"
         else:
             return "Object Cell"
 

@@ -53,16 +53,16 @@ class Feature(object):
      - bbox: the bounding box coordinates of the cell [y_min, y_max, x_min, x_max]
      - dic_intensity: the dic gray value intensity of the mask area
      - mcy_intensity: mcy gray value intensity of the mask area
-     - phase forecast period
+     - cell_type forecast period
 
 
     """
 
-    def __init__(self, center, bbox, area=None, shape=None, phase=None,
+    def __init__(self, center, bbox, area=None, shape=None, cell_type=None,
                  dic_intensity=None, dic_variance=None, mcy_intensity=None, mcy_variance=None, frame=None):
         self.center = center
         self.bbox = bbox
-        self.phase = phase
+        self.cell_type = cell_type
         self.mcy_intensity = mcy_intensity
         self.mcy_variance = mcy_variance
         self.dic_intensity = dic_intensity
@@ -211,8 +211,10 @@ class FeatureExtractor(object):
                 all_x = [0 if i < 0 else i for i in all_x]
                 all_y = [0 if j < 0 else j for j in all_y]
                 phase = region['region_attributes'].get('phase')
-                # phase = None
-                cell = Cell(position=(all_x, all_y), phase=phase, frame_index=self.frame_index)
+                cell_type = region['region_attributes'].get('cell_type')
+                cell_type = cell_type if cell_type else phase
+                # cell_type = None
+                cell = Cell(position=(all_x, all_y), cell_type=cell_type, frame_index=self.frame_index)
                 cell.set_region(region)
                 cell_list.append(cell)
             except KeyError:
@@ -224,9 +226,10 @@ class FeatureExtractor(object):
                     cy = region['shape_attributes'].get('cy')
                     theta = region['shape_attributes'].get('theta')
                     phase = region['region_attributes'].get('phase')
-                    # phase = None
+                    cell_type = region['region_attributes'].get('cell_type')
+                    cell_type = cell_type if cell_type else phase
                     all_x, all_y = self.ellipse_points((cx, cy), rx, ry, num_points=32, theta=theta)
-                    cell = Cell(position=(all_x, all_y), phase=phase, frame_index=self.frame_index)
+                    cell = Cell(position=(all_x, all_y), cell_type=cell_type, frame_index=self.frame_index)
                     cell.set_region(region)
                     cell_list.append(cell)
                 else:

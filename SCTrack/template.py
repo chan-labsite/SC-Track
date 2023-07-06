@@ -14,7 +14,7 @@ REGIONS_TMP = {
         },
     "region_attributes":
         {
-            "phase": None,
+            "cell_type": None,
             "cell_id": None,
             'track_id': None,
         }

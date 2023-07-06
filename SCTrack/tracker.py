@@ -489,8 +489,8 @@ class Matcher(object):
 
     def is_mitosis_start(self, pre_parent: Cell, last_leaves: List[Cell], area_size_t=1.5, iou_t=0.5):
         """
-        Determine whether a cell enters the M phase. The basic criterion is that when a cell enters mitosis, its volume
-        increases and the number of candidate regions increases. If the cell successfully enters the M phase, return a
+        Determine whether a cell enters the M cell_type. The basic criterion is that when a cell enters mitosis, its volume
+        increases and the number of candidate regions increases. If the cell successfully enters the M cell_type, return a
         dict containing information about the last frame of G2 and the first frame of M. Otherwise, return False.
          """
         match_score = {}
@@ -712,7 +712,7 @@ class Matcher(object):
                 if len(matched_candidates) > 1:
                     cell_track_status.enter_mitosis(parent.frame)
                 if not cell_track_status.status.get('enter_mitosis'):
-                    # if parent.phase != 'M':
+                    # if parent.cell_type != 'M':
                     return {'matched_cell': [(self.select_single_child(matched_candidates), 'INACCURATE')],
                             'status': cell_track_status}
                 # elif not self.check_iou(matched_candidates):
@@ -775,7 +775,7 @@ class Matcher(object):
             if not tree.m_counter:
                 tree.m_counter = 5
                 tree.status.reset_M_count()
-            if parent.phase == 'M':
+            if parent.cell_type == 'M':
                 tree.status.add_M_count()
             if tree.status.predict_M_len >= 2:
                 tree.status.enter_mitosis(parent.frame - 3)
@@ -1138,20 +1138,17 @@ class Tracker(object):
 
     def visualize_single_tree(self, tree, background_filename_list, save_dir, xrange=None):
         bg_fname = background_filename_list[:xrange + 2] if xrange else background_filename_list
-        print(bg_fname)
         images = list(map(lambda x: cv2.imread(x, -1), bg_fname))
         images_dict = dict(zip(list(range(len(bg_fname))), images))
-        print(images_dict.keys())
         for node in tree.expand_tree():
             frame = tree.nodes.get(node).cell.frame
             bbox = tree.nodes.get(node).cell.bbox
             img_bg = images_dict[frame]
-            phase = tree.nodes.get(node).cell.phase
+            phase = tree.nodes.get(node).cell.cell_type
             images_dict[frame] = self.draw_bbox(img_bg, tree.nodes.get(node).cell, tree.track_id,
                                                 tree.get_node(node).cell.branch_id, phase)
         for i in zip(bg_fname, list(images_dict.values())):
             fname = os.path.join(save_dir, os.path.basename(i[0]).replace('.tif', '.png'))
-            print(fname)
             cv2.imwrite(fname, i[1])
 
     def visualize_to_tif(self, background_mcy_image: str, output_tif_path, tree_list, xrange=None, single=False):
@@ -1198,7 +1195,7 @@ class Tracker(object):
                 if img_bg is not None:
                     images_dict[frame] = self.draw_bbox(img_bg, i.nodes.get(node).cell, i.track_id,
                                                         i.get_node(node).cell.branch_id,
-                                                        phase=i.get_node(node).cell.phase)
+                                                        phase=i.get_node(node).cell.cell_type)
         if not single:
             if not (os.path.exists(output_tif_path) and os.path.isdir(output_tif_path)):
                 os.mkdir(output_tif_path)
@@ -1219,7 +1216,7 @@ class Tracker(object):
 def get_cell_line_from_tree(tree: TrackingTree, dic_path: str, mcy_path: str, savepath):
     """
     Obtain a complete cell sequence from the track tree, including cell images, dic and mcy dual channels, and cycles,
-    and the generated file name is named track_id-branch_id-frame-phase.tif"""
+    and the generated file name is named track_id-branch_id-frame-cell_type.tif"""
     if not os.path.exists(savepath):
         os.makedirs(savepath)
     save_mcy = os.path.join(savepath, 'mcy')
@@ -1236,7 +1233,7 @@ def get_cell_line_from_tree(tree: TrackingTree, dic_path: str, mcy_path: str, sa
         mcy_img = mcy[cell.frame][y0: y1, x0: x1]
         dic_img = dic[cell.frame][y0: y1, x0: x1]
         fname = str(tree.track_id) + '-' + str(cell.branch_id) + '-' + str(cell.frame) + '-' + str(
-            cell.phase[0]) + '.tif'
+            cell.cell_type[0]) + '.tif'
         tifffile.imwrite(os.path.join(save_mcy, fname), convert_dtype(mcy_img))
         tifffile.imwrite(os.path.join(save_dic, fname), convert_dtype(dic_img))
 

@@ -28,15 +28,15 @@ class DetectionParser:
     def get_region_attr(self, regions):
         """
         regions: extract from json files, one frame data, it cna be get from function [get_regions_by_frame()]
-        Returns: all cells bounding box and phase list,
-        like [((x_min, x_max, y_min, y_max), phase), ..., ((x_min, x_max, y_min, y_max), phase)]
+        Returns: all cells bounding box and cell_type list,
+        like [((x_min, x_max, y_min, y_max), cell_type), ..., ((x_min, x_max, y_min, y_max), cell_type)]
 
         """
         attrs = []
         for i in regions:
             all_x = i['shape_attributes']['all_points_x']
             all_y = i['shape_attributes']['all_points_y']
-            phase = i['region_attributes']['phase']
+            phase = i['region_attributes']['cell_type']
             x_min = int(np.min(all_x))
             x_max = math.ceil(np.max(all_x))
             y_min = int(np.min(all_y))
