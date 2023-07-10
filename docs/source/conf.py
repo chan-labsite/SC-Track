@@ -23,7 +23,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinxcontrib.apidoc',
     'sphinx.ext.viewcode',
-    'm2r2'
+    'sphinx.ext.coverage',
 ]
 
 apidoc_module_dir = project_path
@@ -46,7 +46,7 @@ master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ['../../build', '../../dist', '../../SC_Track.egg-info']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

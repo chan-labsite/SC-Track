@@ -7,12 +7,13 @@ Welcome to SC-Track's documentation!
 ====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 10
    :caption: Contents:
 
+   modules.rst
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 10
    :caption: API References:
 
    python_apis/modules
