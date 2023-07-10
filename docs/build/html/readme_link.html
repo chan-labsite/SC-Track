@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-      <title>What’s SC-Track?</title>
+      <title>SC-Track : Tracking for Single Cell</title>
     
           <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="_static/theme.css " type="text/css" />
@@ -116,7 +116,7 @@
         
           <li class="toctree-l1 current">
             
-              <a href="#" class="reference internal current">What’s  SC-Track?</a>
+              <a href="#" class="reference internal current"><div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/frozenleaves/SC-Track>SC-Track :  Tracking  for  Single  Cell</a></b></div></a>
             
 
             
@@ -131,6 +131,8 @@
                   <li class="toctree-l2"><a href="#installation" class="reference internal">Installation</a></li>
                 
                   <li class="toctree-l2"><a href="#usage" class="reference internal">Usage</a></li>
+                
+                  <li class="toctree-l2"><a href="#api-documentation" class="reference internal">API  Documentation</a></li>
                 
               </ul>
             
@@ -167,7 +169,7 @@
   <ul class="breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
     
-    <li>What’s  SC-Track?</li>
+    <li><span class="raw-html-m2r"><div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/frozenleaves/SC-Track>SC-Track :  Tracking  for  Single  Cell</a></b></div></span></li>
   </ul>
   
 
@@ -186,8 +188,10 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="what-s-sc-track">
-<h1>What’s  SC-Track?<a class="headerlink" href="#what-s-sc-track" title="Permalink to this heading">¶</a></h1>
+  <section id="div-align-center-style-text-align-center-font-size-32px-b-a-href-https-github-com-frozenleaves-sc-track-sc-track-tracking-for-single-cell-a-b-div">
+<h1><span class="raw-html-m2r"><div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/frozenleaves/SC-Track>SC-Track :  Tracking  for  Single  Cell</a></b></div></span><a class="headerlink" href="#div-align-center-style-text-align-center-font-size-32px-b-a-href-https-github-com-frozenleaves-sc-track-sc-track-tracking-for-single-cell-a-b-div" title="Permalink to this heading">¶</a></h1>
+<div align="center"> <img src="docs/icon/license.svg" width = 220 /> <img src="docs/icon/wheel.svg" width = 70 />  <img src="docs/icon/docs.svg" width = 80 /> <img src="docs/icon/Python-version.svg" width = 200 /> </div><section id="what-s-sc-track">
+<h2>What’s  SC-Track?<a class="headerlink" href="#what-s-sc-track" title="Permalink to this heading">¶</a></h2>
 <p>SC-Track is an efficient algorithm for dynamic tracking of single cells on different time-lapse microscope images.
 It can use the segmentation results of various models to efficiently track single cells and reconstruct cell lines.
 It can track multi-generational cell division events without any additional information, only using the outline information of cells;
@@ -201,8 +205,9 @@ and a collection of TrackingTree structure tree files. Users can perform more de
 view the tracking results through visualized results, and modify the track table or track json file to manually correct tracking errors.
 SC-Track is not only suitable for small timelapse analysis, but also suitable for long time and high cell density timelapse analysis of thousands of frames.</p>
 </section>
+<hr class="docutils" />
 <section id="why-using-sc-track">
-<h1>Why using  SC-Track?<a class="headerlink" href="#why-using-sc-track" title="Permalink to this heading">¶</a></h1>
+<h2>Why using  SC-Track?<a class="headerlink" href="#why-using-sc-track" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>The current mainstream methods for image segmentation all use deep learning, and the output results contain noises of varying intensities. SC-Track is currently the only algorithm that can use these noise data for accurate single-cell tracking and lineage reconstruction.</p></li>
 <li><p>SC-Track is compatible with the output results of most of the existing mainstream segmentation models, as well as manual segmentation results, including Cellpose, DeepCell, Stardist, etc. Users can choose a more advanced and suitable segmentation model according to the cell type to split.</p></li>
@@ -210,18 +215,27 @@ SC-Track is not only suitable for small timelapse analysis, but also suitable fo
 <li><p>SC-Track is implemented in Python, which has strong scalability, convenient and quick installation, and low dependency.</p></li>
 </ul>
 </section>
+<hr class="docutils" />
 <section id="how-to-use-sc-track">
-<h1>How to use SC-Track?<a class="headerlink" href="#how-to-use-sc-track" title="Permalink to this heading">¶</a></h1>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">To</span> <span class="n">use</span> <span class="n">SC</span><span class="o">-</span><span class="n">Track</span><span class="p">,</span> <span class="n">please</span> <span class="n">follow</span> <span class="n">the</span> <span class="n">Installation</span> <span class="n">steps</span> <span class="n">first</span><span class="o">.</span> <span class="n">It</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">require</span> <span class="n">too</span> <span class="n">many</span> <span class="n">settings</span> <span class="n">during</span> <span class="n">its</span> <span class="n">use</span><span class="o">.</span> <span class="n">When</span> <span class="n">you</span> <span class="n">only</span> <span class="n">have</span> <span class="n">a</span> <span class="n">single</span><span class="o">-</span><span class="n">channel</span> <span class="n">segmentation</span> <span class="n">result</span><span class="p">,</span> <span class="n">we</span> <span class="n">require</span> <span class="n">that</span> <span class="n">your</span> <span class="n">segmentation</span> <span class="n">result</span> <span class="n">must</span> <span class="n">be</span> <span class="n">a</span> <span class="n">mask</span> <span class="n">grayscale</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">form</span> <span class="n">of</span> <span class="mi">2</span><span class="n">D</span><span class="o">+</span><span class="n">t</span> <span class="ow">in</span> <span class="n">tiff</span> <span class="nb">format</span><span class="o">.</span> <span class="n">The</span> <span class="n">cells</span> <span class="ow">in</span> <span class="n">each</span> <span class="n">mask</span> <span class="n">need</span> <span class="n">to</span> <span class="n">guarantee</span> <span class="n">their</span> <span class="n">pixel</span> <span class="n">values</span><span class="o">.</span> <span class="ow">is</span> <span class="n">unique</span><span class="p">;</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">JSON</span> <span class="n">comment</span> <span class="n">file</span><span class="o">.</span> <span class="n">The</span> <span class="n">specific</span> <span class="nb">format</span> <span class="n">can</span> <span class="n">refer</span> <span class="n">to</span> <span class="n">our</span> <span class="n">example</span><span class="o">.</span>
+<h2>How to use SC-Track?<a class="headerlink" href="#how-to-use-sc-track" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>To use SC-Track, please follow the Installation steps first. It does not require too many settings during its use. When you only have a
 
-<span class="n">When</span> <span class="n">the</span> <span class="n">segmentation</span> <span class="n">result</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">mask</span><span class="p">,</span> <span class="n">please</span> <span class="n">run</span><span class="p">:</span> <span class="n">sctrack</span> <span class="o">-</span><span class="n">p</span> <span class="n">image</span><span class="o">.</span><span class="n">tif</span> <span class="o">-</span><span class="n">a</span> <span class="n">mask</span><span class="o">.</span><span class="n">tif</span><span class="o">.</span>
-<span class="n">When</span> <span class="n">the</span> <span class="n">segmentation</span> <span class="n">result</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">annotation</span> <span class="n">json</span> <span class="n">file</span><span class="p">,</span> <span class="n">please</span> <span class="n">run</span><span class="p">:</span> <span class="n">sctrack</span> <span class="o">-</span><span class="n">p</span> <span class="n">image</span><span class="o">.</span><span class="n">tif</span> <span class="o">-</span><span class="n">a</span> <span class="n">annotation</span><span class="o">.</span><span class="n">json</span><span class="o">.</span>
-<span class="n">Where</span> <span class="n">image</span><span class="o">.</span><span class="n">tif</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">original</span> <span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="o">.</span><span class="n">tif</span><span class="p">,</span> <span class="ow">and</span> <span class="n">annotation</span><span class="o">.</span><span class="n">json</span> <span class="n">are</span> <span class="n">annotation</span> <span class="n">files</span><span class="o">.</span> <span class="n">The</span> <span class="n">original</span> <span class="n">image</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">provided</span><span class="p">,</span> <span class="n">but</span> <span class="k">if</span> <span class="n">the</span> <span class="n">original</span> <span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">provided</span><span class="p">,</span> <span class="n">the</span> <span class="n">visualization</span> <span class="n">result</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">output</span><span class="o">.</span>
+single-channel segmentation result, we require that your segmentation result must be a mask grayscale file in the form of 2D+t in
+
+tiff format. The cells in each mask need to guarantee their pixel values. is unique; or a JSON comment file. The specific format can
+
+refer to our example.
+
+When the segmentation result is a mask, please run: <span class="sb">`sctrack -p image.tif -a mask.tif`</span>.
+When the segmentation result is an annotation json file, please run: <span class="sb">`sctrack -p image.tif -a annotation.json`</span>.
+Where image.tif is the original image, mask.tif, and annotation.json are annotation files. The original image may not be provided,
+but if the original image is not provided, the visualization result cannot be output.
 </pre></div>
 </div>
 </section>
+<hr class="docutils" />
 <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Requirement</span><span class="p">:</span> <span class="n">Python</span> <span class="o">&gt;=</span> <span class="mf">3.7</span>
 
 <span class="n">Windows</span><span class="p">:</span> <span class="n">pip</span> <span class="n">isntall</span> <span class="n">SC</span><span class="o">-</span><span class="n">Track</span>
@@ -236,9 +250,11 @@ SC-Track is not only suitable for small timelapse analysis, but also suitable fo
 </li>
 </ul>
 </section>
+<hr class="docutils" />
 <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">We</span> <span class="n">provide</span> <span class="n">a</span> <span class="n">command</span> <span class="n">line</span> <span class="n">tool</span><span class="p">,</span> <span class="n">you</span> <span class="n">only</span> <span class="n">need</span> <span class="n">to</span> <span class="n">run</span> <span class="n">the</span> <span class="n">sctrack</span> <span class="n">tool</span> <span class="n">on</span> <span class="n">the</span> <span class="n">command</span> <span class="n">line</span><span class="o">.</span> <span class="n">To</span> <span class="n">automate</span> <span class="n">batch</span> <span class="n">processing</span> <span class="n">of</span> <span class="n">a</span> <span class="n">large</span> <span class="n">number</span> <span class="n">of</span> <span class="n">files</span><span class="p">,</span> <span class="n">please</span> <span class="n">refer</span> <span class="n">to</span> <span class="n">our</span> <span class="n">source</span> <span class="n">code</span> <span class="n">documentation</span><span class="o">.</span>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">We</span> <span class="n">provide</span> <span class="n">a</span> <span class="n">command</span> <span class="n">line</span> <span class="n">tool</span><span class="p">,</span> <span class="n">you</span> <span class="n">only</span> <span class="n">need</span> <span class="n">to</span> <span class="n">run</span> <span class="n">the</span> <span class="n">sctrack</span> <span class="n">tool</span> <span class="n">on</span> <span class="n">the</span> <span class="n">command</span> <span class="n">line</span><span class="o">.</span> <span class="n">To</span> <span class="n">automate</span>
+<span class="n">batch</span> <span class="n">processing</span> <span class="n">of</span> <span class="n">a</span> <span class="n">large</span> <span class="n">number</span> <span class="n">of</span> <span class="n">files</span><span class="p">,</span> <span class="n">please</span> <span class="n">refer</span> <span class="n">to</span> <span class="n">our</span> <span class="n">source</span> <span class="n">code</span> <span class="n">documentation</span><span class="o">.</span>
 <span class="n">Its</span> <span class="n">basic</span> <span class="n">usage</span> <span class="ow">is</span><span class="p">:</span>
 
 <span class="kn">from</span> <span class="nn">SCTrack</span> <span class="kn">import</span> <span class="n">strat_track</span>
@@ -254,6 +270,12 @@ SC-Track is not only suitable for small timelapse analysis, but also suitable fo
 <span class="n">start_track</span><span class="p">(</span><span class="n">fannotation</span><span class="o">=</span><span class="n">annotation_json</span><span class="p">,</span> <span class="n">fimage</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<hr class="docutils" />
+<section id="api-documentation">
+<h2>API  Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading">¶</a></h2>
+<p>For more information, please see the <a class="reference external" href="https://sc-track.readthedocs.io/en/latest/">reference documents</a>.</p>
+</section>
 </section>
 
 

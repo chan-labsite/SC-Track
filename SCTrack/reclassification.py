@@ -1,15 +1,10 @@
 import logging
 import os.path
-import sys
 from collections import Counter
 from copy import deepcopy
 from typing import List
 import json
-import random
-import pickle
 import pandas as pd
-
-import config
 from SCTrack.base import Cell
 from SCTrack.tracker import Tracker, CellNode, TrackingTree
 from SCTrack.config import RAW_INPUT_IMAGE_SIZE

@@ -10,8 +10,6 @@ Welcome to SC-Track's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   introduction.md
-   readme_link
 
 .. toctree::
    :maxdepth: 2

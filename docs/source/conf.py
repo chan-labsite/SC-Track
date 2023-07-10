@@ -15,7 +15,8 @@ project_path = '../../SCTrack'
 sys.path.append('.')
 sys.path.append('..')
 sys.path.append('../../')
-# sys.path.insert(0, os.path.abspath(project_path))
+sys.path.insert(0, os.path.abspath(project_path))
+sys.path.insert(0, os.path.abspath('..'))
 
 extensions = [
     'sphinx.ext.autodoc',
