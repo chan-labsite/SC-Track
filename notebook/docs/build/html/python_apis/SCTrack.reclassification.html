@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>SCTrack.reclassification module</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="SCTrack.sctrack module" href="SCTrack.sctrack.html" />
+  <link rel="prev" title="SCTrack.prepare module" href="SCTrack.prepare.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="modules.html">SCTrack</a> &raquo;</li>
+    
+      <li><a href="SCTrack.html">SCTrack package</a> &raquo;</li>
+    
+    <li>SCTrack.reclassification module</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.prepare.html"
+       title="previous chapter">← SCTrack.prepare module</a>
+  </li>
+  <li class="next">
+    <a href="SCTrack.sctrack.html"
+       title="next chapter">SCTrack.sctrack module →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-SCTrack.reclassification">
+<span id="sctrack-reclassification-module"></span><h1>SCTrack.reclassification module<a class="headerlink" href="#module-SCTrack.reclassification" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">TreeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.TrackingTree" title="SCTrack.tracker.TrackingTree"><span class="pre">TrackingTree</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>parse TrackingTree</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.bfs">
+<span class="sig-name descname"><span class="pre">bfs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.bfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.bfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse TrackingTree according to breadth first</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_ctype_exit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ctype_exit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_ctype_exit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_ctype_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>To judge the exit of cell_type, the judgment principle is the same as entering  cell_type,
+if the cells start to exit cell_type, check later</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_ctype_start">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ctype_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_ctype_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_ctype_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the entry of cell_type, if the cell is predicted to be in indicate cell_type, check 10 frames later,
+If the number of remaining frames is less than 10 frames, check all the remaining frames.
+If the cumulative predicted indicate cell type is greater than the threshold,
+If the judgment succeeds, otherwise, the judgment fails</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_mitosis_start">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_mitosis_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_size_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mitosis_gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_predict_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_mitosis_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_mitosis_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the entry of the M period, if the area meets the conditions, check the next frame, if the area of the next
+frame is too small, it is not considered to have entered, and it is judged as a segmentation misjudgment.
+If the check is passed, check the next 6 frames. If the number of M phases is predicted to be greater than or
+equal to the threshold, it is judged to enter the M cell_type to pass, otherwise, the judgment fails.
+If the interval from the last entry to M is too short, it is also considered a misjudgment</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.get_child">
+<span class="sig-name descname"><span class="pre">get_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.get_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.get_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all child nodes according to the parent node, including only direct child nodes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.get_lineage_dict">
+<span class="sig-name descname"><span class="pre">get_lineage_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.get_lineage_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.get_lineage_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_g1_g2">
+<span class="sig-name descname"><span class="pre">parse_g1_g2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_g1_g2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_g1_g2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accurately distinguish G1/G2 into G1, G2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_lineage">
+<span class="sig-name descname"><span class="pre">parse_lineage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_lineage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_lineage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the cell node sequence contained in each branch</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_lineage_branch_id">
+<span class="sig-name descname"><span class="pre">parse_lineage_branch_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_lineage_branch_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_lineage_branch_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_lineage_phase">
+<span class="sig-name descname"><span class="pre">parse_lineage_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_lineage_phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_lineage_phase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_mitosis">
+<span class="sig-name descname"><span class="pre">parse_mitosis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_mitosis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_mitosis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse entry and exit of mitosis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_mitosis_error">
+<span class="sig-name descname"><span class="pre">parse_mitosis_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_mitosis_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_mitosis_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the two daughter cells after division are not matched, all subsequent cells will be in the M cell_type.
+At this time, it should be corrected to G1 within a certain period of time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_s">
+<span class="sig-name descname"><span class="pre">parse_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_s" title="Permalink to this definition">¶</a></dt>
+<dd><p>To judge the entry of S cell_type</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.record_cell_division_count">
+<span class="sig-name descname"><span class="pre">record_cell_division_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.record_cell_division_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.record_cell_division_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.search_root_node">
+<span class="sig-name descname"><span class="pre">search_root_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.search_root_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.search_root_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the root node of each generation of cells, that is, the first node of each branch of TrackingTree
+This method is to deal with the situation where mitosis occurs, that is, the tree begins to branch
+When the cell begins to undergo mitosis, the tree will split, record the node at this time, and backtrack
+as a generation of cells</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.set_cell_id">
+<span class="sig-name descname"><span class="pre">set_cell_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.set_cell_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.set_cell_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.smooth_type">
+<span class="sig-name descname"><span class="pre">smooth_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_lineage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.smooth_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.smooth_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.pares_single_tree">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">pares_single_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.TrackingTree" title="SCTrack.tracker.TrackingTree"><span class="pre">TrackingTree</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#pares_single_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.pares_single_tree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.run">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_visualize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualize_background_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_to_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.run_track">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">run_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#run_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.run_track" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_TRA">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_tree_to_TRA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.Tracker" title="SCTrack.tracker.Tracker"><span class="pre">Tracker</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_tree_to_TRA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_tree_to_TRA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export track result as TRA format</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_mask">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_tree_to_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_tree_to_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_tree_to_mask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_table">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_tree_to_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.Tracker" title="SCTrack.tracker.Tracker"><span class="pre">Tracker</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_tree_to_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_tree_to_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export track result to table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.track_trees_to_json">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_trees_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.Tracker" title="SCTrack.tracker.Tracker"><span class="pre">Tracker</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_trees_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_trees_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export track result to json file</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="SCTrack.prepare.html"
+       title="previous chapter">← SCTrack.prepare module</a>
+  </li>
+  <li class="next">
+    <a href="SCTrack.sctrack.html"
+       title="next chapter">SCTrack.sctrack module →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

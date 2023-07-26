@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>SCTrack.feature</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../python_apis/modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../python_apis/modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../python_apis/modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../python_apis/SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>SCTrack.feature</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for SCTrack.feature</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">shapely.errors</span>
+<span class="kn">from</span> <span class="nn">tifffile</span> <span class="kn">import</span> <span class="n">tifffile</span>
+
+<span class="kn">from</span> <span class="nn">SCTrack</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">SCTrack.base</span> <span class="kn">import</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">Vector</span>
+
+
+<div class="viewcode-block" id="Mask"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.Mask">[docs]</a><span class="k">class</span> <span class="nc">Mask</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="n">mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">coord</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No mask&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No available center position&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Mask object at center of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Feature"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.Feature">[docs]</a><span class="k">class</span> <span class="nc">Feature</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All features contained in each cell instance, including the following:</span>
+<span class="sd">     - area: cell area</span>
+<span class="sd">     - bbox_area: bounding box area</span>
+<span class="sd">     - shape: sequence of cell outline coordinates</span>
+<span class="sd">     - center: cell center coordinates</span>
+<span class="sd">     - vector: the vector of the cell relative to the origin</span>
+<span class="sd">     - bbox: the bounding box coordinates of the cell [y_min, y_max, x_min, x_max]</span>
+<span class="sd">     - dic_intensity: the dic gray value intensity of the mask area</span>
+<span class="sd">     - mcy_intensity: mcy gray value intensity of the mask area</span>
+<span class="sd">     - cell_type forecast period</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">dic_intensity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_variance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mcy_intensity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mcy_variance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">bbox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">=</span> <span class="n">cell_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcy_intensity</span> <span class="o">=</span> <span class="n">mcy_intensity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcy_variance</span> <span class="o">=</span> <span class="n">mcy_variance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dic_intensity</span> <span class="o">=</span> <span class="n">dic_intensity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dic_variance</span> <span class="o">=</span> <span class="n">dic_variance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">area</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="o">*</span><span class="n">center</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="n">frame</span></div>
+
+
+<div class="viewcode-block" id="FeatureExtractor"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor">[docs]</a><span class="k">class</span> <span class="nc">FeatureExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract available features for each cell in a single image&quot;&quot;&quot;</span>
+    <span class="n">_instances</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FeatureExtractor</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">_init_cell_flag</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">_init_flag</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">__cells</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_dic</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">image_mcy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">annotation</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        image_dic: np.ndarray dic image information 2048x2048</span>
+<span class="sd">        image_mcy: np.ndarray mcy image information 2048x2048</span>
+<span class="sd">        annotation: dict Annotation information such as the outline and cycle of cells, regions in the json file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_flag</span><span class="p">:</span>
+            <span class="c1"># config.USING_IMAGE_FOR_TRACKING = config.USING_IMAGE_FOR_TRACKING</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">image_mcy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">image_dic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">image_mcy</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mcy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_dtype</span><span class="p">(</span><span class="n">image_mcy</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mcy</span> <span class="o">=</span> <span class="n">image_mcy</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">image_dic</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_dtype</span><span class="p">(</span><span class="n">image_dic</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dic</span> <span class="o">=</span> <span class="n">image_dic</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># config.py configures using image, but the parameters are not compliant, turn off this option</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">USING_IMAGE_FOR_TRACKING</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">USING_IMAGE_FOR_TRACKING</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span>
+            <span class="c1"># self.image_shape = self.mcy.shape</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_index</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;frame_index&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_flag</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="FeatureExtractor.coord2counter"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.coord2counter">[docs]</a>    <span class="k">def</span> <span class="nf">coord2counter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="n">contours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">contours</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.coordinate2mask"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.coordinate2mask">[docs]</a>    <span class="k">def</span> <span class="nf">coordinate2mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">255</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Mask</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the mask according to the contour coordinates. If you only pass in a set of contour coordinate values,</span>
+<span class="sd">        be sure to put them in the list and pass in the function.</span>
+<span class="sd">        For example, coord = ([x1 x2 ... xn], [y1 y2 ... yn]), please call it according to coordinate2mask([coord])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+                <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="n">contours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">fillConvexPoly</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">mMask</span> <span class="o">=</span> <span class="n">Mask</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]))),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">])))),</span> <span class="n">coord</span><span class="o">=</span><span class="n">coord</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mMask</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.get_roi_from_mask"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.get_roi_from_mask">[docs]</a>    <span class="k">def</span> <span class="nf">get_roi_from_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.GetAreaByVector"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.GetAreaByVector">[docs]</a>    <span class="k">def</span> <span class="nf">GetAreaByVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
+        <span class="c1"># Calculate polygon area based on vector cross product</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">p1</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">p2</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">triArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">p2</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">p1</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">area</span> <span class="o">+=</span> <span class="n">triArea</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">area</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.area"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.area">[docs]</a>    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;cell area&quot;&quot;&quot;</span>
+        <span class="n">_area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coord2counter</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">_area</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.bbox"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.bbox">[docs]</a>    <span class="k">def</span> <span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;bounding box coordinates&quot;&quot;&quot;</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.get_roi_from_coord"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.get_roi_from_coord">[docs]</a>    <span class="k">def</span> <span class="nf">get_roi_from_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use the cell outline to obtain the dic image or the mcy image, depending on the incoming image parameters.</span>
+<span class="sd">        :param cell: Cell object</span>
+<span class="sd">        :param image: dic image or mcy image, that is, the parameter self.mcy or self.dic</span>
+<span class="sd">        :return: roi np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># x0 = int(np.min(cell.position[0]))</span>
+        <span class="c1"># x1 = math.ceil(np.max(cell.position[0]))</span>
+        <span class="c1"># y0 = int(np.min(cell.position[1]))</span>
+        <span class="c1"># y1 = math.ceil(np.max(cell.position[1]))</span>
+        <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image</span><span class="p">[</span><span class="n">y0</span><span class="p">:</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="n">x1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.ellipse_points"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.ellipse_points">[docs]</a>    <span class="k">def</span> <span class="nf">ellipse_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">all_x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">num_points</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rx</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">ry</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rx</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">ry</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+            <span class="n">all_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">all_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">all_x</span><span class="p">,</span> <span class="n">all_y</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.get_cell_list"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.get_cell_list">[docs]</a>    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_cell_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all cells in each single frame image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cell_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ellipse&#39;</span><span class="p">:</span>
+                <span class="n">rx</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rx&#39;</span><span class="p">)</span>
+                <span class="n">ry</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ry&#39;</span><span class="p">)</span>
+                <span class="n">cx</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cx&#39;</span><span class="p">)</span>
+                <span class="n">cy</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cy&#39;</span><span class="p">)</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;theta&#39;</span><span class="p">)</span>
+                <span class="n">phase</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">)</span>
+                <span class="n">cell_type</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cell_type&#39;</span><span class="p">)</span>
+                <span class="n">cell_type</span> <span class="o">=</span> <span class="n">cell_type</span> <span class="k">if</span> <span class="n">cell_type</span> <span class="k">else</span> <span class="n">phase</span>
+                <span class="n">all_x</span><span class="p">,</span> <span class="n">all_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ellipse_points</span><span class="p">((</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span> <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;polygon&#39;</span><span class="p">:</span>
+                <span class="n">all_x</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_x&#39;</span><span class="p">]</span>
+                <span class="n">all_y</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_y&#39;</span><span class="p">]</span>
+                <span class="n">all_x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_x</span><span class="p">]</span>
+                <span class="n">all_y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">all_y</span><span class="p">]</span>
+                <span class="n">phase</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">)</span>
+                <span class="n">cell_type</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cell_type&#39;</span><span class="p">)</span>
+                <span class="n">cell_type</span> <span class="o">=</span> <span class="n">cell_type</span> <span class="k">if</span> <span class="n">cell_type</span> <span class="k">else</span> <span class="n">phase</span>
+                <span class="c1"># cell_type = None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="n">all_x</span><span class="p">,</span> <span class="n">all_y</span><span class="p">),</span> <span class="n">cell_type</span><span class="o">=</span><span class="n">cell_type</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_index</span><span class="p">)</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">set_region</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">center</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">polygon</span>
+                <span class="n">cell_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="k">return</span> <span class="n">cell_list</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.get_cell_image"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.get_cell_image">[docs]</a>    <span class="k">def</span> <span class="nf">get_cell_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get dic and mcy images of cells</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">USING_IMAGE_FOR_TRACKING</span><span class="p">:</span>
+            <span class="n">dic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_roi_from_coord</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dic</span><span class="p">)</span>
+            <span class="n">mcy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_roi_from_coord</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcy</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">dic</span><span class="p">,</span> <span class="n">mcy</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.set_cell_image"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.set_cell_image">[docs]</a>    <span class="k">def</span> <span class="nf">set_cell_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set dic information and mcy information for cell instance</span>
+<span class="sd">        :param cell: Cell object</span>
+<span class="sd">        :return: Cell object containing image information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">USING_IMAGE_FOR_TRACKING</span><span class="p">:</span>
+            <span class="n">dic</span><span class="p">,</span> <span class="n">mcy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cell_image</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">dic</span> <span class="o">=</span> <span class="n">dic</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">mcy</span> <span class="o">=</span> <span class="n">mcy</span>
+        <span class="k">return</span> <span class="n">cell</span></div>
+
+    <span class="nd">@property</span>
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cell_list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">USING_IMAGE_FOR_TRACKING</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_cell_image</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cells</span>
+
+<div class="viewcode-block" id="FeatureExtractor.extract"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feature</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param cell: Cell object</span>
+<span class="sd">        :return: Feature object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">USING_IMAGE_FOR_TRACKING</span><span class="p">:</span>
+            <span class="n">mcy_intensity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mcy</span><span class="p">)</span>
+            <span class="n">mcy_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mcy</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">dic_intensity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">dic</span><span class="p">)</span>
+            <span class="n">dic_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">dic</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mcy_intensity</span> <span class="o">=</span> <span class="n">mcy_variance</span> <span class="o">=</span> <span class="n">dic_intensity</span> <span class="o">=</span> <span class="n">dic_variance</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">Feature</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">(</span><span class="n">cell</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                          <span class="n">mcy_intensity</span><span class="o">=</span><span class="n">mcy_intensity</span><span class="p">,</span> <span class="n">mcy_variance</span><span class="o">=</span><span class="n">mcy_variance</span><span class="p">,</span>
+                          <span class="n">dic_intensity</span><span class="o">=</span><span class="n">dic_intensity</span><span class="p">,</span> <span class="n">dic_variance</span><span class="o">=</span><span class="n">dic_variance</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">feature</span></div>
+
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__cells_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_cells</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cells</span><span class="p">:</span>
+            <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">set_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="n">_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_cells</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_cell_flag</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__cells</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cells_</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_cell_flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cells</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cells</span>
+
+<div class="viewcode-block" id="FeatureExtractor.add_cell"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.add_cell">[docs]</a>    <span class="k">def</span> <span class="nf">add_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_cell</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.convert_dtype"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.convert_dtype">[docs]</a>    <span class="k">def</span> <span class="nf">convert_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">__image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert image from uint16 to uint8&quot;&quot;&quot;</span>
+        <span class="n">min_16bit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">__image</span><span class="p">)</span>
+        <span class="n">max_16bit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">__image</span><span class="p">)</span>
+        <span class="n">image_8bit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="p">((</span><span class="n">__image</span> <span class="o">-</span> <span class="n">min_16bit</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_16bit</span> <span class="o">-</span> <span class="n">min_16bit</span><span class="p">))),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image_8bit</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.show"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.show">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FeatureExtractor.get_regions"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.FeatureExtractor.get_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Feature Extractor of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_index</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">frame_index</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="si">}</span><span class="s1"> at </span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="imread"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.imread">[docs]</a><span class="k">def</span> <span class="nf">imread</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_frame_by_index"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.get_frame_by_index">[docs]</a><span class="k">def</span> <span class="nf">get_frame_by_index</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="feature_extract"><a class="viewcode-back" href="../../python_apis/SCTrack.feature.html#SCTrack.feature.feature_extract">[docs]</a><span class="k">def</span> <span class="nf">feature_extract</span><span class="p">(</span><span class="n">mcy</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">jsonfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the FeatureExtractor instance frame by frame,</span>
+<span class="sd">    including the current frame, the previous frame, and the next frame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">annotations</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="n">jsonfile</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">)</span><span class="si">}</span><span class="s2"> are not invalid&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mcy</span> <span class="ow">and</span> <span class="n">dic</span><span class="p">:</span>
+        <span class="n">_dic</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span>
+        <span class="n">_mcy</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">mcy</span><span class="p">)</span>
+        <span class="n">_frame_len</span> <span class="o">=</span> <span class="n">_mcy</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">using_image</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_frame_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
+        <span class="n">using_image</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">get_fe</span><span class="p">(</span><span class="n">frame_index</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">using_image</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">using_image</span><span class="p">:</span>
+            <span class="n">dic_image</span> <span class="o">=</span> <span class="n">get_frame_by_index</span><span class="p">(</span><span class="n">_dic</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">)</span>
+            <span class="n">mcy_image</span> <span class="o">=</span> <span class="n">get_frame_by_index</span><span class="p">(</span><span class="n">_mcy</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dic_image</span> <span class="o">=</span> <span class="n">mcy_image</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">frame_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;.png&#39;</span><span class="p">)][</span><span class="s1">&#39;regions&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">FeatureExtractor</span><span class="p">(</span><span class="n">image_dic</span><span class="o">=</span><span class="n">dic_image</span><span class="p">,</span> <span class="n">image_mcy</span><span class="o">=</span><span class="n">mcy_image</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="n">region</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="n">frame_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_base_name</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_frame_len</span><span class="p">):</span>
+        <span class="n">current_frame_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">before_frame_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">before_frame_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">_frame_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">after_frame_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">after_frame_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">using_image</span><span class="p">:</span>
+            <span class="n">before_frame_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mcy</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">before_frame_index</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.tif&#39;</span><span class="p">)</span>
+            <span class="n">after_frame_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mcy</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">after_frame_index</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.tif&#39;</span><span class="p">)</span>
+            <span class="n">current_frame_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mcy</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">current_frame_index</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.tif&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">before_frame_name</span> <span class="o">=</span> <span class="n">get_base_name</span><span class="p">(</span><span class="n">annotations</span><span class="p">,</span> <span class="n">before_frame_index</span><span class="p">)</span>
+            <span class="n">current_frame_name</span> <span class="o">=</span> <span class="n">get_base_name</span><span class="p">(</span><span class="n">annotations</span><span class="p">,</span> <span class="n">current_frame_index</span><span class="p">)</span>
+            <span class="n">after_frame_name</span> <span class="o">=</span> <span class="n">get_base_name</span><span class="p">(</span><span class="n">annotations</span><span class="p">,</span> <span class="n">after_frame_index</span><span class="p">)</span>
+        <span class="n">before_fe</span> <span class="o">=</span> <span class="n">get_fe</span><span class="p">(</span><span class="n">before_frame_index</span><span class="p">,</span> <span class="n">before_frame_name</span><span class="p">,</span> <span class="n">using_image</span><span class="o">=</span><span class="n">using_image</span><span class="p">)</span>
+        <span class="n">current_fe</span> <span class="o">=</span> <span class="n">get_fe</span><span class="p">(</span><span class="n">current_frame_index</span><span class="p">,</span> <span class="n">current_frame_name</span><span class="p">,</span> <span class="n">using_image</span><span class="o">=</span><span class="n">using_image</span><span class="p">)</span>
+        <span class="n">after_fe</span> <span class="o">=</span> <span class="n">get_fe</span><span class="p">(</span><span class="n">after_frame_index</span><span class="p">,</span> <span class="n">after_frame_name</span><span class="p">,</span> <span class="n">using_image</span><span class="o">=</span><span class="n">using_image</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">before_fe</span><span class="p">,</span> <span class="n">current_fe</span><span class="p">,</span> <span class="n">after_fe</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

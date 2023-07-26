@@ -1,0 +1,20 @@
+ Cell at ( 1495.69, 1074.49), frame 0, G1, branch 0
+└──  Cell at ( 1484.72, 1084.07), frame 1, G1, branch 0
+    └──  Cell at ( 1488.32, 1084.12), frame 2, G1, branch 0
+        └──  Cell at ( 1493.61, 1081.39), frame 3, G1, branch 0
+            └──  Cell at ( 1495.61, 1081.91), frame 4, G1, branch 0
+                └──  Cell at ( 1496.51, 1084.12), frame 5, G1, branch 0
+                    └──  Cell at ( 1497.43, 1084.61), frame 6, G1, branch 0
+                        └──  Cell at ( 1497.71, 1085.33), frame 7, G1, branch 0
+                            └──  Cell at ( 1499.27, 1083.44), frame 8, G1, branch 0
+                                └──  Cell at ( 1501.58, 1083.53), frame 9, S, branch 0
+                                    └──  Cell at ( 1507.08, 1081.31), frame 10, S, branch 0
+                                        └──  Cell at ( 1511.67, 1079.06), frame 11, S, branch 0
+                                            └──  Cell at ( 1516.84, 1077.57), frame 12, S, branch 0
+                                                └──  Cell at ( 1518.22, 1077.58), frame 13, S, branch 0
+                                                    └──  Cell at ( 1524.06, 1076.32), frame 14, S, branch 0
+                                                        └──  Cell at ( 1528.82, 1073.25), frame 15, S, branch 0
+                                                            └──  Cell at ( 1531.42, 1073.09), frame 16, S, branch 0
+                                                                └──  Cell at ( 1532.30, 1072.78), frame 17, S, branch 0
+                                                                    └──  Cell at ( 1535.88, 1067.11), frame 18, S, branch 0
+                                                                        └──  Cell at ( 1537.25, 1058.38), frame 19, S, branch 0

@@ -1,0 +1,39 @@
+ Cell at ( 713.40, 1499.66), frame 0, G1, branch 0
+├──  Cell at ( 683.09, 1518.79), frame 1, M, branch 1
+│   └──  Cell at ( 681.09, 1514.79), frame 2, M, branch 1
+│       └──  Cell at ( 666.69, 1502.67), frame 3, M, branch 1
+│           └──  Cell at ( 681.09, 1514.79), frame 4, G1, branch 1
+│               └──  Cell at ( 670.11, 1500.13), frame 5, G1, branch 1
+│                   └──  Cell at ( 672.60, 1495.56), frame 6, G1, branch 1
+│                       └──  Cell at ( 674.73, 1491.41), frame 7, G1, branch 1
+│                           └──  Cell at ( 680.53, 1489.50), frame 8, G1, branch 1
+│                               └──  Cell at ( 685.02, 1487.41), frame 9, G1, branch 1
+│                                   └──  Cell at ( 688.29, 1485.28), frame 10, G1, branch 1
+│                                       └──  Cell at ( 692.42, 1485.01), frame 11, G1, branch 1
+│                                           └──  Cell at ( 694.03, 1484.69), frame 12, G1, branch 1
+│                                               └──  Cell at ( 695.78, 1488.85), frame 13, G1, branch 1
+│                                                   └──  Cell at ( 698.02, 1491.45), frame 14, G1, branch 1
+│                                                       └──  Cell at ( 700.58, 1490.91), frame 15, G1, branch 1
+│                                                           └──  Cell at ( 699.71, 1490.82), frame 16, G1, branch 1
+│                                                               └──  Cell at ( 702.00, 1492.07), frame 17, G1, branch 1
+│                                                                   └──  Cell at ( 701.66, 1490.92), frame 18, G1, branch 1
+│                                                                       └──  Cell at ( 699.33, 1485.49), frame 19, G1, branch 1
+└──  Cell at ( 715.40, 1505.66), frame 1, M, branch 2
+    └──  Cell at ( 717.40, 1507.66), frame 2, M, branch 2
+        └──  Cell at ( 715.64, 1509.41), frame 3, M, branch 2
+            └──  Cell at ( 721.40, 1511.66), frame 4, G1, branch 2
+                └──  Cell at ( 725.14, 1515.69), frame 5, G1, branch 2
+                    └──  Cell at ( 730.55, 1522.04), frame 6, G1, branch 2
+                        └──  Cell at ( 734.72, 1528.23), frame 7, G1, branch 2
+                            └──  Cell at ( 738.12, 1532.65), frame 8, G1, branch 2
+                                └──  Cell at ( 739.27, 1533.40), frame 9, G1, branch 2
+                                    └──  Cell at ( 740.24, 1535.20), frame 10, G1, branch 2
+                                        └──  Cell at ( 745.70, 1539.10), frame 11, G1, branch 2
+                                            └──  Cell at ( 750.06, 1541.64), frame 12, G1, branch 2
+                                                └──  Cell at ( 756.31, 1545.71), frame 13, G1, branch 2
+                                                    └──  Cell at ( 763.54, 1547.66), frame 14, G1, branch 2
+                                                        └──  Cell at ( 770.44, 1546.35), frame 15, G1, branch 2
+                                                            └──  Cell at ( 782.21, 1543.18), frame 16, G1, branch 2
+                                                                └──  Cell at ( 790.85, 1544.00), frame 17, G1, branch 2
+                                                                    └──  Cell at ( 795.95, 1541.89), frame 18, G1, branch 2
+                                                                        └──  Cell at ( 794.77, 1537.03), frame 19, G1, branch 2

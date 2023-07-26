@@ -1,0 +1,25 @@
+ Cell at ( 574.37, 1340.37), frame 0, G1, branch 0
+├──  Cell at ( 572.39, 1339.75), frame 1, M, branch 1
+│   └──  Cell at ( 572.45, 1341.50), frame 2, M, branch 1
+│       └──  Cell at ( 569.89, 1361.91), frame 3, M, branch 1
+│           └──  Cell at ( 552.24, 1365.69), frame 4, G1, branch 1
+│               └──  Cell at ( 567.55, 1366.49), frame 5, G1, branch 1
+│                   └──  Cell at ( 620.17, 1378.76), frame 6, S, branch 1
+│                       └──  Cell at ( 620.39, 1376.44), frame 7, S, branch 1
+│                           └──  Cell at ( 618.07, 1375.13), frame 8, S, branch 1
+│                               └──  Cell at ( 615.29, 1373.79), frame 9, S, branch 1
+│                                   └──  Cell at ( 611.04, 1373.66), frame 10, S, branch 1
+│                                       └──  Cell at ( 609.15, 1372.74), frame 11, S, branch 1
+│                                           └──  Cell at ( 607.30, 1370.63), frame 12, G2, branch 1
+│                                               └──  Cell at ( 604.42, 1366.26), frame 13, G2, branch 1
+│                                                   └──  Cell at ( 599.71, 1363.30), frame 14, G2, branch 1
+│                                                       └──  Cell at ( 597.73, 1365.94), frame 15, G2, branch 1
+│                                                           └──  Cell at ( 598.70, 1367.26), frame 16, G2, branch 1
+│                                                               └──  Cell at ( 599.22, 1369.08), frame 17, G2, branch 1
+│                                                                   └──  Cell at ( 597.70, 1369.82), frame 18, G2, branch 1
+│                                                                       └──  Cell at ( 592.99, 1366.17), frame 19, G2, branch 1
+└──  Cell at ( 603.30, 1374.01), frame 1, M, branch 2
+    └──  Cell at ( 598.78, 1372.90), frame 2, M, branch 2
+        └──  Cell at ( 602.37, 1375.92), frame 3, M, branch 2
+            └──  Cell at ( 607.85, 1373.91), frame 4, G1, branch 2
+                └──  Cell at ( 616.68, 1375.17), frame 5, G1, branch 2

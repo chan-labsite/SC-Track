@@ -1,0 +1,39 @@
+ Cell at ( 1415.16, 1795.06), frame 0, G1, branch 0
+├──  Cell at ( 1427.70, 1785.89), frame 1, M, branch 1
+│   └──  Cell at ( 1419.70, 1783.89), frame 2, M, branch 1
+│       └──  Cell at ( 1419.70, 1783.89), frame 3, M, branch 1
+│           └──  Cell at ( 1419.05, 1782.30), frame 4, G1, branch 1
+│               └──  Cell at ( 1419.27, 1781.37), frame 5, G1, branch 1
+│                   └──  Cell at ( 1421.03, 1782.69), frame 6, G1, branch 1
+│                       └──  Cell at ( 1423.55, 1783.13), frame 7, G1, branch 1
+│                           └──  Cell at ( 1423.93, 1782.00), frame 8, G1, branch 1
+│                               └──  Cell at ( 1425.87, 1780.38), frame 9, G1, branch 1
+│                                   └──  Cell at ( 1426.21, 1781.55), frame 10, G1, branch 1
+│                                       └──  Cell at ( 1431.58, 1785.80), frame 11, G1, branch 1
+│                                           └──  Cell at ( 1434.83, 1789.23), frame 12, G1, branch 1
+│                                               └──  Cell at ( 1438.75, 1791.55), frame 13, G1, branch 1
+│                                                   └──  Cell at ( 1440.40, 1796.09), frame 14, G1, branch 1
+│                                                       └──  Cell at ( 1440.52, 1797.76), frame 15, G1, branch 1
+│                                                           └──  Cell at ( 1441.18, 1798.98), frame 16, G1, branch 1
+│                                                               └──  Cell at ( 1441.09, 1801.71), frame 17, G1, branch 1
+│                                                                   └──  Cell at ( 1440.37, 1799.94), frame 18, G1, branch 1
+│                                                                       └──  Cell at ( 1437.31, 1795.83), frame 19, G1, branch 1
+└──  Cell at ( 1409.06, 1808.31), frame 1, M, branch 2
+    └──  Cell at ( 1413.06, 1814.31), frame 2, M, branch 2
+        └──  Cell at ( 1413.40, 1816.97), frame 3, M, branch 2
+            └──  Cell at ( 1413.02, 1818.11), frame 4, G1, branch 2
+                └──  Cell at ( 1414.40, 1820.13), frame 5, G1, branch 2
+                    └──  Cell at ( 1414.90, 1820.06), frame 6, G1, branch 2
+                        └──  Cell at ( 1414.01, 1819.59), frame 7, G1, branch 2
+                            └──  Cell at ( 1410.87, 1814.90), frame 8, G1, branch 2
+                                └──  Cell at ( 1409.49, 1814.22), frame 9, G1, branch 2
+                                    └──  Cell at ( 1408.74, 1815.21), frame 10, G1, branch 2
+                                        └──  Cell at ( 1405.80, 1812.76), frame 11, G1, branch 2
+                                            └──  Cell at ( 1405.26, 1812.62), frame 12, G1, branch 2
+                                                └──  Cell at ( 1403.10, 1810.96), frame 13, G1, branch 2
+                                                    └──  Cell at ( 1401.31, 1810.73), frame 14, G1, branch 2
+                                                        └──  Cell at ( 1397.09, 1806.86), frame 15, G1, branch 2
+                                                            └──  Cell at ( 1391.32, 1799.19), frame 16, G1, branch 2
+                                                                └──  Cell at ( 1384.81, 1796.34), frame 17, G1, branch 2
+                                                                    └──  Cell at ( 1377.36, 1790.16), frame 18, G1, branch 2
+                                                                        └──  Cell at ( 1365.12, 1777.32), frame 19, G1, branch 2

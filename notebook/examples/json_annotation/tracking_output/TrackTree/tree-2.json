@@ -1,0 +1,35 @@
+ Cell at ( 1275.73, 504.30), frame 0, G1, branch 0
+└──  Cell at ( 1276.32, 504.34), frame 1, G1, branch 0
+    └──  Cell at ( 1276.89, 503.08), frame 2, G1, branch 0
+        └──  Cell at ( 1277.74, 503.48), frame 3, G1, branch 0
+            └──  Cell at ( 1277.27, 503.22), frame 4, G1, branch 0
+                ├──  Cell at ( 1235.14, 489.76), frame 5, M, branch 2
+                │   └──  Cell at ( 1235.72, 490.39), frame 6, M, branch 2
+                │       └──  Cell at ( 1234.21, 492.88), frame 7, M, branch 2
+                │           └──  Cell at ( 1231.92, 496.95), frame 8, G1, branch 2
+                │               └──  Cell at ( 1226.45, 507.00), frame 9, G1, branch 2
+                │                   └──  Cell at ( 1228.17, 505.53), frame 10, G1, branch 2
+                │                       └──  Cell at ( 1229.62, 508.59), frame 11, G1, branch 2
+                │                           └──  Cell at ( 1231.41, 511.92), frame 12, G1, branch 2
+                │                               └──  Cell at ( 1230.92, 515.59), frame 13, G1, branch 2
+                │                                   └──  Cell at ( 1229.63, 517.25), frame 14, G1, branch 2
+                │                                       └──  Cell at ( 1230.23, 517.73), frame 15, G1, branch 2
+                │                                           └──  Cell at ( 1231.15, 519.37), frame 16, G1, branch 2
+                │                                               └──  Cell at ( 1231.99, 519.78), frame 17, G1, branch 2
+                │                                                   └──  Cell at ( 1234.09, 517.69), frame 18, G1, branch 2
+                │                                                       └──  Cell at ( 1230.71, 513.21), frame 19, G1, branch 2
+                └──  Cell at ( 1279.61, 505.18), frame 5, M, branch 1
+                    └──  Cell at ( 1281.01, 505.72), frame 6, M, branch 1
+                        └──  Cell at ( 1283.25, 505.55), frame 7, M, branch 1
+                            └──  Cell at ( 1283.07, 507.12), frame 8, G1, branch 1
+                                └──  Cell at ( 1284.76, 512.07), frame 9, G1, branch 1
+                                    └──  Cell at ( 1283.21, 511.39), frame 10, S, branch 1
+                                        └──  Cell at ( 1283.96, 513.11), frame 11, S, branch 1
+                                            └──  Cell at ( 1288.63, 516.26), frame 12, S, branch 1
+                                                └──  Cell at ( 1288.55, 517.63), frame 13, S, branch 1
+                                                    └──  Cell at ( 1289.07, 520.16), frame 14, S, branch 1
+                                                        └──  Cell at ( 1290.95, 520.00), frame 15, S, branch 1
+                                                            └──  Cell at ( 1290.76, 518.80), frame 16, S, branch 1
+                                                                └──  Cell at ( 1290.05, 519.37), frame 17, S, branch 1
+                                                                    └──  Cell at ( 1288.54, 515.66), frame 18, S, branch 1
+                                                                        └──  Cell at ( 1284.18, 510.40), frame 19, S, branch 1

@@ -1,0 +1,15 @@
+Sphinx
+sphinx-autobuild
+sphinx-press-theme
+sphinxcontrib-apidoc
+sphinxcontrib-applehelp
+sphinxcontrib-devhelp
+sphinxcontrib-htmlhelp
+sphinxcontrib-jquery
+sphinxcontrib-jsmath
+sphinxcontrib-napoleon
+sphinxcontrib-qthelp
+sphinxcontrib-serializinghtml
+docutils
+m2r
+m2r2
