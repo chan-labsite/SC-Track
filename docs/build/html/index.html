@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-      <title>Welcome to SC-Track’s documentation!</title>
+      <title>Welcome to SC-Track API documentation!</title>
     
           <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="_static/theme.css " type="text/css" />
@@ -143,7 +143,7 @@
   <ul class="breadcrumbs">
     <li><a href="#">Docs</a> &raquo;</li>
     
-    <li>Welcome to SC-Track’s documentation!</li>
+    <li>Welcome to SC-Track API documentation!</li>
   </ul>
   
 
@@ -158,8 +158,9 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="welcome-to-sc-track-s-documentation">
-<h1>Welcome to SC-Track’s documentation!<a class="headerlink" href="#welcome-to-sc-track-s-documentation" title="Permalink to this heading">¶</a></h1>
+  <section id="welcome-to-sc-track-api-documentation">
+<h1>Welcome to SC-Track API documentation!<a class="headerlink" href="#welcome-to-sc-track-api-documentation" title="Permalink to this heading">¶</a></h1>
+<p>SC-Track is an efficient algorithm for dynamic tracking of single cells on different time-lapse microscope images. It can use the segmentation results of various models to efficiently track single cells and reconstruct cell lines. It can track multi-generational cell division events without any additional information, only using the outline information of cells; and can reduce the noise of the segmentation, so as to use the noise segmentation results to generate accurate cell lineages. Its cascade-caching model can efficiently deal with segmentation loss, and its TCS algorithm can perform accurate reclassification for users with cell classification needs (such as classification of different cell cycle phases). SC-Track allows users to use different segmentation results as input, including the JSON annotation file format supported by VGG image annotator, and the common mask grayscale image format. The export results include track table, visualized labeled image, JSON file containing tracking information (which can be imported into VGG image annotator for viewing), and a collection of TrackingTree structure tree files. Users can perform more detailed downstream analysis on the track table, view the tracking results through visualized results, and modify the track table or track json file to manually correct tracking errors. SC-Track is not only suitable for small timelapse analysis, but also suitable for long time and high cell density timelapse analysis of thousands of frames.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -229,8 +230,8 @@
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.add_exist_time"><code class="docutils literal notranslate"><span class="pre">TreeStatus.add_exist_time()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.check_division_window"><code class="docutils literal notranslate"><span class="pre">TreeStatus.check_division_window()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.enter_mitosis"><code class="docutils literal notranslate"><span class="pre">TreeStatus.enter_mitosis()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.exist_mitosis_time"><code class="docutils literal notranslate"><span class="pre">TreeStatus.exist_mitosis_time</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.exit_mitosis"><code class="docutils literal notranslate"><span class="pre">TreeStatus.exit_mitosis()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.exit_mitosis_time"><code class="docutils literal notranslate"><span class="pre">TreeStatus.exit_mitosis_time</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.get_status"><code class="docutils literal notranslate"><span class="pre">TreeStatus.get_status()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.is_in_division_window"><code class="docutils literal notranslate"><span class="pre">TreeStatus.is_in_division_window()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.base.TreeStatus.is_mitosis_enter"><code class="docutils literal notranslate"><span class="pre">TreeStatus.is_mitosis_enter</span></code></a></li>
@@ -328,9 +329,9 @@
 <li class="toctree-l3"><a class="reference internal" href="SCTrack.html#module-SCTrack.reclassification">SCTrack.reclassification module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser"><code class="docutils literal notranslate"><span class="pre">TreeParser</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.bfs"><code class="docutils literal notranslate"><span class="pre">TreeParser.bfs()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.check_ctype_exit"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_ctype_exit()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.check_ctype_start"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_ctype_start()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.check_mitosis_start"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_mitosis_start()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.check_s_exit"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_s_exit()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.check_s_start"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_s_start()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.get_child"><code class="docutils literal notranslate"><span class="pre">TreeParser.get_child()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.get_lineage_dict"><code class="docutils literal notranslate"><span class="pre">TreeParser.get_lineage_dict()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.parse_g1_g2"><code class="docutils literal notranslate"><span class="pre">TreeParser.parse_g1_g2()</span></code></a></li>
@@ -343,12 +344,14 @@
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.record_cell_division_count"><code class="docutils literal notranslate"><span class="pre">TreeParser.record_cell_division_count()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.search_root_node"><code class="docutils literal notranslate"><span class="pre">TreeParser.search_root_node()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.set_cell_id"><code class="docutils literal notranslate"><span class="pre">TreeParser.set_cell_id()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.TreeParser.smooth_type"><code class="docutils literal notranslate"><span class="pre">TreeParser.smooth_type()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.pares_single_tree"><code class="docutils literal notranslate"><span class="pre">pares_single_tree()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.run_track"><code class="docutils literal notranslate"><span class="pre">run_track()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.track_tree_to_MOT"><code class="docutils literal notranslate"><span class="pre">track_tree_to_MOT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.track_tree_to_TRA"><code class="docutils literal notranslate"><span class="pre">track_tree_to_TRA()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.track_tree_to_mask"><code class="docutils literal notranslate"><span class="pre">track_tree_to_mask()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.track_tree_to_table"><code class="docutils literal notranslate"><span class="pre">track_tree_to_table()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="SCTrack.html#SCTrack.reclassification.track_trees_to_json"><code class="docutils literal notranslate"><span class="pre">track_trees_to_json()</span></code></a></li>
 </ul>
@@ -545,8 +548,8 @@
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.add_exist_time"><code class="docutils literal notranslate"><span class="pre">TreeStatus.add_exist_time()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.check_division_window"><code class="docutils literal notranslate"><span class="pre">TreeStatus.check_division_window()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.enter_mitosis"><code class="docutils literal notranslate"><span class="pre">TreeStatus.enter_mitosis()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.exist_mitosis_time"><code class="docutils literal notranslate"><span class="pre">TreeStatus.exist_mitosis_time</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.exit_mitosis"><code class="docutils literal notranslate"><span class="pre">TreeStatus.exit_mitosis()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.exit_mitosis_time"><code class="docutils literal notranslate"><span class="pre">TreeStatus.exit_mitosis_time</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.get_status"><code class="docutils literal notranslate"><span class="pre">TreeStatus.get_status()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.is_in_division_window"><code class="docutils literal notranslate"><span class="pre">TreeStatus.is_in_division_window()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.base.html#SCTrack.base.TreeStatus.is_mitosis_enter"><code class="docutils literal notranslate"><span class="pre">TreeStatus.is_mitosis_enter</span></code></a></li>
@@ -644,9 +647,9 @@
 <li class="toctree-l4"><a class="reference internal" href="python_apis/SCTrack.reclassification.html">SCTrack.reclassification module</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser"><code class="docutils literal notranslate"><span class="pre">TreeParser</span></code></a><ul>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.bfs"><code class="docutils literal notranslate"><span class="pre">TreeParser.bfs()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.check_ctype_exit"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_ctype_exit()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.check_ctype_start"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_ctype_start()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.check_mitosis_start"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_mitosis_start()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.check_s_exit"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_s_exit()</span></code></a></li>
-<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.check_s_start"><code class="docutils literal notranslate"><span class="pre">TreeParser.check_s_start()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.get_child"><code class="docutils literal notranslate"><span class="pre">TreeParser.get_child()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.get_lineage_dict"><code class="docutils literal notranslate"><span class="pre">TreeParser.get_lineage_dict()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.parse_g1_g2"><code class="docutils literal notranslate"><span class="pre">TreeParser.parse_g1_g2()</span></code></a></li>
@@ -659,12 +662,14 @@
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.record_cell_division_count"><code class="docutils literal notranslate"><span class="pre">TreeParser.record_cell_division_count()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.search_root_node"><code class="docutils literal notranslate"><span class="pre">TreeParser.search_root_node()</span></code></a></li>
 <li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.set_cell_id"><code class="docutils literal notranslate"><span class="pre">TreeParser.set_cell_id()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.TreeParser.smooth_type"><code class="docutils literal notranslate"><span class="pre">TreeParser.smooth_type()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.pares_single_tree"><code class="docutils literal notranslate"><span class="pre">pares_single_tree()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.run_track"><code class="docutils literal notranslate"><span class="pre">run_track()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.track_tree_to_MOT"><code class="docutils literal notranslate"><span class="pre">track_tree_to_MOT()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.track_tree_to_TRA"><code class="docutils literal notranslate"><span class="pre">track_tree_to_TRA()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.track_tree_to_mask"><code class="docutils literal notranslate"><span class="pre">track_tree_to_mask()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.track_tree_to_table"><code class="docutils literal notranslate"><span class="pre">track_tree_to_table()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="python_apis/SCTrack.reclassification.html#SCTrack.reclassification.track_trees_to_json"><code class="docutils literal notranslate"><span class="pre">track_trees_to_json()</span></code></a></li>
 </ul>

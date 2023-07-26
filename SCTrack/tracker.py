@@ -648,14 +648,12 @@ class Matcher(object):
                 if score_dict[cell].get('IoU') > 0.0:
                     candidates[cell] = score_dict[cell]
         if not candidates:
+            if not score_dict:
+                return None
             for cell in score_dict:
                 candidates[cell] = sum(score_dict[cell].values())
-            try:
-                best = max(candidates, key=candidates.get)
-                return best
-            except ValueError:
-                print(score_dict)
-                return None
+            best = max(candidates, key=candidates.get)
+            return best
         else:
             best = calc_weight(candidates)
             return best

@@ -202,7 +202,7 @@
 
 <div class="viewcode-block" id="TreeStatus"><a class="viewcode-back" href="../../python_apis/SCTrack.base.html#SCTrack.base.TreeStatus">[docs]</a><span class="k">class</span> <span class="nc">TreeStatus</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Record the state of the tracked cells, including cell phase status, division status, and matching status</span>
+<span class="sd">    Record the state of the tracked cells, including cell cell_type status, division status, and matching status</span>
 <span class="sd">    Phase: whether Mitosis has entered, and which frame has entered Mitosis</span>
 <span class="sd">    Division: whether there is Mitosis</span>
 <span class="sd">    Matching situation: Is there any loss of matching in this cell</span>
@@ -220,7 +220,7 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">__tracking_tree</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">__init_flag</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">enter_mitosis_threshold</span> <span class="o">=</span> <span class="mi">50</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">enter_mitosis_threshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">ENTER_DIVISION_THRESHOLD</span>
 
             <span class="c1"># The cell division window stage, with an initial value of 20, will exit division matching when no cell</span>
             <span class="c1"># division is matched or cell division is completed during this window period. After entering the split</span>
@@ -244,7 +244,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__exit_mitosis_frame</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__match_status</span> <span class="o">=</span> <span class="n">MatchStatus</span><span class="o">.</span><span class="n">Unmatched</span>
 
-            <span class="c1"># This value records the number of predicted M phase. If &gt; 3, it is considered to have entered M period,</span>
+            <span class="c1"># This value records the number of predicted M cell_type. If &gt; 3, it is considered to have entered M period,</span>
             <span class="c1"># and at this point, enter needs to be called externally_ Mitosis()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__predict_M_count</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__init_flag</span> <span class="o">=</span> <span class="kc">True</span>
@@ -331,7 +331,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__enter_mitosis</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">exist_mitosis_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">exit_mitosis_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exit_mitosis_time</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -633,12 +633,12 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">__match_status</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># 匹配状态，如果参与匹配则设置为匹配状态，从未匹配则设置为False</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mcy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mcy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># if  Cell.init_flag is False:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>  <span class="c1"># [(x1, x2 ... xn), (y1, y2 ... yn)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mcy</span> <span class="o">=</span> <span class="n">mcy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dic</span> <span class="o">=</span> <span class="n">dic</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">=</span> <span class="n">cell_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame_index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># If a cell divides, record the __id of the cell&#39;s parent</span>
@@ -705,18 +705,15 @@
         <span class="n">area</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">centroid_x</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">centroid_y</span> <span class="o">=</span> <span class="mf">0.0</span>
-
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span>
             <span class="n">cross_product</span> <span class="o">=</span> <span class="n">x_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">y_coords</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_coords</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">y_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">area</span> <span class="o">+=</span> <span class="n">cross_product</span>
             <span class="n">centroid_x</span> <span class="o">+=</span> <span class="p">(</span><span class="n">x_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_coords</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">*</span> <span class="n">cross_product</span>
             <span class="n">centroid_y</span> <span class="o">+=</span> <span class="p">(</span><span class="n">y_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_coords</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">*</span> <span class="n">cross_product</span>
-
         <span class="n">area</span> <span class="o">/=</span> <span class="mf">2.0</span>
         <span class="n">centroid_x</span> <span class="o">/=</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">area</span>
         <span class="n">centroid_y</span> <span class="o">/=</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">area</span>
-
         <span class="k">return</span> <span class="n">centroid_x</span><span class="p">,</span> <span class="n">centroid_y</span></div>
 
     <span class="nd">@property</span>
@@ -842,7 +839,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_position</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">i</span> <span class="o">+</span> <span class="n">speed</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">time</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span>
                         <span class="nb">tuple</span><span class="p">([</span><span class="n">j</span> <span class="o">+</span> <span class="n">speed</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">time</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]])]</span>
-        <span class="n">new_cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">new_position</span><span class="p">,</span> <span class="n">mcy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mcy</span><span class="p">,</span> <span class="n">dic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dic</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">new_cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">new_position</span><span class="p">,</span> <span class="n">mcy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mcy</span><span class="p">,</span> <span class="n">dic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dic</span><span class="p">,</span> <span class="n">cell_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_type</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
         <span class="n">new_cell</span><span class="o">.</span><span class="n">set_track_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__track_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_cell</span></div>
 
@@ -944,7 +941,7 @@
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot; Cell at (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">), frame </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="si">}</span><span class="s2">, branch </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__branch_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot; Cell at (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">), frame </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_type</span><span class="si">}</span><span class="s2">, branch </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__branch_id</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Object Cell&quot;</span>
 

@@ -155,7 +155,9 @@
           <div class="content" role="main" v-pre>
             
   <h1>Source code for SCTrack.track</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="c1"># coding=utf-8</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
@@ -195,8 +197,20 @@
                          <span class="n">mcy</span><span class="o">=</span><span class="n">fimage</span><span class="p">,</span>
                          <span class="n">save_visualize</span><span class="o">=</span><span class="n">export_visualization</span><span class="p">,</span> <span class="n">visualize_background_image</span><span class="o">=</span><span class="n">fimage</span><span class="p">,</span>
                          <span class="n">track_to_json</span><span class="o">=</span><span class="n">track_to_json</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="n">basename</span><span class="p">)</span></div>
-<span class="c1">#</span>
-<span class="c1"># start_track(r&#39;G:\20x_dataset\evaluate_data\src01\result-GT.json&#39;,r&#39;G:\20x_dataset\evaluate_data\src01&#39;, &#39;mcy&#39;, 40, fpcna=r&#39;G:\20x_dataset\evaluate_data\src01\mcy.tif&#39;)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">annotation</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;G:\paper\test\Data</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">\SEG.tif&quot;</span>
+    <span class="n">mcy_img</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;G:\paper\test\Data</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">\01.tif&quot;</span>
+    <span class="n">start_track</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="sa">rf</span><span class="s2">&quot;G:\paper\test\Data</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;mcy&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="n">mcy_img</span><span class="p">)</span>
+
+    <span class="c1"># annotation = r&quot;G:\杂项\example\example-annotation.json&quot;</span>
+    <span class="c1"># mcy_img = r&quot;G:\杂项\example\example-image.tif&quot;</span>
+    <span class="c1"># dic_img = r&#39;G:\杂项\example\example-bf.tif&#39;</span>
+    <span class="c1"># start_track(annotation, r&quot;G:\杂项\example&quot;, &#39;mcy&#39;, 30,</span>
+    <span class="c1">#             mcy_img)</span>
 </pre></div>
 
           </div>

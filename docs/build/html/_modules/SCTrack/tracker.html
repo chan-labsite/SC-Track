@@ -155,8 +155,7 @@
           <div class="content" role="main" v-pre>
             
   <h1>Source code for SCTrack.tracker</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -166,10 +165,10 @@
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
 <span class="kn">import</span> <span class="nn">shapely</span>
 
-
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../../&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span><span class="p">,</span> <span class="n">lru_cache</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -187,7 +186,6 @@
 <span class="kn">from</span> <span class="nn">SCTrack.t_error</span> <span class="kn">import</span> <span class="n">InsertError</span><span class="p">,</span> <span class="n">MitosisError</span><span class="p">,</span> <span class="n">NodeExistError</span><span class="p">,</span> <span class="n">ErrorMatchMitosis</span><span class="p">,</span> <span class="n">StatusError</span>
 <span class="kn">from</span> <span class="nn">SCTrack.feature</span> <span class="kn">import</span> <span class="n">FeatureExtractor</span><span class="p">,</span> <span class="n">feature_extract</span>
 <span class="kn">from</span> <span class="nn">SCTrack</span> <span class="kn">import</span> <span class="n">config</span>
-
 
 <span class="n">TEST</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">TEST_INDEX</span> <span class="o">=</span> <span class="kc">None</span>
@@ -257,8 +255,8 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">__branch_id</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">childs</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">add_tree</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># 如果被添加到TrackingTree中，设置为True</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">life</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># 每个分支初始生命值为5，如果没有匹配上，或者利用缺省值填充匹配，则-1，如如果生命值为0，则该分支不再参与匹配</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">add_tree</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># if adding to the TrackingTree，set as True</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">life</span> <span class="o">=</span> <span class="mi">5</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">_init_flag</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
@@ -464,6 +462,8 @@
 <div class="viewcode-block" id="Match.calcIoU"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Match.calcIoU">[docs]</a>    <span class="k">def</span> <span class="nf">calcIoU</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_1</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">cell_2</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate IoU of two cells.</span>
+<span class="sd">        First, try to calculate the IoU of the contour. If it is not possible to calculate,</span>
+<span class="sd">        then change to calculating the IoU of the bounding box.</span>
 <span class="sd">        return value range: float(0-1)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">poly1</span> <span class="o">=</span> <span class="n">cell_1</span><span class="o">.</span><span class="n">polygon</span>
@@ -474,21 +474,22 @@
                 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
                 <span class="n">intersection</span> <span class="o">=</span> <span class="n">poly1</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">poly2</span><span class="p">)</span>
                 <span class="n">union</span> <span class="o">=</span> <span class="n">poly1</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">poly2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">union</span><span class="o">.</span><span class="n">area</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="mi">0</span>
+                <span class="k">elif</span> <span class="n">poly1</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">poly2</span><span class="p">)</span> <span class="ow">or</span> <span class="n">poly2</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">poly1</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">intersection</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="n">union</span><span class="o">.</span><span class="n">area</span>
         <span class="k">except</span> <span class="n">shapely</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">GEOSException</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcIoU_roughly</span><span class="p">(</span><span class="n">cell_1</span><span class="p">,</span> <span class="n">cell_2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">union</span><span class="o">.</span><span class="n">area</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="k">elif</span> <span class="n">poly1</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">poly2</span><span class="p">)</span> <span class="ow">or</span> <span class="n">poly2</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">poly1</span><span class="p">):</span>
-            <span class="k">return</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">intersection</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="n">union</span><span class="o">.</span><span class="n">area</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcIoU_roughly</span><span class="p">(</span><span class="n">cell_1</span><span class="p">,</span> <span class="n">cell_2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Match.calcCosDistance"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Match.calcCosDistance">[docs]</a>    <span class="k">def</span> <span class="nf">calcCosDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_1</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">cell_2</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the cosine distance of two cells</span>
 <span class="sd">        Return value range: float[0, 2]</span>
 <span class="sd">        The smaller the distance, the more similar it is, scaled to [0, 1) by the arctangent function</span>
-<span class="sd">        The return value is the cosine value after normalization [0, π/2]. The smaller the return value, the lower the similarity</span>
+<span class="sd">        The return value is the cosine value after normalization [0, π/2].</span>
+<span class="sd">        The smaller the return value, the lower the similarity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dist</span> <span class="o">=</span> <span class="n">cell_1</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">cosDistance</span><span class="p">(</span><span class="n">cell_2</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span></div>
@@ -549,8 +550,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the contour similarity of two cells</span>
 <span class="sd">        Return value range: float(0, 1)</span>
-<span class="sd">        The smaller the score value, the greater the similarity, and the inversion operation can be performed</span>
-<span class="sd">        The return value is the cosine value after normalization [0, π/2]</span>
+<span class="sd">        The smaller the score value, the greater the similarity, and the inversion operation can be performed.</span>
+<span class="sd">        (The return value is the cosine value after normalization [0, π/2], no longer do this change, directly return</span>
+<span class="sd">        the score.)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">score</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">matchShapes</span><span class="p">(</span><span class="n">cell_1</span><span class="o">.</span><span class="n">contours</span><span class="p">,</span> <span class="n">cell_2</span><span class="o">.</span><span class="n">contours</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
         <span class="c1"># return np.cos(self.normalize(score))</span>
@@ -597,7 +599,11 @@
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">child</span> <span class="ow">and</span> <span class="n">cell</span><span class="o">.</span><span class="n">is_accurate_matched</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">calcEuclideanDistance</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">child</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">child</span><span class="o">.</span><span class="n">r_long</span> <span class="ow">or</span> \
-                        <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">calcIoU</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">child</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">calcIoU</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">child</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">filtered_candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filtered_candidates</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">child</span> <span class="ow">and</span> <span class="n">cell</span><span class="o">.</span><span class="n">is_accurate_matched</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                     <span class="n">filtered_candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">filtered_candidates</span>
@@ -637,17 +643,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">matched</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">unmatched_child_list</span><span class="p">:</span>
-            <span class="c1"># if i.is_be_matched :</span>
-            <span class="c1">#     if i.status.exist_mitosis_time &lt; 50:</span>
-            <span class="c1">#         continue</span>
             <span class="n">similar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_similar</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-            <span class="n">matched</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">similar</span>
+            <span class="k">if</span> <span class="n">similar</span><span class="p">[</span><span class="s1">&#39;IoU&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">matched</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">similar</span>
         <span class="k">return</span> <span class="n">matched</span></div>
 
-<div class="viewcode-block" id="Matcher.is_mitosis_start"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.is_mitosis_start">[docs]</a>    <span class="k">def</span> <span class="nf">is_mitosis_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">last_leaves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Cell</span><span class="p">],</span> <span class="n">area_size_t</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">iou_t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class="viewcode-block" id="Matcher.is_mitosis_start"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.is_mitosis_start">[docs]</a>    <span class="k">def</span> <span class="nf">is_mitosis_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">last_leaves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Cell</span><span class="p">],</span> <span class="n">area_size_t</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">iou_t</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determine whether a cell enters the M phase. The basic criterion is that when a cell enters mitosis, its volume</span>
-<span class="sd">        increases and the number of candidate regions increases. If the cell successfully enters the M phase, return a</span>
+<span class="sd">        Determine whether a cell enters the M cell_type. The basic criterion is that when a cell enters mitosis, its volume</span>
+<span class="sd">        increases and the number of candidate regions increases. If the cell successfully enters the M cell_type, return a</span>
 <span class="sd">        dict containing information about the last frame of G2 and the first frame of M. Otherwise, return False.</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="n">match_score</span> <span class="o">=</span> <span class="p">{}</span>
@@ -655,13 +659,11 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_similar</span><span class="p">(</span><span class="n">pre_parent</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;IoU&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">iou_t</span><span class="p">:</span>
                 <span class="n">match_score</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_similar</span><span class="p">(</span><span class="n">pre_parent</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">child_cell</span> <span class="ow">in</span> <span class="n">match_score</span><span class="p">:</span>
-            <span class="c1"># if Rectangle(*parent.bbox).isInclude(Rectangle(*child_cell.bbox)) or (</span>
-            <span class="c1">#         (child_cell.area / parent.area) &gt;= area_size_t):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">child_cell</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="n">pre_parent</span><span class="o">.</span><span class="n">area</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">area_size_t</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;last_G2&#39;</span><span class="p">:</span> <span class="n">pre_parent</span><span class="p">,</span> <span class="s1">&#39;first_M&#39;</span><span class="p">:</span> <span class="n">child_cell</span><span class="p">}</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="Matcher.get_similar_sister"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.get_similar_sister">[docs]</a>    <span class="k">def</span> <span class="nf">get_similar_sister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">matched_cells_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">area_t</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">shape_t</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">area_size_t</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span>
+<div class="viewcode-block" id="Matcher.get_similar_sister"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.get_similar_sister">[docs]</a>    <span class="k">def</span> <span class="nf">get_similar_sister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">matched_cells_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">area_t</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">shape_t</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">area_size_t</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span>
                            <span class="n">iou_t</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the two most similar cells among multiple candidates as the daughter cells.&quot;&quot;&quot;</span>
         <span class="n">cell_dict_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matched_cells_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -696,7 +698,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MitosisError</span><span class="p">(</span><span class="s1">&#39;cannot match the suitable daughter cells&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Matcher.select_mitosis_cells"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.select_mitosis_cells">[docs]</a>    <span class="k">def</span> <span class="nf">select_mitosis_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">candidates_child_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Cell</span><span class="p">],</span> <span class="n">area_t</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">shape_t</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<div class="viewcode-block" id="Matcher.select_mitosis_cells"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.select_mitosis_cells">[docs]</a>    <span class="k">def</span> <span class="nf">select_mitosis_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">candidates_child_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Cell</span><span class="p">],</span> <span class="n">area_t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">shape_t</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">area_size_t</span><span class="o">=</span><span class="mf">1.3</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If cell division occurs, select two daughter cells. When calling this method, make sure that cell division is</span>
@@ -711,28 +713,20 @@
         <span class="n">checked_candidates</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matched_candidates</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_be_matched</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">exist_mitosis_time</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">exit_mitosis_time</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">ENTER_DIVISION_THRESHOLD</span><span class="p">:</span>
                     <span class="k">continue</span>
             <span class="n">checked_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">matched_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">matched_cells_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_iou</span><span class="p">(</span><span class="n">checked_candidates</span><span class="p">)</span>
-        <span class="c1"># matched_cells_dict = self.check_iou(matched_candidates)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">matched_cells_dict</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MitosisError</span><span class="p">(</span><span class="s1">&#39;not enough candidates&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matched_cells_dict</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">cells</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matched_cells_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="c1"># if max([i.area for i in</span>
-                <span class="c1">#         list(matched_cells_dict.keys())]) &gt; parent.area * area_size_t:  # 如果母细胞太小了，不认为会发生有丝分裂，转向单项判断</span>
-                <span class="c1">#     raise MitosisError(&#39;The cell is too small to have cell division !&#39;)</span>
-                <span class="c1"># if self.matcher.calcAreaSimilar(cells[0], cells[1]) &gt; area_t and self.matcher.compareShapeSimilar(</span>
-                <span class="c1">#         cells[0], cells[1]) &lt; shape_t:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">calcAreaSimilar</span><span class="p">(</span><span class="n">cells</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cells</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">area_t</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">cells</span><span class="p">,</span> <span class="s1">&#39;ACCURATE&#39;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># raise MitosisError(&quot;not enough candidates, after matched.&quot;)</span>
                     <span class="k">return</span> <span class="n">cells</span><span class="p">,</span> <span class="s1">&#39;INACCURATE&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># max_two = heapq.nlargest(2, [sum(sm) for sm in matched_cells_dict.values()])  # 找到匹配结果中最大的两个值</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">max_two</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_similar_sister</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">matched_cells_dict</span><span class="p">)</span>  <span class="c1"># 找到匹配结果中最大的两个值</span>
                 <span class="k">except</span> <span class="n">MitosisError</span><span class="p">:</span>
@@ -756,10 +750,8 @@
 <span class="sd">        it should be filled as a predicted cell.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">def</span> <span class="nf">calc_weight</span><span class="p">(</span><span class="n">candidate_score_dict</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Compute and dynamically update matching weights and matching results.&quot;&quot;&quot;</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="c1"># for cell in candidate_score_dict:</span>
             <span class="c1">#     score_dict = candidate_score_dict[cell]</span>
             <span class="c1"># value =  score_dict[&#39;IoU&#39;] * self.WEIGHT.get(&#39;IoU&#39;) + \</span>
@@ -799,7 +791,6 @@
                         <span class="n">selected_cell</span> <span class="o">=</span> <span class="n">cell</span>
                         <span class="n">max_iou</span> <span class="o">=</span> <span class="n">iou</span>
             <span class="k">return</span> <span class="n">selected_cell</span>
-            <span class="c1"># return max(result, key=result.get)</span>
 
         <span class="n">candidates</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">score_dict</span><span class="p">:</span>
@@ -814,26 +805,25 @@
                 <span class="k">if</span> <span class="n">score_dict</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;IoU&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
                     <span class="n">candidates</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">score_dict</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">score_dict</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">score_dict</span><span class="p">:</span>
                 <span class="n">candidates</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">score_dict</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">candidates</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">score_dict</span><span class="p">)</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">candidates</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">best</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">best</span> <span class="o">=</span> <span class="n">calc_weight</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">best</span></div>
+            <span class="k">return</span> <span class="n">best</span></div>
 
 <div class="viewcode-block" id="Matcher.match_one"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Matcher.match_one">[docs]</a>    <span class="k">def</span> <span class="nf">match_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predict_child</span><span class="p">,</span> <span class="n">candidates</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># print(&#39;matched single:&#39;, self.calc_similar(parent, filtered_candidates[0]))</span>
-            <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_similar</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">score</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">calcIoU</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[(</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ACCURATE&#39;</span><span class="p">)]</span>
-            <span class="k">elif</span> <span class="n">score</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[(</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="p">[(</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
@@ -856,25 +846,21 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare the overall similarity of two cells.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># predict_child = self.predict_next_position(parent)</span>
         <span class="n">predict_child</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="c1"># filtered_candidates = self.match_candidates(predict_child, no_filter_candidates_cells)</span>
         <span class="n">filtered_candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">cell</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">filter_candidates_cells</span> <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">is_accurate_matched</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">]</span>
-        <span class="c1"># print(filtered_candidates)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_one</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">filtered_candidates</span><span class="p">):</span>  <span class="c1"># 不只有一个选项</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_one</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">filtered_candidates</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">return</span>
                 <span class="n">matched_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_duplicate_child</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">filtered_candidates</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">cell_track_status</span><span class="o">.</span><span class="n">exit_mitosis_time</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">:</span>
                     <span class="n">cell_track_status</span><span class="o">.</span><span class="n">enter_mitosis</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">cell_track_status</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enter_mitosis&#39;</span><span class="p">):</span>
-                    <span class="c1"># if parent.phase != &#39;M&#39;:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">return</span>
                     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;matched_cell&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">),</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">)],</span>
                             <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">cell_track_status</span><span class="p">}</span>
-                <span class="c1"># elif not self.check_iou(matched_candidates):</span>
-                <span class="c1">#     return {&#39;matched_cell&#39;: [(self.select_single_child(matched_candidates), &#39;ACCURATE&#39;)],</span>
-                <span class="c1">#             &#39;status&#39;: cell_track_status}</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">matched_result</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">try</span><span class="p">:</span>
@@ -884,14 +870,16 @@
                             <span class="n">matched_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sister</span><span class="p">,</span> <span class="n">status</span><span class="p">))</span>
 
                     <span class="k">except</span> <span class="n">MitosisError</span> <span class="k">as</span> <span class="n">M</span><span class="p">:</span>  <span class="c1"># 细胞可能仍然处于M期，但是已经完成分开，或者只是被误判为M期</span>
-                        <span class="n">matched_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">),</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">))</span>
-                        <span class="c1"># print(M)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">):</span>
+                            <span class="n">matched_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">),</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">))</span>
                     <span class="k">except</span> <span class="n">ErrorMatchMitosis</span> <span class="k">as</span> <span class="n">M2</span><span class="p">:</span>
                         <span class="c1"># 细胞可能不均等分裂</span>
-                        <span class="n">matched_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">),</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">))</span>
-                        <span class="c1"># print(M2)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">):</span>
+                            <span class="n">matched_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">select_single_child</span><span class="p">(</span><span class="n">matched_candidates</span><span class="p">),</span> <span class="s1">&#39;INACCURATE&#39;</span><span class="p">))</span>
                     <span class="k">finally</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;matched_cell&#39;</span><span class="p">:</span> <span class="n">matched_result</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">cell_track_status</span><span class="p">}</span>
+                        <span class="k">if</span> <span class="n">matched_result</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;matched_cell&#39;</span><span class="p">:</span> <span class="n">matched_result</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">cell_track_status</span><span class="p">}</span>
+                        <span class="k">return</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;matched_cell&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_one</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">filtered_candidates</span><span class="p">),</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">cell_track_status</span><span class="p">}</span>
 
@@ -906,10 +894,6 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">tree</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">child_node</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent_node</span><span class="p">)</span>
             <span class="n">child_node</span><span class="o">.</span><span class="n">set_tree_status</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
-        <span class="c1"># except TypeError as E:</span>
-        <span class="c1">#     print(E)</span>
-        <span class="c1"># except NodeExistError as E2:</span>
-        <span class="c1">#     print(E2)</span>
         <span class="k">except</span> <span class="n">treelib</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DuplicatedNodeIdError</span><span class="p">:</span>
             <span class="k">pass</span></div>
 
@@ -927,25 +911,19 @@
                 <span class="n">parents</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">min_parent</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
             <span class="c1"># Two or more cells after cell division.</span>
-            <span class="c1"># print(f&#39;\nparent cell math status: {parent.is_be_matched}&#39;)</span>
             <span class="n">tree</span><span class="o">.</span><span class="n">m_counter</span> <span class="o">-=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">tree</span><span class="o">.</span><span class="n">m_counter</span><span class="p">:</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">m_counter</span> <span class="o">=</span> <span class="mi">5</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">reset_M_count</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">phase</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">:</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">add_M_count</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">predict_M_len</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">enter_mitosis</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">frame</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
-
-            <span class="c1"># predict_child = self.predict_next_position(parent)</span>
             <span class="n">predict_child</span> <span class="o">=</span> <span class="n">parent</span>
-
             <span class="n">filtered_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_candidates</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
-            <span class="c1"># filtered_candidates = list(candidates)</span>
             <span class="n">before_parent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_parent</span><span class="p">(</span><span class="n">parents</span><span class="p">[</span><span class="n">parent</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">before_parent</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mitosis_start</span><span class="p">(</span><span class="n">before_parent</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="p">[</span><span class="n">predict_child</span><span class="p">]):</span>
-                    <span class="c1"># if self.is_mitosis_start(predict_child, filtered_candidates):</span>
                     <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">enter_mitosis</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
             <span class="n">match_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match</span><span class="p">(</span><span class="n">predict_child</span><span class="p">,</span> <span class="n">filtered_candidates</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">match_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -957,33 +935,18 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">child_cells</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="c1"># if child_cells[0][1] == &#39;PREDICTED&#39;:</span>
-                <span class="c1">#     current_frame.add_cell(child_cells[0][0])</span>
-                <span class="c1">#     child_node = CellNode(child_cells[0][0])</span>
-                <span class="c1">#     child_node.life -= 1</span>
                 <span class="k">if</span> <span class="n">child_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ACCURATE&#39;</span><span class="p">:</span>
-                    <span class="c1"># candidates.remove(child_cells[0][0])</span>
                     <span class="n">child_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_accurate_matched</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="n">child_node</span> <span class="o">=</span> <span class="n">CellNode</span><span class="p">(</span><span class="n">child_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">child_node</span> <span class="o">=</span> <span class="n">CellNode</span><span class="p">(</span><span class="n">child_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-                    <span class="c1"># child_cells[0][0].is_accurate_matched = True</span>
-                <span class="c1"># child_node.set_branch_id(parent_node.get_branch_id())</span>
                 <span class="n">child_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">set_branch_id</span><span class="p">(</span><span class="n">parent_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">branch_id</span><span class="p">)</span>
                 <span class="n">child_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
                 <span class="n">child_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">update_region</span><span class="p">(</span><span class="n">track_id</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">track_id</span><span class="p">)</span>
                 <span class="n">child_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">update_region</span><span class="p">(</span><span class="n">branch_id</span><span class="o">=</span><span class="n">parent_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">branch_id</span><span class="p">)</span>
                 <span class="n">child_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">set_match_status</span><span class="p">(</span><span class="n">child_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
-                <span class="c1"># if child_node.life &gt; 0:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_child_node</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">child_node</span><span class="p">,</span> <span class="n">parent_node</span><span class="p">)</span>
-                <span class="c1"># child_node.branch_id = parent_node.branch_id</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1">#     try:</span>
-                <span class="c1">#         assert len(child_cells) == 2</span>
-                <span class="c1">#     except AssertionError:</span>
-                <span class="c1">#         # self._match(predict_child, filtered_candidates, tree.status)</span>
-                <span class="c1">#         continue</span>
-
                 <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">child_cells</span><span class="p">:</span>
                     <span class="n">new_branch_id</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">branch_id_distributor</span><span class="p">()</span>
                     <span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_branch_id</span><span class="p">(</span><span class="n">new_branch_id</span><span class="p">)</span>
@@ -993,7 +956,6 @@
                     <span class="n">child_node</span> <span class="o">=</span> <span class="n">CellNode</span><span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                     <span class="k">if</span> <span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ACCURATE&#39;</span><span class="p">:</span>
                         <span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_accurate_matched</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="c1"># candidates.remove(cell[0])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_child_node</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">child_node</span><span class="p">,</span> <span class="n">parent_node</span><span class="p">)</span>
         <span class="n">tree</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">add_exist_time</span><span class="p">()</span></div></div>
 
@@ -1012,7 +974,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dic</span> <span class="o">=</span> <span class="n">dic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exist_tree_id</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_available_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_available_id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_flag</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_ext</span> <span class="o">=</span> <span class="n">feature_extract</span><span class="p">(</span><span class="n">mcy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mcy</span><span class="p">,</span> <span class="n">dic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dic</span><span class="p">,</span> <span class="n">jsonfile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tree_maps</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1036,7 +998,6 @@
 
 <div class="viewcode-block" id="Tracker.init_tracking_tree"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.init_tracking_tree">[docs]</a>    <span class="k">def</span> <span class="nf">init_tracking_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fe</span><span class="p">:</span> <span class="n">FeatureExtractor</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize TrackingTree&quot;&quot;&quot;</span>
-        <span class="c1"># trees = []</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fe</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="n">TrackingTree</span><span class="p">(</span><span class="n">track_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_distributor</span><span class="p">())</span>
             <span class="n">i</span><span class="o">.</span><span class="n">sort_value</span> <span class="o">=</span> <span class="mi">1</span>
@@ -1057,7 +1018,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">trees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tree_maps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tree</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_flag</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="c1"># self.trees = trees</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fe_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fe</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Tracker.draw_bbox"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.draw_bbox">[docs]</a>    <span class="k">def</span> <span class="nf">draw_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bg1</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">track_id</span><span class="p">,</span> <span class="n">branch_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1096,7 +1056,7 @@
 
 <div class="viewcode-block" id="Tracker.get_current_tree"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.get_current_tree">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the TrackingTree where the current parent cell is located&quot;&quot;&quot;</span>
-        <span class="n">exist_trees</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 细胞可能存在的tree</span>
+        <span class="n">exist_trees</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Possible trees include the cells</span>
         <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">parent_cell</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">last_layer_cell</span><span class="p">:</span>
                 <span class="n">exist_trees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
@@ -1104,7 +1064,6 @@
 
 <div class="viewcode-block" id="Tracker.add_node"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_node</span><span class="p">,</span> <span class="n">parent_node</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">child_node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tree</span><span class="p">:</span>
-            <span class="c1"># tree.add_node(child_node, parent=parent_node.identifier)</span>
             <span class="n">tree</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">child_node</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent_node</span><span class="p">)</span>
             <span class="n">child_node</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">CellStatus</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1114,14 +1073,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;match adjacent frames&quot;&quot;&quot;</span>
         <span class="n">cells</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fe1</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">cell</span><span class="p">:</span> <span class="n">cell</span><span class="o">.</span><span class="n">sort_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">:</span>
-            <span class="c1"># print(parent)</span>
             <span class="n">trees</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_tree</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">match_single_cell</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">fe2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Tracker.track_near_frame_mult_thread"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.track_near_frame_mult_thread">[docs]</a>    <span class="k">def</span> <span class="nf">track_near_frame_mult_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fe1</span><span class="p">:</span> <span class="n">FeatureExtractor</span><span class="p">,</span> <span class="n">fe2</span><span class="p">:</span> <span class="n">FeatureExtractor</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Match Adjacent Frames, Multithreaded Beta&quot;&quot;&quot;</span>
-
         <span class="k">def</span> <span class="nf">work</span><span class="p">(</span><span class="n">__parent</span><span class="p">:</span> <span class="n">Cell</span><span class="p">):</span>
             <span class="n">trees</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_tree</span><span class="p">(</span><span class="n">__parent</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
@@ -1129,7 +1086,6 @@
 
         <span class="n">thread_pool_executor</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;track_&quot;</span><span class="p">)</span>
         <span class="n">cells</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fe1</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">cell</span><span class="p">:</span> <span class="n">cell</span><span class="o">.</span><span class="n">sort_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># print([i.sort_value for i in cells])</span>
         <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">:</span>
             <span class="n">thread_pool_executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">work</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
         <span class="n">thread_pool_executor</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
@@ -1139,31 +1095,13 @@
         <span class="n">child_node</span> <span class="o">=</span> <span class="n">CellNode</span><span class="p">(</span><span class="n">duplicate_match_cell</span><span class="p">)</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_tree</span><span class="p">(</span><span class="n">duplicate_match_cell</span><span class="p">)</span>
         <span class="n">parent0</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">(</span><span class="n">child_node</span><span class="o">.</span><span class="n">nid</span><span class="p">)</span>
-
         <span class="n">parent1</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">(</span><span class="n">child_node</span><span class="o">.</span><span class="n">nid</span><span class="p">)</span>
-        <span class="c1"># if not (parent0.is_root() and parent1.is_root()):</span>
-        <span class="c1">#     parent00 = tmp[0].parent(parent0.nid)</span>
-        <span class="c1">#     parent11 = tmp[1].parent(parent1.nid)</span>
-        <span class="c1">#     tree_dict = {parent00: tmp[0], parent11: tmp[1]}</span>
-        <span class="c1">#     sm0 = self.matcher.match_similar(duplicate_match_cell, parent00.cell)</span>
-        <span class="c1">#     sm1 = self.matcher.match_similar(duplicate_match_cell, parent11.cell)</span>
-        <span class="c1">#     # match_score = {parent00: sm0[&#39;IoU&#39;] + 1 / (sm0[&#39;distance&#39;] + 1e-5),</span>
-        <span class="c1">#     #                parent11: sm1[&#39;IoU&#39;] + 1 / (sm0[&#39;distance&#39;] + 1e-5), }</span>
-        <span class="c1">#     match_score = {parent00: sm0[&#39;distance&#39;],</span>
-        <span class="c1">#                    parent11: sm0[&#39;distance&#39;]}</span>
-        <span class="c1">#     error_parent = max(match_score)</span>
-        <span class="c1"># else:</span>
         <span class="n">tree_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">parent0</span><span class="p">:</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parent1</span><span class="p">:</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
         <span class="n">sm0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">match_similar</span><span class="p">(</span><span class="n">duplicate_match_cell</span><span class="p">,</span> <span class="n">parent0</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
         <span class="n">sm1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matcher</span><span class="o">.</span><span class="n">match_similar</span><span class="p">(</span><span class="n">duplicate_match_cell</span><span class="p">,</span> <span class="n">parent1</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
-        <span class="c1"># match_score = {parent0: sm0[&#39;IoU&#39;] + 1 / (sm0[&#39;distance&#39;] + 1e-5),</span>
-        <span class="c1">#                parent1: sm1[&#39;IoU&#39;] + 1 / (sm0[&#39;distance&#39;] + 1e-5), }</span>
         <span class="n">match_score</span> <span class="o">=</span> <span class="p">{</span><span class="n">parent0</span><span class="p">:</span> <span class="n">sm0</span><span class="p">[</span><span class="s1">&#39;distance&#39;</span><span class="p">],</span>
                        <span class="n">parent1</span><span class="p">:</span> <span class="n">sm1</span><span class="p">[</span><span class="s1">&#39;distance&#39;</span><span class="p">]}</span>
-        <span class="c1"># truth_parent = max(match_score)</span>
         <span class="n">error_parent</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">match_score</span><span class="p">)</span>
-        <span class="c1"># if len(tree_dict[truth_parent].nodes) &lt; 3:</span>
-        <span class="c1">#     error_parent = truth_parent</span>
         <span class="n">tree_dict</span><span class="p">[</span><span class="n">error_parent</span><span class="p">]</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">child_node</span><span class="o">.</span><span class="n">nid</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">error_parent</span><span class="p">:</span> <span class="n">tree_dict</span><span class="p">[</span><span class="n">error_parent</span><span class="p">]}</span></div>
 
@@ -1172,7 +1110,6 @@
         <span class="n">unmatched_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cell</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">fe1</span><span class="o">.</span><span class="n">cells</span> <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">is_be_matched</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">unmatched_list</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="c1"># for cell in fe1.cells:</span>
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">unmatched_list</span><span class="p">:</span>
             <span class="n">current_frame</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">frame</span>
             <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">is_be_matched</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -1262,7 +1199,6 @@
             <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">speed_f</span><span class="p">)</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s1">&#39;Iteration&#39;</span><span class="p">,</span> <span class="s1">&#39;Speed (it/s)&#39;</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">fe_before</span><span class="p">,</span> <span class="n">fe_current</span><span class="p">,</span> <span class="n">fe_next</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_ext</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">range</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;tracking process&#39;</span><span class="p">):</span>
-            <span class="c1"># self.track_near_frame(fe_before, fe_current)</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">track_near_frame</span><span class="p">(</span><span class="n">fe_before</span><span class="p">,</span> <span class="n">fe_current</span><span class="p">)</span>
             <span class="c1"># self.track_near_frame_mult_thread(fe_before, fe_current)</span>
@@ -1295,20 +1231,17 @@
 
 <div class="viewcode-block" id="Tracker.visualize_single_tree"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.visualize_single_tree">[docs]</a>    <span class="k">def</span> <span class="nf">visualize_single_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">background_filename_list</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">xrange</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">bg_fname</span> <span class="o">=</span> <span class="n">background_filename_list</span><span class="p">[:</span><span class="n">xrange</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">xrange</span> <span class="k">else</span> <span class="n">background_filename_list</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">bg_fname</span><span class="p">)</span>
         <span class="n">images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">bg_fname</span><span class="p">))</span>
         <span class="n">images_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bg_fname</span><span class="p">))),</span> <span class="n">images</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">images_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">expand_tree</span><span class="p">():</span>
             <span class="n">frame</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">frame</span>
             <span class="n">bbox</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bbox</span>
             <span class="n">img_bg</span> <span class="o">=</span> <span class="n">images_dict</span><span class="p">[</span><span class="n">frame</span><span class="p">]</span>
-            <span class="n">phase</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">phase</span>
+            <span class="n">phase</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">cell_type</span>
             <span class="n">images_dict</span><span class="p">[</span><span class="n">frame</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_bbox</span><span class="p">(</span><span class="n">img_bg</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">track_id</span><span class="p">,</span>
                                                 <span class="n">tree</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">branch_id</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bg_fname</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">images_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
             <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;.png&#39;</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
             <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Tracker.visualize_to_tif"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.Tracker.visualize_to_tif">[docs]</a>    <span class="k">def</span> <span class="nf">visualize_to_tif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">background_mcy_image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_tif_path</span><span class="p">,</span> <span class="n">tree_list</span><span class="p">,</span> <span class="n">xrange</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1355,7 +1288,7 @@
                 <span class="k">if</span> <span class="n">img_bg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">images_dict</span><span class="p">[</span><span class="n">frame</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_bbox</span><span class="p">(</span><span class="n">img_bg</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">track_id</span><span class="p">,</span>
                                                         <span class="n">i</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">branch_id</span><span class="p">,</span>
-                                                        <span class="n">phase</span><span class="o">=</span><span class="n">i</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
+                                                        <span class="n">phase</span><span class="o">=</span><span class="n">i</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">cell_type</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">single</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_tif_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_tif_path</span><span class="p">)):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">output_tif_path</span><span class="p">)</span>
@@ -1376,7 +1309,7 @@
 <div class="viewcode-block" id="get_cell_line_from_tree"><a class="viewcode-back" href="../../python_apis/SCTrack.tracker.html#SCTrack.tracker.get_cell_line_from_tree">[docs]</a><span class="k">def</span> <span class="nf">get_cell_line_from_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">:</span> <span class="n">TrackingTree</span><span class="p">,</span> <span class="n">dic_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mcy_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">savepath</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Obtain a complete cell sequence from the track tree, including cell images, dic and mcy dual channels, and cycles,</span>
-<span class="sd">    and the generated file name is named track_id-branch_id-frame-phase.tif&quot;&quot;&quot;</span>
+<span class="sd">    and the generated file name is named track_id-branch_id-frame-cell_type.tif&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">savepath</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">savepath</span><span class="p">)</span>
     <span class="n">save_mcy</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">savepath</span><span class="p">,</span> <span class="s1">&#39;mcy&#39;</span><span class="p">)</span>
@@ -1393,23 +1326,12 @@
         <span class="n">mcy_img</span> <span class="o">=</span> <span class="n">mcy</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">frame</span><span class="p">][</span><span class="n">y0</span><span class="p">:</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="n">x1</span><span class="p">]</span>
         <span class="n">dic_img</span> <span class="o">=</span> <span class="n">dic</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">frame</span><span class="p">][</span><span class="n">y0</span><span class="p">:</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="n">x1</span><span class="p">]</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">track_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">branch_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
-            <span class="n">cell</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;.tif&#39;</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">cell_type</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;.tif&#39;</span>
         <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_mcy</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span> <span class="n">convert_dtype</span><span class="p">(</span><span class="n">mcy_img</span><span class="p">))</span>
         <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dic</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span> <span class="n">convert_dtype</span><span class="p">(</span><span class="n">dic_img</span><span class="p">))</span></div>
 
-        <span class="c1"># break</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">annotation</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;G:\20x_dataset\evaluate_data\copy_of_1_xy19\result-GT.json&#39;</span>
-    <span class="n">mcy_img</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;G:\20x_dataset\evaluate_data\copy_of_1_xy19\mcy.tif&#39;</span>
-    <span class="n">dic_img</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;G:\20x_dataset\evaluate_data\copy_of_1_xy19\dic.tif&#39;</span>
-    <span class="n">tracker</span> <span class="o">=</span> <span class="n">Tracker</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
-    <span class="c1"># tracker = Tracker(r&#39;G:\20x_dataset\evaluate_data\copy_of_1_xy19\result-GT.json&#39;)</span>
-    <span class="n">tracker</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">trees</span><span class="p">):</span>
-        <span class="n">get_cell_line_from_tree</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dic_img</span><span class="p">,</span> <span class="n">mcy_img</span><span class="p">,</span>
-                                <span class="sa">fr</span><span class="s1">&#39;G:\20x_dataset\evaluate_data\copy_of_1_xy19\cell_lines\</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
           </div>

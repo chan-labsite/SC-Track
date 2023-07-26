@@ -10,7 +10,7 @@ SC-Track is an efficient algorithm for dynamic tracking of single cells on diffe
 It can use the segmentation results of various models to efficiently track single cells and reconstruct cell lines. 
 It can track multi-generational cell division events without any additional information, only using the outline information of cells; 
 and can reduce the noise of the segmentation, so as to use the noise segmentation results to generate accurate cell lineages. 
-Its cascade-caching model can efficiently deal with segmentation loss, and its TPS algorithm can perform accurate reclassification 
+Its cascade-caching model can efficiently deal with segmentation loss, and its TCS algorithm can perform accurate reclassification 
 for users with cell classification needs (such as classification of different cell cycle phases). 
 SC-Track allows users to use different segmentation results as input, including the JSON annotation file format supported by VGG image annotator, 
 and the common mask grayscale image format. The export results include track table, visualized labeled image, 

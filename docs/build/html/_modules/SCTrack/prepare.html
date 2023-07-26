@@ -185,15 +185,15 @@
 <div class="viewcode-block" id="DetectionParser.get_region_attr"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.DetectionParser.get_region_attr">[docs]</a>    <span class="k">def</span> <span class="nf">get_region_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        regions: extract from json files, one frame data, it cna be get from function [get_regions_by_frame()]</span>
-<span class="sd">        Returns: all cells bounding box and phase list,</span>
-<span class="sd">        like [((x_min, x_max, y_min, y_max), phase), ..., ((x_min, x_max, y_min, y_max), phase)]</span>
+<span class="sd">        Returns: all cells bounding box and cell_type list,</span>
+<span class="sd">        like [((x_min, x_max, y_min, y_max), cell_type), ..., ((x_min, x_max, y_min, y_max), cell_type)]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
             <span class="n">all_x</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_x&#39;</span><span class="p">]</span>
             <span class="n">all_y</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_y&#39;</span><span class="p">]</span>
-            <span class="n">phase</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
+            <span class="n">phase</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;cell_type&#39;</span><span class="p">]</span>
             <span class="n">x_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">all_x</span><span class="p">))</span>
             <span class="n">x_max</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">all_x</span><span class="p">))</span>
             <span class="n">y_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">all_y</span><span class="p">))</span>

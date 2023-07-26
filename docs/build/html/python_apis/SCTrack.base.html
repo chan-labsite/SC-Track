@@ -535,7 +535,7 @@ is the status value of TrackingTree.</p>
 <dt class="sig sig-object py" id="SCTrack.base.TreeStatus">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SCTrack.base.</span></span><span class="sig-name descname"><span class="pre">TreeStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/base.html#TreeStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.base.TreeStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Record the state of the tracked cells, including cell phase status, division status, and matching status
+<p>Record the state of the tracked cells, including cell cell_type status, division status, and matching status
 Phase: whether Mitosis has entered, and which frame has entered Mitosis
 Division: whether there is Mitosis
 Matching situation: Is there any loss of matching in this cell</p>
@@ -560,14 +560,14 @@ Matching situation: Is there any loss of matching in this cell</p>
 <span class="sig-name descname"><span class="pre">enter_mitosis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/base.html#TreeStatus.enter_mitosis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.base.TreeStatus.enter_mitosis" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="SCTrack.base.TreeStatus.exist_mitosis_time">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exist_mitosis_time</span></span><a class="headerlink" href="#SCTrack.base.TreeStatus.exist_mitosis_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="SCTrack.base.TreeStatus.exit_mitosis">
 <span class="sig-name descname"><span class="pre">exit_mitosis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/base.html#TreeStatus.exit_mitosis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.base.TreeStatus.exit_mitosis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="SCTrack.base.TreeStatus.exit_mitosis_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exit_mitosis_time</span></span><a class="headerlink" href="#SCTrack.base.TreeStatus.exit_mitosis_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

@@ -181,29 +181,29 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_ctype_exit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ctype_exit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_ctype_exit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_ctype_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>To judge the exit of cell_type, the judgment principle is the same as entering  cell_type,
+if the cells start to exit cell_type, check later</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_ctype_start">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ctype_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_ctype_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_ctype_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the entry of cell_type, if the cell is predicted to be in indicate cell_type, check 10 frames later,
+If the number of remaining frames is less than 10 frames, check all the remaining frames.
+If the cumulative predicted indicate cell type is greater than the threshold,
+If the judgment succeeds, otherwise, the judgment fails</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_mitosis_start">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_mitosis_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_size_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mitosis_gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_predict_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_mitosis_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_mitosis_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the entry of the M period, if the area meets the conditions, check the next frame, if the area of the next
 frame is too small, it is not considered to have entered, and it is judged as a segmentation misjudgment.
 If the check is passed, check the next 6 frames. If the number of M phases is predicted to be greater than or
-equal to the threshold, it is judged to enter the M phase to pass, otherwise, the judgment fails.
+equal to the threshold, it is judged to enter the M cell_type to pass, otherwise, the judgment fails.
 If the interval from the last entry to M is too short, it is also considered a misjudgment</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_s_exit">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_s_exit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">end_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_s_exit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_s_exit" title="Permalink to this definition">¶</a></dt>
-<dd><p>To judge the exit of S phase, the judgment principle is the same as entering S phase,
-if the cells start to exit S phase, check later</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.check_s_start">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_s_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.check_s_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.check_s_start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the entry of S phase, if the cell is predicted to be in S phase, check 10 frames later at random,
-If the number of remaining frames is less than 10 frames, check all the remaining frames.
-If the cumulative predicted S period is greater than the threshold,
-If the judgment succeeds, otherwise, the judgment fails</p>
 </dd></dl>
 
 <dl class="py method">
@@ -248,14 +248,14 @@ If the judgment succeeds, otherwise, the judgment fails</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_mitosis_error">
 <span class="sig-name descname"><span class="pre">parse_mitosis_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_mitosis_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_mitosis_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the two daughter cells after division are not matched, all subsequent cells will be in the M phase.
+<dd><p>If the two daughter cells after division are not matched, all subsequent cells will be in the M cell_type.
 At this time, it should be corrected to G1 within a certain period of time.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.parse_s">
 <span class="sig-name descname"><span class="pre">parse_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.parse_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.parse_s" title="Permalink to this definition">¶</a></dt>
-<dd><p>To judge the entry of S phase</p>
+<dd><p>To judge the entry of S cell_type</p>
 </dd></dl>
 
 <dl class="py method">
@@ -274,7 +274,12 @@ as a generation of cells</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.set_cell_id">
-<span class="sig-name descname"><span class="pre">set_cell_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">linage_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.set_cell_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.set_cell_id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_cell_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.CellNode" title="SCTrack.tracker.CellNode"><span class="pre">CellNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.set_cell_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.set_cell_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SCTrack.reclassification.TreeParser.smooth_type">
+<span class="sig-name descname"><span class="pre">smooth_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_lineage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineage_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#TreeParser.smooth_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.TreeParser.smooth_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -295,10 +300,15 @@ as a generation of cells</p>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_MOT">
-<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_tree_to_MOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.Tracker" title="SCTrack.tracker.Tracker"><span class="pre">Tracker</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_tree_to_MOT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_tree_to_MOT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export track result as MOT format</p>
+<dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_TRA">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_tree_to_TRA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="SCTrack.tracker.html#SCTrack.tracker.Tracker" title="SCTrack.tracker.Tracker"><span class="pre">Tracker</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_tree_to_TRA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_tree_to_TRA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export track result as TRA format</p>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_mask">
+<span class="sig-prename descclassname"><span class="pre">SCTrack.reclassification.</span></span><span class="sig-name descname"><span class="pre">track_tree_to_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/SCTrack/reclassification.html#track_tree_to_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#SCTrack.reclassification.track_tree_to_mask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="SCTrack.reclassification.track_tree_to_table">
