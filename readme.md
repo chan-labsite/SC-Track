@@ -107,7 +107,7 @@ To see the using guidance, please refer our [quick-start](./notebook/quick-start
 
 ### API  Documentation
 
-For more information, please see the [reference documents](htmlpreview.github.io/?./notebook/docs/build/html/index.html).
+For more information, please see the [reference documents](htmlpreview.github.io/?notebook/docs/build/html/index.html).
 
 
 
