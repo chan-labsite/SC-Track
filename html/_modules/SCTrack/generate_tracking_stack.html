@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>SCTrack.generate_tracking_stack</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../python_apis/modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../python_apis/modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../python_apis/modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../python_apis/SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>SCTrack.generate_tracking_stack</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for SCTrack.generate_tracking_stack</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">openpyxl</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">tifffile</span>
+<span class="kn">from</span> <span class="nn">SCTrack.prepare</span> <span class="kn">import</span> <span class="n">convert_dtype</span>
+
+
+<div class="viewcode-block" id="Stack"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.Stack">[docs]</a><span class="k">class</span> <span class="nc">Stack</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_frame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_frame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_info</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># return self.end_frame - self.start_frame + 1</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_info</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;start frame: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_frame</span><span class="si">}</span><span class="s2">, end frame: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end_frame</span><span class="si">}</span><span class="s2">, total: &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end_frame</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">start_frame</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, len: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_info</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">center info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">center_info</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RefinedParser"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.RefinedParser">[docs]</a><span class="k">class</span> <span class="nc">RefinedParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">wb</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">load_workbook</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">sheet</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="n">wb</span><span class="o">.</span><span class="n">sheetnames</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_details</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_details</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineage_details</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent_id_details</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase_details</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center0</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center1</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+
+<div class="viewcode-block" id="RefinedParser.parse_id"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.RefinedParser.parse_id">[docs]</a>    <span class="k">def</span> <span class="nf">parse_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">id_record</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">id_info</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_details</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_details</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">id_record</span><span class="p">:</span>
+                <span class="n">id_record</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_details</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_id</span> <span class="ow">in</span> <span class="n">id_record</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">current_index</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_details</span><span class="p">[</span><span class="n">current_index</span><span class="p">:]:</span>
+                <span class="k">if</span> <span class="n">j</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">_id</span><span class="p">:</span>
+                    <span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current_index</span> <span class="o">+=</span> <span class="n">length</span>
+                    <span class="k">break</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">id_info</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">_id</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span> <span class="s1">&#39;continue&#39;</span><span class="p">:</span> <span class="n">length</span><span class="p">})</span>
+            <span class="c1"># print({&#39;id&#39;: _id, &#39;start&#39;: start, &#39;end&#39;: end, &#39;continue&#39;: length})</span>
+        <span class="k">return</span> <span class="n">id_info</span></div>
+
+<div class="viewcode-block" id="RefinedParser.parse_position"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.RefinedParser.parse_position">[docs]</a>    <span class="k">def</span> <span class="nf">parse_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">id_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_id</span><span class="p">()</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">id_info</span><span class="p">:</span>
+            <span class="n">_id</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span>
+            <span class="n">end_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span>
+            <span class="c1"># print(_id, start_index, end_index, self.frame_details[start_index].value,</span>
+            <span class="c1">#       self.frame_details[end_index].value)</span>
+            <span class="n">position</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">_id</span><span class="p">,</span> <span class="s1">&#39;start_index&#39;</span><span class="p">:</span> <span class="n">start_index</span><span class="p">,</span> <span class="s1">&#39;end_index&#39;</span><span class="p">:</span> <span class="n">end_index</span><span class="p">,</span>
+                             <span class="s1">&#39;start_frame&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_details</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                             <span class="s1">&#39;end_frame&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_details</span><span class="p">[</span><span class="n">end_index</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">position</span></div>
+
+<div class="viewcode-block" id="RefinedParser.get_stack"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.RefinedParser.get_stack">[docs]</a>    <span class="k">def</span> <span class="nf">get_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_position</span><span class="p">()</span>
+        <span class="n">stacks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+            <span class="n">stack</span> <span class="o">=</span> <span class="n">Stack</span><span class="p">()</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">start_frame</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_frame&#39;</span><span class="p">)</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">end_frame</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;end_frame&#39;</span><span class="p">)</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">center_info</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_index&#39;</span><span class="p">),</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;end_index&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">center_info</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center0</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center1</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
+            <span class="n">stacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stacks</span></div></div>
+
+
+<div class="viewcode-block" id="JsonParser"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.JsonParser">[docs]</a><span class="k">class</span> <span class="nc">JsonParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">__index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index_map</span><span class="p">[</span><span class="n">__index</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span>
+            <span class="n">__index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_map</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JsonParser.parse_json"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.JsonParser.parse_json">[docs]</a>    <span class="k">def</span> <span class="nf">parse_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">all_coords</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="s1">&#39;regions&#39;</span><span class="p">]</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+                <span class="n">all_x</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_x&#39;</span><span class="p">]</span>
+                <span class="n">all_y</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_y&#39;</span><span class="p">]</span>
+                <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">all_x</span><span class="p">,</span> <span class="n">all_y</span><span class="p">))</span>
+            <span class="n">all_coords</span><span class="p">[</span><span class="n">frame</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span>
+        <span class="k">return</span> <span class="n">all_coords</span></div>
+
+<div class="viewcode-block" id="JsonParser.get_coords_by_frame_name"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.JsonParser.get_coords_by_frame_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_coords_by_frame_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">):</span>
+        <span class="n">regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">frame_name</span><span class="p">][</span><span class="s1">&#39;regions&#39;</span><span class="p">]</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+            <span class="n">all_x</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_x&#39;</span><span class="p">]</span>
+            <span class="n">all_y</span> <span class="o">=</span> <span class="n">j</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_y&#39;</span><span class="p">]</span>
+            <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">all_x</span><span class="p">,</span> <span class="n">all_y</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">coords</span></div>
+
+<div class="viewcode-block" id="JsonParser.get_coords_by_frame_index"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.JsonParser.get_coords_by_frame_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_coords_by_frame_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">frame_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_map</span><span class="p">[</span><span class="n">frame_index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coords_by_frame_name</span><span class="p">(</span><span class="n">frame_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JsonParser.get_frame_name_by_index"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.JsonParser.get_frame_name_by_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_frame_name_by_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_map</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="Mask"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.Mask">[docs]</a><span class="k">class</span> <span class="nc">Mask</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="n">mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coord</span> <span class="o">=</span> <span class="n">coord</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No mask&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No available center position&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Mask object at center of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="coordinate2mask"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.coordinate2mask">[docs]</a><span class="k">def</span> <span class="nf">coordinate2mask</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">255</span><span class="p">,</span> <span class="n">image_size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> \
+        <span class="n">List</span><span class="p">[</span><span class="n">Mask</span><span class="p">]:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">image_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="n">contours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">fillConvexPoly</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">mMask</span> <span class="o">=</span> <span class="n">Mask</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]))),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">])))),</span> <span class="n">coord</span><span class="o">=</span><span class="n">coord</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mMask</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="coord2counter"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.coord2counter">[docs]</a><span class="k">def</span> <span class="nf">coord2counter</span><span class="p">(</span><span class="n">coord</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+    <span class="n">contours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">contours</span></div>
+
+
+<div class="viewcode-block" id="link"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.link">[docs]</a><span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="n">refined_file</span><span class="p">):</span>
+    <span class="n">ref_file</span> <span class="o">=</span> <span class="n">refined_file</span>
+    <span class="n">refined</span> <span class="o">=</span> <span class="n">RefinedParser</span><span class="p">(</span><span class="n">ref_file</span><span class="p">)</span>
+    <span class="n">stacks</span> <span class="o">=</span> <span class="n">refined</span><span class="o">.</span><span class="n">get_stack</span><span class="p">()</span>
+    <span class="n">json_parser</span> <span class="o">=</span> <span class="n">JsonParser</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">stack</span> <span class="ow">in</span> <span class="n">stacks</span><span class="p">:</span>
+        <span class="n">linked_masks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">centers</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">center_info</span>
+        <span class="n">start_frame</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">start_frame</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="o">.</span><span class="n">center_info</span><span class="p">)):</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">centers</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">json_parser</span><span class="o">.</span><span class="n">get_coords_by_frame_index</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="n">start_frame</span><span class="p">)</span>
+            <span class="n">masks</span> <span class="o">=</span> <span class="n">coordinate2mask</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">):</span>
+                    <span class="c1"># print(f&quot;id index: {index} detected! at frame: {index + start_frame}.&quot;)</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">frame_index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="n">start_frame</span>
+                    <span class="n">linked_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                    <span class="k">break</span>
+        <span class="k">yield</span> <span class="n">linked_masks</span></div>
+
+
+<div class="viewcode-block" id="extractRoiFromImg"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.extractRoiFromImg">[docs]</a><span class="k">def</span> <span class="nf">extractRoiFromImg</span><span class="p">(</span><span class="n">images</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the area in the original image according to the mask. Note that it can only be a single-channel image.</span>
+<span class="sd">    If it is rgb, please convert it to a grayscale image first.</span>
+<span class="sd">    :param images: original images</span>
+<span class="sd">    :param mask: mask file</span>
+<span class="sd">    :return: single cell image data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">images</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">images</span>
+    <span class="n">new_src</span> <span class="o">=</span> <span class="n">convert_dtype</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">new_src</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">copyTo</span><span class="p">(</span><span class="n">new_src</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dst</span></div>
+
+
+<div class="viewcode-block" id="csv2mask"><a class="viewcode-back" href="../../python_apis/SCTrack.generate_tracking_stack.html#SCTrack.generate_tracking_stack.csv2mask">[docs]</a><span class="k">def</span> <span class="nf">csv2mask</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">,</span> <span class="n">excelfile</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
+    <span class="n">jp</span> <span class="o">=</span> <span class="n">JsonParser</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">)</span>
+    <span class="n">rp</span> <span class="o">=</span> <span class="n">RefinedParser</span><span class="p">(</span><span class="n">excelfile</span><span class="p">)</span>
+    <span class="n">stacks</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">get_stack</span><span class="p">()</span>
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jp</span><span class="p">)):</span>
+        <span class="n">frame_info</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">frame_info</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">stack</span> <span class="ow">in</span> <span class="n">stacks</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">start_frame</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)):</span>
+            <span class="n">frame_info</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">stack</span><span class="o">.</span><span class="n">center_info</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">stack</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+    <span class="n">all_masks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frame_info</span><span class="p">)):</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">jp</span><span class="o">.</span><span class="n">get_coords_by_frame_index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">match_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">matched_center</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">frame_info</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]))))</span> <span class="o">&lt;</span> <span class="mi">8</span> <span class="ow">and</span>
+                        <span class="nb">abs</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">):</span>
+                    <span class="n">ret</span> <span class="o">=</span> <span class="n">coordinate2mask</span><span class="p">([</span><span class="n">coord</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">matched_center</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]))),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">])))))</span>
+                    <span class="n">match_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">masks</span> <span class="o">+=</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]))),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matched_center</span><span class="p">:</span>
+                <span class="n">e_ret</span> <span class="o">=</span> <span class="n">coordinate2mask</span><span class="p">([</span><span class="n">coord</span><span class="p">],</span> <span class="mi">255</span><span class="p">)</span>
+                <span class="n">masks</span> <span class="o">+=</span> <span class="n">e_ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">masks</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">match_count</span><span class="p">)</span>
+        <span class="n">all_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">masks</span><span class="p">)</span>
+    <span class="n">all_masks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_masks</span><span class="p">)</span>
+    <span class="n">tifffile</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="n">mask_filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;-1.tif&#39;</span><span class="p">),</span> <span class="n">all_masks</span><span class="p">[:</span><span class="n">all_masks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">tifffile</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="n">mask_filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;-2.tif&#39;</span><span class="p">),</span> <span class="n">all_masks</span><span class="p">[</span><span class="n">all_masks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:])</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

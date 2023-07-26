@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>SCTrack.prepare</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <span class="site-name">SC-Track</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../python_apis/modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../python_apis/modules.html#sctrack"
+         class="nav-link ">
+         sctrack
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../python_apis/modules.html#sctrack">sctrack</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../python_apis/SCTrack.html" class="reference internal ">SCTrack package</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>SCTrack.prepare</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <h1>Source code for SCTrack.prepare</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+
+<div class="viewcode-block" id="DetectionParser"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.DetectionParser">[docs]</a><span class="k">class</span> <span class="nc">DetectionParser</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">py_data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">jf</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">jf</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">py_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">py_data</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">py_data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fname or py_data need once&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DetectionParser.get_frame_names"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.DetectionParser.get_frame_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_frame_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">frames</span></div>
+
+<div class="viewcode-block" id="DetectionParser.get_regions_by_frame"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.DetectionParser.get_regions_by_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_regions_by_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="n">frame_name</span><span class="p">][</span><span class="s1">&#39;regions&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DetectionParser.get_region_attr"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.DetectionParser.get_region_attr">[docs]</a>    <span class="k">def</span> <span class="nf">get_region_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        regions: extract from json files, one frame data, it cna be get from function [get_regions_by_frame()]</span>
+<span class="sd">        Returns: all cells bounding box and cell_type list,</span>
+<span class="sd">        like [((x_min, x_max, y_min, y_max), cell_type), ..., ((x_min, x_max, y_min, y_max), cell_type)]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+            <span class="n">all_x</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_x&#39;</span><span class="p">]</span>
+            <span class="n">all_y</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;shape_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;all_points_y&#39;</span><span class="p">]</span>
+            <span class="n">phase</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;region_attributes&#39;</span><span class="p">][</span><span class="s1">&#39;cell_type&#39;</span><span class="p">]</span>
+            <span class="n">x_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">all_x</span><span class="p">))</span>
+            <span class="n">x_max</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">all_x</span><span class="p">))</span>
+            <span class="n">y_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">all_y</span><span class="p">))</span>
+            <span class="n">y_max</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">all_y</span><span class="p">))</span>
+            <span class="n">attrs</span><span class="o">.</span><span class="n">append</span><span class="p">([(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">),</span> <span class="n">phase</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">attrs</span></div></div>
+
+
+<div class="viewcode-block" id="convert_dtype"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.convert_dtype">[docs]</a><span class="k">def</span> <span class="nf">convert_dtype</span><span class="p">(</span><span class="n">__image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">min_16bit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">__image</span><span class="p">)</span>
+    <span class="n">max_16bit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">__image</span><span class="p">)</span>
+    <span class="n">image_8bit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="p">((</span><span class="n">__image</span> <span class="o">-</span> <span class="n">min_16bit</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_16bit</span> <span class="o">-</span> <span class="n">min_16bit</span><span class="p">))),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">image_8bit</span></div>
+
+
+<div class="viewcode-block" id="draw_bbox"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.draw_bbox">[docs]</a><span class="k">def</span> <span class="nf">draw_bbox</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">regions_bounding</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">im_rgb</span> <span class="o">=</span> <span class="n">image</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">im_rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">convert_dtype</span><span class="p">(</span><span class="n">image</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_GRAY2RGB</span><span class="p">)</span>
+    <span class="n">_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">regions_bounding</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;G1/G2&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">im_rgb</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]),</span> <span class="n">color</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">im_rgb</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">_id</span><span class="p">),</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_COMPLEX</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">im_rgb</span></div>
+
+
+<div class="viewcode-block" id="json2box"><a class="viewcode-back" href="../../python_apis/SCTrack.prepare.html#SCTrack.prepare.json2box">[docs]</a><span class="k">def</span> <span class="nf">json2box</span><span class="p">(</span><span class="n">shapes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+    <span class="c1"># from tqdm import tqdm</span>
+    <span class="c1">#</span>
+    <span class="c1"># file = r&quot;G:\20x_dataset\copy_of_xy_01\copy_of_1_xy01.json&quot;</span>
+    <span class="c1"># image = r&#39;G:\20x_dataset\copy_of_xy_01\tif\mcy\copy_of_1_xy01-0000.tif&#39;</span>
+    <span class="c1"># base = r&#39;G:\20x_dataset\copy_of_xy_01\tif\mcy&#39;</span>
+    <span class="c1"># dp = DetectionParser(fname=file)</span>
+    <span class="c1"># dp.get_frame_names()</span>
+    <span class="c1"># # rb = dp.get_region_attr(dp.get_regions_by_frame(&#39;copy_of_1_xy01-0000.png&#39;))</span>
+    <span class="c1"># im = cv2.imread(image, -1)</span>
+    <span class="c1"># bb_list = []</span>
+    <span class="c1"># videoWriter = cv2.VideoWriter(r&#39;G:\20x_dataset\copy_of_xy_01\development-dir\result-2-multi-bbox.mp4&#39;,</span>
+    <span class="c1">#                               cv2.VideoWriter_fourcc(&#39;M&#39;, &#39;P&#39;, &#39;4&#39;, &#39;V&#39;),</span>
+    <span class="c1">#                               5, (2048, 2048), True)</span>
+    <span class="c1"># for i in tqdm(range(len(dp.get_frame_names()))):</span>
+    <span class="c1">#     fname = dp.get_frame_names()</span>
+    <span class="c1">#     img = cv2.imread(os.path.join(base, fname[i].replace(&#39;.png&#39;, &#39;.tif&#39;)), -1)</span>
+    <span class="c1">#     if i == 0:</span>
+    <span class="c1">#         rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))</span>
+    <span class="c1">#         rb_before = rb</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         rb = dp.get_region_attr(dp.get_regions_by_frame(fname[i]))</span>
+    <span class="c1">#         rb_before = dp.get_region_attr(dp.get_regions_by_frame(fname[i - 1]))</span>
+    <span class="c1">#     tmp = draw_bbox(img, rb_before)</span>
+    <span class="c1">#     ret = draw_bbox(tmp, rb)</span>
+    <span class="c1">#     videoWriter.write(ret)</span>
+    <span class="c1"># videoWriter.release()</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2023, Li Chengxin.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
