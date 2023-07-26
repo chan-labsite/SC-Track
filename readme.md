@@ -99,9 +99,14 @@ start_track(fannotation=annotation_json, fimage=image)
 
 ------
 
+### Using guidance
+
+To see the using guidance, please refer our [quick-start](./notebook/quick-start.ipynb).
+------
+
 ### API  Documentation
 
-For more information, please see the [reference documents](https://sc-track.readthedocs.io/en/latest/).
+For more information, please see the [reference documents](./notebook/docs/build/html/index.html).
 
 
 
