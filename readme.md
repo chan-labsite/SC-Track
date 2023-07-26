@@ -107,7 +107,7 @@ To see the using guidance, please refer our [quick-start](./notebook/quick-start
 
 ### API  Documentation
 
-For more information, please see the [reference documents](https://htmlpreview.github.io/?https://github.com/frozenleaves/SC-Track/blob/master/html/index.html).
+For more information, please see the [reference documents](https://htmlpreview.github.io/?https://github.com/frozenleaves/SC-Track/blob/master/docs/build/html/index.html).
 
 
 
