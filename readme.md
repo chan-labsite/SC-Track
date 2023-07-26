@@ -102,7 +102,8 @@ start_track(fannotation=annotation_json, fimage=image)
 ### Using guidance
 
 To see the using guidance, please refer our [quick-start](./notebook/quick-start.ipynb).
-------
+
+---------
 
 ### API  Documentation
 
