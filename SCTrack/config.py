@@ -34,3 +34,5 @@ N_CLASS = 4    # *  Number of annotation categories
 
 CLASS_NAME: List | None = ['G1', 'S', 'G2', 'M']   # *  Class name list
 # CLASS_NAME = None
+
+EXPORT_TRACKING_VISUALIZATION = True

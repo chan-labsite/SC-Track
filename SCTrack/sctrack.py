@@ -11,7 +11,7 @@ import os
 import sys
 import time
 import imagesize
-from SCTrack import track
+from SCTrack import track, config
 
 
 def main():
@@ -23,7 +23,8 @@ def main():
         Welcome to use SC-Track!
         using this script to auto tracking the single cell images and identify each cell's type.\n
         usage:
-            python main.py -image <image image filepath>  -bf <bf image filepath> -o [optional] <output result filepath> 
+            sctrack -i <image filepath> -a <annotation filepath, json annotation or segmentation mask filepath>  
+            -bf[optional] <bright field image filepath> -o [optional] <output result filepath> 
             -t [optional]
     """
 
@@ -34,7 +35,7 @@ def main():
     parser.add_argument('-ot', "--ot", default=False, help='tracking output result saved dir')
     parser.add_argument('-a', "--annotation", default=False, help='annotation file path, json file or tiff mask file.')
     parser.add_argument('-r', "--range", default=False,
-                        help='tracking frame range, default is None, means tracking whole timelapse')
+                        help='tracking frame range, default is None, means tracking the whole timelapse')
 
     args = parser.parse_args()
 
@@ -47,7 +48,7 @@ def main():
         visualization = False
     else:
         image = args.image
-        visualization = True
+        visualization = config.EXPORT_TRACKING_VISUALIZATION
         image_width, image_height = imagesize.get(image)
         bf = args.bf
 

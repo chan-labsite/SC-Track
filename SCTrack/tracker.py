@@ -486,19 +486,9 @@ class Matcher(object):
         """
         matched = {}
         for i in unmatched_child_list:
-            # if i.is_be_matched :
-            #     if i.status.exist_mitosis_time < 50:
-            #         continue
             similar = self.match_similar(parent, i)
             if similar['IoU'] > 0:
                 matched[i] = similar
-        # if not matched:
-        #     tmp = {}
-        #     for i in unmatched_child_list:
-        #         similar = self.match_similar(parent, i)
-        #         tmp[i] = similar['IoU'] + similar['shape'] + similar['area'] + 1/(similar['distance'] + 1e-5)
-        #     best = max(tmp, key=tmp.get)
-        #     matched[best] = self.match_similar(parent, best)
         return matched
 
     def is_mitosis_start(self, pre_parent: Cell, last_leaves: List[Cell], area_size_t=1.5, iou_t=0.3):
@@ -512,8 +502,6 @@ class Matcher(object):
             if self.match_similar(pre_parent, i).get('IoU') >= iou_t:
                 match_score[i] = self.match_similar(pre_parent, i)
         for child_cell in match_score:
-            # if Rectangle(*parent.bbox).isInclude(Rectangle(*child_cell.bbox)) or (
-            #         (child_cell.area / parent.area) >= area_size_t):
             if (child_cell.area / pre_parent.area) >= area_size_t:
                 return {'last_G2': pre_parent, 'first_M': child_cell}
         return False
@@ -572,24 +560,16 @@ class Matcher(object):
                     continue
             checked_candidates[i] = matched_candidates[i]
         matched_cells_dict = self.check_iou(checked_candidates)
-        # matched_cells_dict = self.check_iou(matched_candidates)
         if not matched_cells_dict:
             raise MitosisError('not enough candidates')
         else:
             if len(matched_cells_dict) == 2:
                 cells = list(matched_cells_dict.keys())
-                # if max([i.area for i in
-                #         list(matched_cells_dict.keys())]) > parent.area * area_size_t:  # 如果母细胞太小了，不认为会发生有丝分裂，转向单项判断
-                #     raise MitosisError('The cell is too small to have cell division !')
-                # if self.matcher.calcAreaSimilar(cells[0], cells[1]) > area_t and self.matcher.compareShapeSimilar(
-                #         cells[0], cells[1]) < shape_t:
                 if self.matcher.calcAreaSimilar(cells[0], cells[1]) > area_t:
                     return cells, 'ACCURATE'
                 else:
-                    # raise MitosisError("not enough candidates, after matched.")
                     return cells, 'INACCURATE'
             else:
-                # max_two = heapq.nlargest(2, [sum(sm) for sm in matched_cells_dict.values()])  # 找到匹配结果中最大的两个值
                 try:
                     max_two = self.get_similar_sister(parent, matched_cells_dict)  # 找到匹配结果中最大的两个值
                 except MitosisError:
@@ -613,10 +593,8 @@ class Matcher(object):
         it should be filled as a predicted cell.
 
         """
-
         def calc_weight(candidate_score_dict):
             """Compute and dynamically update matching weights and matching results."""
-            result = {}
             # for cell in candidate_score_dict:
             #     score_dict = candidate_score_dict[cell]
             # value =  score_dict['IoU'] * self.WEIGHT.get('IoU') + \
@@ -656,7 +634,6 @@ class Matcher(object):
                         selected_cell = cell
                         max_iou = iou
             return selected_cell
-            # return max(result, key=result.get)
 
         candidates = {}
         for cell in score_dict:
@@ -685,7 +662,6 @@ class Matcher(object):
 
     def match_one(self, predict_child, candidates):
         if len(candidates) == 1:
-            # print('matched single:', self.calc_similar(parent, filtered_candidates[0]))
             score = self.matcher.calcIoU(predict_child, candidates[0])
             if score > 0.5:
                 return [(candidates[0], 'ACCURATE')]
@@ -715,11 +691,9 @@ class Matcher(object):
         """
         Compare the overall similarity of two cells.
         """
-        # predict_child = self.predict_next_position(parent)
         predict_child = parent
         # filtered_candidates = self.match_candidates(predict_child, no_filter_candidates_cells)
         filtered_candidates = [cell for cell in filter_candidates_cells if cell.is_accurate_matched is False]
-        # print(filtered_candidates)
         if len(filtered_candidates) > 0:
             if not self.match_one(predict_child, filtered_candidates):  # 不只有一个选项
                 if self.match_one(predict_child, filtered_candidates) is None:
@@ -728,14 +702,10 @@ class Matcher(object):
                 if len(matched_candidates) > 1 and cell_track_status.exit_mitosis_time > 25:
                     cell_track_status.enter_mitosis(parent.frame)
                 if not cell_track_status.status.get('enter_mitosis'):
-                    # if parent.cell_type != 'M':
                     if self.select_single_child(matched_candidates) is None:
                         return
                     return {'matched_cell': [(self.select_single_child(matched_candidates), 'INACCURATE')],
                             'status': cell_track_status}
-                # elif not self.check_iou(matched_candidates):
-                #     return {'matched_cell': [(self.select_single_child(matched_candidates), 'ACCURATE')],
-                #             'status': cell_track_status}
                 else:
                     matched_result = []
                     try:
@@ -747,12 +717,10 @@ class Matcher(object):
                     except MitosisError as M:  # 细胞可能仍然处于M期，但是已经完成分开，或者只是被误判为M期
                         if self.select_single_child(matched_candidates):
                             matched_result.append((self.select_single_child(matched_candidates), 'INACCURATE'))
-                        # print(M)
                     except ErrorMatchMitosis as M2:
                         # 细胞可能不均等分裂
                         if self.select_single_child(matched_candidates):
                             matched_result.append((self.select_single_child(matched_candidates), 'INACCURATE'))
-                        # print(M2)
                     finally:
                         if matched_result:
                             return {'matched_cell': matched_result, 'status': cell_track_status}
@@ -771,10 +739,6 @@ class Matcher(object):
         try:
             tree.add_node(child_node, parent=parent_node)
             child_node.set_tree_status(tree.status)
-        # except TypeError as E:
-        #     print(E)
-        # except NodeExistError as E2:
-        #     print(E2)
         except treelib.exceptions.DuplicatedNodeIdError:
             pass
 
@@ -792,7 +756,6 @@ class Matcher(object):
                 parents.pop(min_parent)
         for parent in parents:
             # Two or more cells after cell division.
-            # print(f'\nparent cell math status: {parent.is_be_matched}')
             tree.m_counter -= 1
             if not tree.m_counter:
                 tree.m_counter = 5
@@ -801,16 +764,11 @@ class Matcher(object):
                 tree.status.add_M_count()
             if tree.status.predict_M_len >= 2:
                 tree.status.enter_mitosis(parent.frame - 3)
-
-            # predict_child = self.predict_next_position(parent)
             predict_child = parent
-
             filtered_candidates = self.match_candidates(predict_child, cells)
-            # filtered_candidates = list(candidates)
             before_parent = tree.get_parent(parents[parent])
             if before_parent:
                 if self.is_mitosis_start(before_parent.cell, [predict_child]):
-                    # if self.is_mitosis_start(predict_child, filtered_candidates):
                     tree.status.enter_mitosis(parent.frame)
             match_result = self._match(predict_child, filtered_candidates, tree.status)
             if match_result is not None:
@@ -822,33 +780,18 @@ class Matcher(object):
             else:
                 continue
             if len(child_cells) == 1:
-                # if child_cells[0][1] == 'PREDICTED':
-                #     current_frame.add_cell(child_cells[0][0])
-                #     child_node = CellNode(child_cells[0][0])
-                #     child_node.life -= 1
                 if child_cells[0][1] == 'ACCURATE':
-                    # candidates.remove(child_cells[0][0])
                     child_cells[0][0].is_accurate_matched = True
                     child_node = CellNode(child_cells[0][0])
                 else:
                     child_node = CellNode(child_cells[0][0])
-                    # child_cells[0][0].is_accurate_matched = True
-                # child_node.set_branch_id(parent_node.get_branch_id())
                 child_node.cell.set_branch_id(parent_node.cell.branch_id)
                 child_node.cell.set_status(tree.status)
                 child_node.cell.update_region(track_id=tree.track_id)
                 child_node.cell.update_region(branch_id=parent_node.cell.branch_id)
                 child_node.cell.set_match_status(child_cells[0][1])
-                # if child_node.life > 0:
                 self.add_child_node(tree, child_node, parent_node)
-                # child_node.branch_id = parent_node.branch_id
             else:
-                #     try:
-                #         assert len(child_cells) == 2
-                #     except AssertionError:
-                #         # self._match(predict_child, filtered_candidates, tree.status)
-                #         continue
-
                 for cell in child_cells:
                     new_branch_id = tree.branch_id_distributor()
                     cell[0].set_branch_id(new_branch_id)
@@ -858,7 +801,6 @@ class Matcher(object):
                     child_node = CellNode(cell[0])
                     if cell[1] == 'ACCURATE':
                         cell[0].is_accurate_matched = True
-                        # candidates.remove(cell[0])
                     self.add_child_node(tree, child_node, parent_node)
         tree.status.add_exist_time()
 
@@ -901,7 +843,6 @@ class Tracker(object):
 
     def init_tracking_tree(self, fe: FeatureExtractor):
         """Initialize TrackingTree"""
-        # trees = []
         for i in fe.cells:
             tree = TrackingTree(track_id=self.id_distributor())
             i.sort_value = 1
@@ -922,7 +863,6 @@ class Tracker(object):
             self.trees.append(tree)
             self.tree_maps[i] = tree
         self.init_flag = True
-        # self.trees = trees
         self.fe_cache.append(fe)
 
     def draw_bbox(self, bg1, cell: Cell, track_id, branch_id=None, phase=None):
@@ -969,7 +909,6 @@ class Tracker(object):
 
     def add_node(self, child_node, parent_node, tree):
         if child_node not in tree:
-            # tree.add_node(child_node, parent=parent_node.identifier)
             tree.add_node(child_node, parent=parent_node)
             child_node.cell.set_status(CellStatus(tree))
         else:
@@ -979,14 +918,12 @@ class Tracker(object):
         """match adjacent frames"""
         cells = sorted(fe1.cells, key=lambda cell: cell.sort_value, reverse=True)
         for parent in cells:
-            # print(parent)
             trees = self.get_current_tree(parent)
             for tree in trees:
                 self.matcher.match_single_cell(tree, fe2)
 
     def track_near_frame_mult_thread(self, fe1: FeatureExtractor, fe2: FeatureExtractor):
         """Match Adjacent Frames, Multithreaded Beta"""
-
         def work(__parent: Cell):
             trees = self.get_current_tree(__parent)
             for tree in trees:
@@ -994,7 +931,6 @@ class Tracker(object):
 
         thread_pool_executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix="track_")
         cells = sorted(fe1.cells, key=lambda cell: cell.sort_value, reverse=True)
-        # print([i.sort_value for i in cells])
         for parent in cells:
             thread_pool_executor.submit(work, parent)
         thread_pool_executor.shutdown(wait=True)
@@ -1004,31 +940,13 @@ class Tracker(object):
         child_node = CellNode(duplicate_match_cell)
         tmp = self.get_current_tree(duplicate_match_cell)
         parent0 = tmp[0].parent(child_node.nid)
-
         parent1 = tmp[1].parent(child_node.nid)
-        # if not (parent0.is_root() and parent1.is_root()):
-        #     parent00 = tmp[0].parent(parent0.nid)
-        #     parent11 = tmp[1].parent(parent1.nid)
-        #     tree_dict = {parent00: tmp[0], parent11: tmp[1]}
-        #     sm0 = self.matcher.match_similar(duplicate_match_cell, parent00.cell)
-        #     sm1 = self.matcher.match_similar(duplicate_match_cell, parent11.cell)
-        #     # match_score = {parent00: sm0['IoU'] + 1 / (sm0['distance'] + 1e-5),
-        #     #                parent11: sm1['IoU'] + 1 / (sm0['distance'] + 1e-5), }
-        #     match_score = {parent00: sm0['distance'],
-        #                    parent11: sm0['distance']}
-        #     error_parent = max(match_score)
-        # else:
         tree_dict = {parent0: tmp[0], parent1: tmp[1]}
         sm0 = self.matcher.match_similar(duplicate_match_cell, parent0.cell)
         sm1 = self.matcher.match_similar(duplicate_match_cell, parent1.cell)
-        # match_score = {parent0: sm0['IoU'] + 1 / (sm0['distance'] + 1e-5),
-        #                parent1: sm1['IoU'] + 1 / (sm0['distance'] + 1e-5), }
         match_score = {parent0: sm0['distance'],
                        parent1: sm1['distance']}
-        # truth_parent = max(match_score)
         error_parent = min(match_score)
-        # if len(tree_dict[truth_parent].nodes) < 3:
-        #     error_parent = truth_parent
         tree_dict[error_parent].remove_node(child_node.nid)
         return {error_parent: tree_dict[error_parent]}
 
@@ -1037,7 +955,6 @@ class Tracker(object):
         unmatched_list = [cell for cell in fe1.cells if cell.is_be_matched is False]
         if not unmatched_list:
             return
-        # for cell in fe1.cells:
         for cell in unmatched_list:
             current_frame = cell.frame
             if cell.is_be_matched is False:
@@ -1127,7 +1044,6 @@ class Tracker(object):
             writer = csv.writer(speed_f)
             writer.writerow(['Iteration', 'Speed (it/s)'])
         for fe_before, fe_current, fe_next in tqdm(self.feature_ext, total=range, desc='tracking process'):
-            # self.track_near_frame(fe_before, fe_current)
             start_time = time.time()
             self.track_near_frame(fe_before, fe_current)
             # self.track_near_frame_mult_thread(fe_before, fe_current)
