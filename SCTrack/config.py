@@ -8,6 +8,7 @@
 # Global configuration variables. If you are not sure what these parameters are, please do not modify them,
 # except for those marked with *
 
+from __future__ import annotations
 
 from typing import List, Tuple
 
@@ -16,6 +17,8 @@ AVAILABLE_RANGE_COEFFICIENT: float = 1.5  # The available range coefficient of c
 RAW_INPUT_IMAGE_SIZE: Tuple = (2048, 2048)   # * image size (width, height)
 
 GAP_WINDOW_LEN = 20  # Maximum number of lost track
+
+ENTER_DIVISION_THRESHOLD = 50  # Starting from the completion of cell division, the second division is not allowed until the value is exceeded
 
 USING_IMAGE_FOR_TRACKING = False   # * Using additional image information for tracking
 

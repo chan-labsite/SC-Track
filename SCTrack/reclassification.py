@@ -4,7 +4,14 @@ from collections import Counter
 from copy import deepcopy
 from typing import List
 import json
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+import tifffile
+from imagesize import imagesize
+
 from SCTrack.base import Cell
 from SCTrack.tracker import Tracker, CellNode, TrackingTree
 from SCTrack.config import RAW_INPUT_IMAGE_SIZE
@@ -59,15 +66,15 @@ class TreeParser(object):
                     loop_queue.append(next_node)
                 if len(ch) > 1:
                     self.record_cell_division_count()
-                    if current not in self.lineage_dict:
-                        for child_cell in ch:
-                            self.lineage_dict[child_cell] = {'cells': [child_cell],
-                                                             'branch_id': child_cell.cell.branch_id,
-                                                             'branch_start': child_cell.cell.frame, 'parent': current}
-                            if child_cell not in self.root_parent_list:
-                                branch_id += 1
-                                child_cell.cell.set_cell_id(str(self.tree.track_id) + '_' + str(branch_id))
-                                self.root_parent_list.append(child_cell)
+                    # if current not in self.lineage_dict or current in self.lineage_dict:  # not useful branch
+                    for child_cell in ch:
+                        self.lineage_dict[child_cell] = {'cells': [child_cell],
+                                                         'branch_id': child_cell.cell.branch_id,
+                                                         'branch_start': child_cell.cell.frame, 'parent': current}
+                        if child_cell not in self.root_parent_list:
+                            branch_id += 1
+                            child_cell.cell.set_cell_id(str(self.tree.track_id) + '_' + str(branch_id))
+                            self.root_parent_list.append(child_cell)
         self.parse_root_flag = True
 
     def parse_lineage(self, root_node):
@@ -460,6 +467,8 @@ def track_tree_to_table(tracker: Tracker, filepath):
         new_nodes = []
         before_index = 0
         current_index = 1
+        if len(cell_nodes) == 1:
+            new_nodes.append(cell_nodes[0])
         for cell_node_index in range(len(cell_nodes) - 1):
             before_node = cell_nodes[before_index]
             current_node = cell_nodes[current_index]
@@ -496,11 +505,12 @@ def track_tree_to_table(tracker: Tracker, filepath):
 
     parser_dict = tracker.parser_dict
     for tree in parser_dict:
+        if tree.track_id == 4:
+            p = parser_dict[tree]
         parser = parser_dict[tree]
         for node_index in parser.root_parent_list:
             cell_lineage = parser.lineage_dict.get(node_index)
             series_list, new_node_list = generate_series(cell_lineage)
-
             for series in series_list:
                 track_detail_dataframe = track_detail_dataframe._append(series, ignore_index=True)
     fname = filepath
@@ -555,14 +565,56 @@ def track_trees_to_json(tracker: Tracker, output_fname, xrange, basename=None):
         json.dump(result, f)
 
 
-def track_tree_to_MOT(tracker: Tracker, output_fname, xrange, basename=None):
-    """Export track result as MOT format"""
+def track_tree_to_TRA(tracker: Tracker, output_fname=None, xrange=None, basename=None):
+    """Export track result as TRA format"""
+
+    TRA = []
     parser_dict = tracker.parser_dict
     for tree in parser_dict:
         parser = parser_dict[tree]
         for node_index in parser.root_parent_list:
             cell_lineage = parser.lineage_dict.get(node_index)
-            pass
+            cells = cell_lineage.get('cells')
+            parent = cell_lineage['parent']
+            branch_id = cell_lineage['branch_id']
+            L = int(cells[0].cell.cell_id.replace('_', ''))
+            B = cells[0].cell.frame
+            E = cells[-1].cell.frame
+            if branch_id == 0:
+                P = 0
+            else:
+                P = int(parent.cell.cell_id.replace('_', ''))
+            line = f'{L} {B} {E} {P}\n'
+            TRA.append(line)
+    if output_fname:
+        with open(output_fname, 'w') as f:
+            f.writelines(TRA)
+
+
+def track_tree_to_mask(tracker, width, height, output_dir):
+    parser_dict = tracker.parser_dict
+    cell_each_frame = {}  # {frame: cell_list}
+    for tree in parser_dict:
+        parser = parser_dict[tree]
+        for node_index in parser.root_parent_list:
+            cell_lineage = parser.lineage_dict.get(node_index)
+            cells = cell_lineage.get('cells')
+            for cell in cells:
+                if cell.cell.frame not in cell_each_frame:
+                    cell_each_frame[cell.cell.frame] = {cell}
+                else:
+                    cell_each_frame[cell.cell.frame].add(cell)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    for frame in cell_each_frame.keys():
+        fname = os.path.join(output_dir, f"mask" + f"{frame}".zfill(3) + ".tif")
+        mask_arr = np.zeros((height, width), dtype=np.uint16)
+        for cell in cell_each_frame[frame]:
+            contours = cell.cell.contours
+            L = int(cell.cell.cell_id.replace('_', ''))
+            cv2.fillConvexPoly(mask_arr, contours, (L))
+        tifffile.imwrite(fname, mask_arr)
+
 
 
 def run(annotation, output_dir, basename, track_range=None, save_visualize=True, visualize_background_image=None,
@@ -589,6 +641,9 @@ def run(annotation, output_dir, basename, track_range=None, save_visualize=True,
     tracktree_save_path = os.path.join(output_dir, 'TrackTree')
     track_tree_to_table(tracker, track_table_fname)
     tracker.track_tree_to_json(tracktree_save_path)
+    track_tree_to_TRA(tracker, os.path.join(output_dir, 'TRA.txt'))
+    image_width, image_height = imagesize.get(mcy)
+    track_tree_to_mask(tracker, image_width, image_height, os.path.join(output_dir, 'mask'))
     if track_to_json:
         track_trees_to_json(tracker, track_json_fname, xrange=xrange, basename=basename)
     if save_visualize:
@@ -596,21 +651,24 @@ def run(annotation, output_dir, basename, track_range=None, save_visualize=True,
 
 
 if __name__ == '__main__':
-    annotation = r'G:\杂项\example\example-annotation.json'
-    mcy_img = r'G:\杂项\example\example-image.tif'
-    dic_img = r'G:\杂项\example\example-bf.tif'
+    # annotation = r'G:\杂项\example\example-annotation.json'
+    # mcy_img = r'G:\杂项\example\example-image.tif'
+    # dic_img = r'G:\杂项\example\example-bf.tif'
+    annotation = r"G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\test.json"
+    mcy_img = r"G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\SEG.tif"
+    dic_img = r"G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST\SEG.tif"
     # tracker = run_track(r'G:\paper\evaluate_data\copy_of_1_xy10\result-GT.json', track_range=10)
-    tracker = run_track(annotation, track_range=30)
-    background_filename_list = [os.path.join(r'G:\paper\evaluate_data\copy_of_1_xy10\tif-seq', i) for i in
-                                os.listdir(r'G:\paper\evaluate_data\copy_of_1_xy10\tif-seq')]
+    # tracker = run_track(annotation, track_range=30)
+    # background_filename_list = [os.path.join(r'G:\paper\evaluate_data\copy_of_1_xy10\tif-seq', i) for i in
+    #                             os.listdir(r'G:\paper\evaluate_data\copy_of_1_xy10\tif-seq')]
     # print(background_filename_list)
-    for i in tracker.trees:
-        print(i)
+    # for i in tracker.trees:
+    #     print(i)
     # tracker.visualize_single_tree(tree=tracker.trees[51],
     #                               save_dir=r'G:\paper\evaluate_data\copy_of_1_xy10\single_tree_visualize',
     #                               background_filename_list=background_filename_list, xrange=10)
 
-    # run(annotation=annotation, output_dir=r'G:\杂项\example\tracking_output',
-    #     track_range=10, dic=None, mcy=mcy_img,
-    #     save_visualize=True, visualize_background_image=mcy_img,
-    #     track_to_json=True, basename=r'example')
+    run(annotation=annotation, output_dir=r"G:\CTC dataset\Fluo-N2DL-HeLa\Fluo-N2DL-HeLa\01_ST",
+        track_range=None, dic=None, mcy=mcy_img,
+        save_visualize=True, visualize_background_image=mcy_img,
+        track_to_json=True, basename=r'man_seg')

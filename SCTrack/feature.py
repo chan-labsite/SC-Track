@@ -9,6 +9,7 @@ import json
 
 import matplotlib.pyplot as plt
 import numpy as np
+import shapely.errors
 from tifffile import tifffile
 
 from SCTrack import config
@@ -124,7 +125,7 @@ class FeatureExtractor(object):
         contours = np.array(points)
         return contours
 
-    def coordinate2mask(self, coords: np.ndarray | list | tuple, shape, value: int = 255) -> List[np.ndarray]:
+    def coordinate2mask(self, coords: np.ndarray | list | tuple, shape, value: int = 255) -> List[Mask]:
         """
         Draw the mask according to the contour coordinates. If you only pass in a set of contour coordinate values,
         be sure to put them in the list and pass in the function.
@@ -201,11 +202,21 @@ class FeatureExtractor(object):
     @lru_cache(maxsize=None)
     def get_cell_list(self):
         """
-        Get all cells in a single frame image
+        Get all cells in each single frame image
         """
         cell_list = []
         for region in self.annotation:
-            try:
+            if region['shape_attributes'].get('name') == 'ellipse':
+                rx = region['shape_attributes'].get('rx')
+                ry = region['shape_attributes'].get('ry')
+                cx = region['shape_attributes'].get('cx')
+                cy = region['shape_attributes'].get('cy')
+                theta = region['shape_attributes'].get('theta')
+                phase = region['region_attributes'].get('phase')
+                cell_type = region['region_attributes'].get('cell_type')
+                cell_type = cell_type if cell_type else phase
+                all_x, all_y = self.ellipse_points((cx, cy), rx, ry, num_points=32, theta=theta)
+            elif region['shape_attributes'].get('name') == 'polygon':
                 all_x = region['shape_attributes']['all_points_x']
                 all_y = region['shape_attributes']['all_points_y']
                 all_x = [0 if i < 0 else i for i in all_x]
@@ -214,26 +225,18 @@ class FeatureExtractor(object):
                 cell_type = region['region_attributes'].get('cell_type')
                 cell_type = cell_type if cell_type else phase
                 # cell_type = None
+            else:
+                continue
+            try:
                 cell = Cell(position=(all_x, all_y), cell_type=cell_type, frame_index=self.frame_index)
                 cell.set_region(region)
+                _ = cell.center
+                _ = cell.polygon
                 cell_list.append(cell)
-            except KeyError:
-                # print(region)
-                if region['shape_attributes'].get('name') == 'ellipse':
-                    rx = region['shape_attributes'].get('rx')
-                    ry = region['shape_attributes'].get('ry')
-                    cx = region['shape_attributes'].get('cx')
-                    cy = region['shape_attributes'].get('cy')
-                    theta = region['shape_attributes'].get('theta')
-                    phase = region['region_attributes'].get('phase')
-                    cell_type = region['region_attributes'].get('cell_type')
-                    cell_type = cell_type if cell_type else phase
-                    all_x, all_y = self.ellipse_points((cx, cy), rx, ry, num_points=32, theta=theta)
-                    cell = Cell(position=(all_x, all_y), cell_type=cell_type, frame_index=self.frame_index)
-                    cell.set_region(region)
-                    cell_list.append(cell)
-                else:
-                    print(region)
+            except ZeroDivisionError:
+                continue
+            except ValueError as e:
+                continue
         return cell_list
 
     def get_cell_image(self, cell: Cell):

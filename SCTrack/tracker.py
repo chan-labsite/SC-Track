@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import csv
@@ -9,10 +8,10 @@ from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 import shapely
 
-
 sys.path.append('.')
 sys.path.append('..')
 sys.path.append('../../')
+sys.setrecursionlimit(3000)
 
 from functools import wraps, lru_cache
 import warnings
@@ -30,7 +29,6 @@ from SCTrack.base import Cell, Rectangle, Vector, TreeStatus, CellStatus
 from SCTrack.t_error import InsertError, MitosisError, NodeExistError, ErrorMatchMitosis, StatusError
 from SCTrack.feature import FeatureExtractor, feature_extract
 from SCTrack import config
-
 
 TEST = False
 TEST_INDEX = None
@@ -100,8 +98,8 @@ class CellNode(Node):
             cls._instance_[key].__branch_id = None
             cls._instance_[key].parent = None
             cls._instance_[key].childs = []
-            cls._instance_[key].add_tree = False  # 如果被添加到TrackingTree中，设置为True
-            cls._instance_[key].life = 5  # 每个分支初始生命值为5，如果没有匹配上，或者利用缺省值填充匹配，则-1，如如果生命值为0，则该分支不再参与匹配
+            cls._instance_[key].add_tree = False  # if adding to the TrackingTree，set as True
+            cls._instance_[key].life = 5
             cls._instance_[key]._init_flag = False
         return cls._instance_[key]
 
@@ -307,6 +305,8 @@ class Match(object):
     def calcIoU(self, cell_1: Cell, cell_2: Cell):
         """
         Calculate IoU of two cells.
+        First, try to calculate the IoU of the contour. If it is not possible to calculate,
+        then change to calculating the IoU of the bounding box.
         return value range: float(0-1)
         """
         poly1 = cell_1.polygon
@@ -317,21 +317,22 @@ class Match(object):
                 warnings.simplefilter("ignore")
                 intersection = poly1.intersection(poly2)
                 union = poly1.union(poly2)
+                if union.area == 0:
+                    return 0
+                elif poly1.contains(poly2) or poly2.contains(poly1):
+                    return 1
+                else:
+                    return intersection.area / union.area
         except shapely.errors.GEOSException:
             return self.calcIoU_roughly(cell_1, cell_2)
-        if union.area == 0:
-            return 0
-        elif poly1.contains(poly2) or poly2.contains(poly1):
-            return 1
-        else:
-            return intersection.area / union.area
 
     def calcCosDistance(self, cell_1: Cell, cell_2: Cell):
         """
         Calculate the cosine distance of two cells
         Return value range: float[0, 2]
         The smaller the distance, the more similar it is, scaled to [0, 1) by the arctangent function
-        The return value is the cosine value after normalization [0, π/2]. The smaller the return value, the lower the similarity
+        The return value is the cosine value after normalization [0, π/2].
+        The smaller the return value, the lower the similarity
         """
         dist = cell_1.vector.cosDistance(cell_2.vector)
         return np.cos(np.arctan(dist) / (np.pi / 2))
@@ -392,8 +393,9 @@ class Match(object):
         """
         Calculate the contour similarity of two cells
         Return value range: float(0, 1)
-        The smaller the score value, the greater the similarity, and the inversion operation can be performed
-        The return value is the cosine value after normalization [0, π/2]
+        The smaller the score value, the greater the similarity, and the inversion operation can be performed.
+        (The return value is the cosine value after normalization [0, π/2], no longer do this change, directly return
+        the score.)
         """
         score = cv2.matchShapes(cell_1.contours, cell_2.contours, 1, 0.0)
         # return np.cos(self.normalize(score))
@@ -440,7 +442,11 @@ class Matcher(object):
         for cell in cells:
             if cell in child and cell.is_accurate_matched is False:
                 if self.matcher.calcEuclideanDistance(cell, child) < child.r_long or \
-                        self.matcher.calcIoU(cell, child) > 0.2:
+                        self.matcher.calcIoU(cell, child) > 0:
+                    filtered_candidates.append(cell)
+        if not filtered_candidates:
+            for cell in cells:
+                if cell in child and cell.is_accurate_matched is False:
                     filtered_candidates.append(cell)
 
         return filtered_candidates
@@ -484,10 +490,18 @@ class Matcher(object):
             #     if i.status.exist_mitosis_time < 50:
             #         continue
             similar = self.match_similar(parent, i)
-            matched[i] = similar
+            if similar['IoU'] > 0:
+                matched[i] = similar
+        # if not matched:
+        #     tmp = {}
+        #     for i in unmatched_child_list:
+        #         similar = self.match_similar(parent, i)
+        #         tmp[i] = similar['IoU'] + similar['shape'] + similar['area'] + 1/(similar['distance'] + 1e-5)
+        #     best = max(tmp, key=tmp.get)
+        #     matched[best] = self.match_similar(parent, best)
         return matched
 
-    def is_mitosis_start(self, pre_parent: Cell, last_leaves: List[Cell], area_size_t=1.5, iou_t=0.5):
+    def is_mitosis_start(self, pre_parent: Cell, last_leaves: List[Cell], area_size_t=1.5, iou_t=0.3):
         """
         Determine whether a cell enters the M cell_type. The basic criterion is that when a cell enters mitosis, its volume
         increases and the number of candidate regions increases. If the cell successfully enters the M cell_type, return a
@@ -504,7 +518,7 @@ class Matcher(object):
                 return {'last_G2': pre_parent, 'first_M': child_cell}
         return False
 
-    def get_similar_sister(self, parent: Cell, matched_cells_dict: dict, area_t=0.7, shape_t=0.03, area_size_t=1.3,
+    def get_similar_sister(self, parent: Cell, matched_cells_dict: dict, area_t=0.6, shape_t=0.03, area_size_t=1.3,
                            iou_t=0.1):
         """Find the two most similar cells among multiple candidates as the daughter cells."""
         cell_dict_keys = list(matched_cells_dict.keys())
@@ -539,7 +553,7 @@ class Matcher(object):
         else:
             raise MitosisError('cannot match the suitable daughter cells')
 
-    def select_mitosis_cells(self, parent: Cell, candidates_child_list: List[Cell], area_t=0.7, shape_t=0.05,
+    def select_mitosis_cells(self, parent: Cell, candidates_child_list: List[Cell], area_t=0.5, shape_t=0.05,
                              area_size_t=1.3):
         """
         If cell division occurs, select two daughter cells. When calling this method, make sure that cell division is
@@ -554,7 +568,7 @@ class Matcher(object):
         checked_candidates = {}
         for i in matched_candidates:
             if i.is_be_matched:
-                if i.status.exist_mitosis_time < 50:
+                if i.status.exit_mitosis_time < config.ENTER_DIVISION_THRESHOLD:
                     continue
             checked_candidates[i] = matched_candidates[i]
         matched_cells_dict = self.check_iou(checked_candidates)
@@ -661,22 +675,24 @@ class Matcher(object):
                 candidates[cell] = sum(score_dict[cell].values())
             try:
                 best = max(candidates, key=candidates.get)
+                return best
             except ValueError:
                 print(score_dict)
+                return None
         else:
             best = calc_weight(candidates)
-        return best
+            return best
 
     def match_one(self, predict_child, candidates):
         if len(candidates) == 1:
             # print('matched single:', self.calc_similar(parent, filtered_candidates[0]))
-            score = self.calc_similar(predict_child, candidates[0])
-            if score[0] > 0.5:
+            score = self.matcher.calcIoU(predict_child, candidates[0])
+            if score > 0.5:
                 return [(candidates[0], 'ACCURATE')]
-            elif score[0] > 0:
+            elif score > 0:
                 return [(candidates[0], 'INACCURATE')]
             else:
-                return None
+                return [(candidates[0], 'INACCURATE')]
         else:
             return False
 
@@ -709,10 +725,12 @@ class Matcher(object):
                 if self.match_one(predict_child, filtered_candidates) is None:
                     return
                 matched_candidates = self.match_duplicate_child(predict_child, filtered_candidates)
-                if len(matched_candidates) > 1:
+                if len(matched_candidates) > 1 and cell_track_status.exit_mitosis_time > 25:
                     cell_track_status.enter_mitosis(parent.frame)
                 if not cell_track_status.status.get('enter_mitosis'):
                     # if parent.cell_type != 'M':
+                    if self.select_single_child(matched_candidates) is None:
+                        return
                     return {'matched_cell': [(self.select_single_child(matched_candidates), 'INACCURATE')],
                             'status': cell_track_status}
                 # elif not self.check_iou(matched_candidates):
@@ -727,14 +745,18 @@ class Matcher(object):
                             matched_result.append((sister, status))
 
                     except MitosisError as M:  # 细胞可能仍然处于M期，但是已经完成分开，或者只是被误判为M期
-                        matched_result.append((self.select_single_child(matched_candidates), 'INACCURATE'))
+                        if self.select_single_child(matched_candidates):
+                            matched_result.append((self.select_single_child(matched_candidates), 'INACCURATE'))
                         # print(M)
                     except ErrorMatchMitosis as M2:
                         # 细胞可能不均等分裂
-                        matched_result.append((self.select_single_child(matched_candidates), 'INACCURATE'))
+                        if self.select_single_child(matched_candidates):
+                            matched_result.append((self.select_single_child(matched_candidates), 'INACCURATE'))
                         # print(M2)
                     finally:
-                        return {'matched_cell': matched_result, 'status': cell_track_status}
+                        if matched_result:
+                            return {'matched_cell': matched_result, 'status': cell_track_status}
+                        return None
             else:
                 return {'matched_cell': self.match_one(predict_child, filtered_candidates), 'status': cell_track_status}
 
@@ -855,7 +877,7 @@ class Tracker(object):
         self.dic = dic
         self.annotation = annotation
         self._exist_tree_id = []
-        self._available_id = 0
+        self._available_id = 1
         self.init_flag = False
         self.feature_ext = feature_extract(mcy=self.mcy, dic=self.dic, jsonfile=self.annotation)
         self.tree_maps = {}
@@ -939,7 +961,7 @@ class Tracker(object):
 
     def get_current_tree(self, parent_cell: Cell):
         """Get the TrackingTree where the current parent cell is located"""
-        exist_trees = []  # 细胞可能存在的tree
+        exist_trees = []  # Possible trees include the cells
         for tree in self.trees:
             if parent_cell in tree.last_layer_cell:
                 exist_trees.append(tree)
@@ -1237,16 +1259,5 @@ def get_cell_line_from_tree(tree: TrackingTree, dic_path: str, mcy_path: str, sa
         tifffile.imwrite(os.path.join(save_mcy, fname), convert_dtype(mcy_img))
         tifffile.imwrite(os.path.join(save_dic, fname), convert_dtype(dic_img))
 
-        # break
 
 
-if __name__ == '__main__':
-    annotation = r'G:\20x_dataset\evaluate_data\copy_of_1_xy19\result-GT.json'
-    mcy_img = r'G:\20x_dataset\evaluate_data\copy_of_1_xy19\mcy.tif'
-    dic_img = r'G:\20x_dataset\evaluate_data\copy_of_1_xy19\dic.tif'
-    tracker = Tracker(annotation)
-    # tracker = Tracker(r'G:\20x_dataset\evaluate_data\copy_of_1_xy19\result-GT.json')
-    tracker.track(300)
-    for i in enumerate(tracker.trees):
-        get_cell_line_from_tree(i[1], dic_img, mcy_img,
-                                fr'G:\20x_dataset\evaluate_data\copy_of_1_xy19\cell_lines\{i[0]}')

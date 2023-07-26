@@ -63,7 +63,7 @@ class TreeStatus(object):
             cls._instances[key] = super().__new__(cls)
             cls._instances[key].__tracking_tree = None
             cls._instances[key].__init_flag = False
-            cls._instances[key].enter_mitosis_threshold = 50
+            cls._instances[key].enter_mitosis_threshold = config.ENTER_DIVISION_THRESHOLD
 
             # The cell division window stage, with an initial value of 20, will exit division matching when no cell
             # division is matched or cell division is completed during this window period. After entering the split
@@ -174,7 +174,7 @@ class TreeStatus(object):
         return self.__enter_mitosis
 
     @property
-    def exist_mitosis_time(self):
+    def exit_mitosis_time(self):
         return self.__exit_mitosis_time
 
     def __str__(self):
@@ -548,18 +548,15 @@ class Cell(object):
         area = 0.0
         centroid_x = 0.0
         centroid_y = 0.0
-
         for i in range(n):
             j = (i + 1) % n
             cross_product = x_coords[i] * y_coords[j] - x_coords[j] * y_coords[i]
             area += cross_product
             centroid_x += (x_coords[i] + x_coords[j]) * cross_product
             centroid_y += (y_coords[i] + y_coords[j]) * cross_product
-
         area /= 2.0
         centroid_x /= 6.0 * area
         centroid_y /= 6.0 * area
-
         return centroid_x, centroid_y
 
     @property

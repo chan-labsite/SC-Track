@@ -14,7 +14,7 @@ with open('requirements.txt', 'r') as fr:
     pkg_requirements.remove('')
 
 
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 
 setuptools.setup(
     name='SC-Track',

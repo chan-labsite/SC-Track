@@ -41,9 +41,16 @@ def start_track(fannotation: str | dict, fout, basename, track_range=None, fimag
                          save_visualize=export_visualization, visualize_background_image=fimage,
                          track_to_json=track_to_json, basename=basename)
 
+
 if __name__ == '__main__':
-    annotation = r'G:\杂项\example\example-annotation.json'
-    mcy_img = r'G:\杂项\example\example-image.tif'
-    dic_img = r'G:\杂项\example\example-bf.tif'
-    start_track(annotation, r'G:\杂项\example', 'mcy', 30,
+    i = 8
+    annotation = rf"G:\paper\test\Data{i}\SEG.tif"
+    mcy_img = rf"G:\paper\test\Data{i}\01.tif"
+    start_track(annotation, rf"G:\paper\test\Data{i}", 'mcy', 1000,
                 mcy_img)
+
+    # annotation = r"G:\杂项\example\example-annotation.json"
+    # mcy_img = r"G:\杂项\example\example-image.tif"
+    # dic_img = r'G:\杂项\example\example-bf.tif'
+    # start_track(annotation, r"G:\杂项\example", 'mcy', 30,
+    #             mcy_img)
