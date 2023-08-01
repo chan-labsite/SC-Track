@@ -82,17 +82,17 @@ We provide a command line tool, you only need to run the sctrack tool on the com
 batch processing of a large number of files, please refer to our source code documentation.
 Its basic usage is:
     
-from SCTrack import strat_track
+from SCTrack.track import start_track
 
 image = 'path/to/image.tif'
 
 # using mask annotation
 annotation_mask = '/path/to/annotation.tif'
-start_track(fannotation=annotation_mask, fimage=image)
+start_track(fannotation=annotation_mask, fimage=image, basename='image', track_range=None, fout='/path/to/dir')
 
 # using json file annotation
 annotation_json = '/path/to/annotation.json'
-start_track(fannotation=annotation_json, fimage=image)
+start_track(fannotation=annotation_json, fimage=image, basename='image', track_range=None, fout='/path/to/dir')
 ```
 
 

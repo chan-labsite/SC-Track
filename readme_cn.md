@@ -48,16 +48,16 @@ Linux/Macos: pip3 isntall SC-Track
 ```python
 我们提供了命令行工具，只需要在命令行中运行sctrack工具即可，要自动化批处理大量文件，请参阅我们的源码文档。
 其基本用法是：
-from SCTrack import strat_track
+from SCTrack.track import start_track
 
 image = 'path/to/image.tif'
 
 # using mask annotation
 annotation_mask = '/path/to/annotation.tif'
-start_track(fannotation=annotation_mask, fimage=image)
+start_track(fannotation=annotation_mask, fimage=image, basename='image', track_range=None, fout='/path/to/dir')
 
 # using json file annotation
 annotation_json = '/path/to/annotation.json'
-start_track(fannotation=annotation_json, fimage=image)
+start_track(fannotation=annotation_json, fimage=image, basename='image', track_range=None, fout='/path/to/dir')
 ```
 
