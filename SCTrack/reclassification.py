@@ -643,7 +643,7 @@ def run(annotation, output_dir, basename, track_range=None, save_visualize=True,
     tracker.track_tree_to_json(tracktree_save_path)
     track_tree_to_TRA(tracker, os.path.join(output_dir, 'TRA.txt'))
     image_width, image_height = imagesize.get(mcy)
-    track_tree_to_mask(tracker, image_width, image_height, os.path.join(output_dir, 'mask'))
+    # track_tree_to_mask(tracker, image_width, image_height, os.path.join(output_dir, 'mask'))
     if track_to_json:
         track_trees_to_json(tracker, track_json_fname, xrange=xrange, basename=basename)
     if save_visualize:

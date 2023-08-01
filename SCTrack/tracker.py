@@ -506,7 +506,7 @@ class Matcher(object):
                 return {'last_G2': pre_parent, 'first_M': child_cell}
         return False
 
-    def get_similar_sister(self, parent: Cell, matched_cells_dict: dict, area_t=0.6, shape_t=0.03, area_size_t=1.3,
+    def get_similar_sister(self, parent: Cell, matched_cells_dict: dict, area_t=0.7, shape_t=0.03, area_size_t=1.3,
                            iou_t=0.1):
         """Find the two most similar cells among multiple candidates as the daughter cells."""
         cell_dict_keys = list(matched_cells_dict.keys())
@@ -698,7 +698,8 @@ class Matcher(object):
                     return
                 matched_candidates = self.match_duplicate_child(predict_child, filtered_candidates)
                 if len(matched_candidates) > 1 and cell_track_status.exit_mitosis_time > 25:
-                    cell_track_status.enter_mitosis(parent.frame)
+                    if config.INCLUDE_CELL_CYCLE is False:
+                        cell_track_status.enter_mitosis(parent.frame)
                 if not cell_track_status.status.get('enter_mitosis'):
                     if self.select_single_child(matched_candidates) is None:
                         return
@@ -760,7 +761,7 @@ class Matcher(object):
                 tree.status.reset_M_count()
             if parent.cell_type == 'M':
                 tree.status.add_M_count()
-            if tree.status.predict_M_len >= 2:
+            if tree.status.predict_M_len >= 3:
                 tree.status.enter_mitosis(parent.frame - 3)
             predict_child = parent
             filtered_candidates = self.match_candidates(predict_child, cells)
@@ -1059,9 +1060,9 @@ class Tracker(object):
         if speed_filename:
             speed_f.close()
 
-        # __filter_trees = [tree for tree in self.trees if len(tree.nodes) > 10]
-        # del self.trees
-        # self.trees = __filter_trees
+        __filter_trees = [tree for tree in self.trees if len(tree.nodes) > config.FILTER_THRESHOLD]
+        del self.trees
+        self.trees = __filter_trees
 
     def track_tree_to_json(self, filepath):
         if not os.path.exists(filepath):

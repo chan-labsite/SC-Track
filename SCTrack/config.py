@@ -12,13 +12,13 @@ from __future__ import annotations
 
 from typing import List, Tuple
 
-AVAILABLE_RANGE_COEFFICIENT: float = 1.5  # The available range coefficient of candidate screening for matching algorithms
+AVAILABLE_RANGE_COEFFICIENT: float = 1.5 # The available range coefficient of candidate screening for matching algorithms
 
 RAW_INPUT_IMAGE_SIZE: Tuple = (2048, 2048)   # * image size (width, height)
 
-GAP_WINDOW_LEN = 20  # Maximum number of lost track
+GAP_WINDOW_LEN = 10 # Maximum number of lost track
 
-ENTER_DIVISION_THRESHOLD = 50  # Starting from the completion of cell division, the second division is not allowed until the value is exceeded
+ENTER_DIVISION_THRESHOLD = 50 # Starting from the completion of cell division, the second division is not allowed until the value is exceeded
 
 USING_IMAGE_FOR_TRACKING = False   # * Using additional image information for tracking
 
@@ -26,7 +26,7 @@ RECORD_SPEED: bool = False    # *  Record tracking speed
 
 SMOOTH_WINDOW_LEN = 10  # Window length of smooth classification algorithm
 
-TRACKING_CHECK_WINDOW_LEN: int = 20  # Tracking algorithm backtracking window length
+TRACKING_CHECK_WINDOW_LEN: int = 100  # Tracking algorithm backtracking window length
 
 PROB_THRESHOLD: float = 0.6  # Probability threshold of smooth classification algorithm
 
@@ -36,3 +36,7 @@ CLASS_NAME: List | None = ['G1', 'S', 'G2', 'M']   # *  Class name list
 # CLASS_NAME = None
 
 EXPORT_TRACKING_VISUALIZATION = True
+
+INCLUDE_CELL_CYCLE = True
+
+FILTER_THRESHOLD = 10
