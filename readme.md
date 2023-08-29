@@ -10,9 +10,8 @@ SC-Track is an efficient multi-object cell tracking algorithm that can generate 
 
 SC-Track allows users to use two different segmentation results as input. It can either take:
 1) A greyscale Multi-TIFF image, where every segmented instance of cells is given a unique pixel value and the background set as 0.
-2) A VGG image annotator (VIA2) compatible JSON file, containing the segmented instances and class infromation of every segmented cell. 
+2) A VGG image annotator (VIA2) compatible JSON file, containing the segmented instances and class infromation of every segmented cell.
 
-SC-Track will output the tracking results in a track table for downstream analysis. If SC-track is run from command prompt, it will also produce a png image folder containing the labelled cell linages, VIA2 combatible JSON file containing the tracking information and a collection of TrackingTree files to aid visualisation and analysis of the generated single cell tracks. 
 
 ----------
 
@@ -39,7 +38,7 @@ When the segmentation results are contained in a VIA2 compatible JSON file, you 
 ```
 sctrack -p image.tif -a annotation.json
 ```
-The file "image.tif" corresponds to the microscopy timelapse image stack, "mask.tif" represents the greyscale segmented cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without the png image folder containing the labelled cell linages.
+The file "image.tif" corresponds to the microscopy timelapse image stack, "mask.tif" represents the greyscale segmented cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding png image folder containing the labelled cell linages.
 
 
 ----------
@@ -81,12 +80,14 @@ from SCTrack.track import start_track
 
 image = 'path/to/image.tif'
 
-# using mask annotation
+# if using greyscale mask annotation
 annotation_mask = '/path/to/annotation.tif'
+
 start_track(fannotation=annotation_mask, fimage=image, basename='image', track_range=None, fout='/path/to/dir')
 
-# using json file annotation
+# if using json file annotation
 annotation_json = '/path/to/annotation.json'
+
 start_track(fannotation=annotation_json, fimage=image, basename='image', track_range=None, fout='/path/to/dir')
 ```
 
