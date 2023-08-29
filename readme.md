@@ -1,6 +1,6 @@
 
 
-# <div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/chan-labsite/SC-Track>SC-Track : A Biologically Inspired Algorithm for Generating Accurate Single Cell Lineages</a></b></div>
+# <div align="center" style="text-align: center; font-size: 32px;"> <b><a href=https://github.com/chan-labsite/SC-Track>SC-Track : A Robust Cell Tracking Algorithm Capable of Generating Accurate Single Cell Linages from Diverse Cell Segmentations</a></b></div>
 
 <div align="center"> <img src="docs/icon/license.svg" width = 220 /> <img src="docs/icon/wheel.svg" width = 70 />  <img src="docs/icon/docs.svg" width = 80 /> <img src="docs/icon/Python-version.svg" width = 200 /> </div> 
 
