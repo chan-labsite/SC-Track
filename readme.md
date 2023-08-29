@@ -110,6 +110,6 @@ For more information, please see the [reference documents](https://htmlpreview.g
 
 Please cite our paper if you found this package useful. 
 ```
-SC-Track: A Biologically Inspired Algorithm for Generating Accurate Single Cell Lineages. 
+SC-Track: A Robust Cell Tracking Algorithm Capable of Generating Accurate Single Cell Linages from Diverse Cell Segmentationss. 
 Chengxin Li，Shuang Shuang Xie，Jiaqi Wang，Septavera Sharvia，Kuan Yoow Chan
 ```
