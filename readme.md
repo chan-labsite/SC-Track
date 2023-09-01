@@ -53,9 +53,15 @@ If you run with this command, and solve the related dependency problem, you shou
    └─track.csv
    └─result_with_track.json
    
-The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process, the `track_visualization.tif` folder contains the visual image information of the tracking(if you close the visualization option, this content will not be generated), and `track.csv` is a detailed table of the tracking results. For specific information about the track.csv, see [https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb](https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb). The content of `result_with_track.json` is consistent with the structure of annotation.json, but result_with_track.json contains track information and smoothed classification information (if exists).
+The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process,
+ the `track_visualization.tif` folder contains the visual image information of the tracking(if you close the
+visualization option, this content will not be generated), and `track.csv` is a detailed table of the tracking results.
+For specific information about the track.csv, see [https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb](https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb).
+The content of `result_with_track.json` is consistent with the structure of annotation.json, but result_with_track.json
+contains track information and smoothed classification information (if exists).
 
-Normally, when the visualization results are exported, running our demo data set will take no more than `3` minutes from start to finish; if the visualization results are not exported, the running time will not exceed `2` minutes.
+Normally, when the visualization results are exported, running our demo data set will take no more than `3` minutes
+from start to finish; if the visualization results are not exported, the running time will not exceed `2` minutes.
 ````
 
 For the demo dataset, you can visit [zenodo](https://zenodo.org/record/8284987)  to download. 
