@@ -85,11 +85,11 @@ Linux/Macos: pip3 isntall SC-Track
 For details on dependencies, you can view https://github.com/chan-labsite/SC-Track/blob/master/requirements.txt
 ```
 
--   Note： On `Windows`, the required package `pylibtiff `cannot directly install by pip, please install with this command:
+-   Note： On `Windows`, the required package `pylibtiff` cannot be installed directly by pip. Please use the following command instead:
 
     `conda install libtiff`
 
-    or you can download the wheel package from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pylibtiff), and then using `pip install pylibtiff.whl` to install the package.
+    or you can download the wheel package from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pylibtiff), and use the command `pip install pylibtiff.whl` to install the package.
 
     On `Linux` or `macOS`, you can use the command `pip install pylibtiff`.
 
