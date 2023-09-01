@@ -31,16 +31,22 @@
 ### How to use SC-Track?
 
 ````markdown
-If you have a single-channel segmentation result, the segmentation results should be in a grayscale 2D+t tiff file with each segmented cell instance containing a unique pixel value with the beackground given a pixel value of 0. You will need to run SC-Track from the folder containing the image and mask TIFF files. The command to call SC-Track is as follows:
+If you have a single-channel segmentation result, the segmentation results should be in a grayscale 2D+t tiff file with
+each segmented cell instance containing a unique pixel value with the beackground given a pixel value of 0. You will need
+to run SC-Track from the folder containing the image and mask TIFF files. The command to call SC-Track is as follows:
 ```
 sctrack -i /path/to/image.tif -a /path/to/mask.tif
 ```
 
-When the segmentation results are contained in a VIA2 compatible JSON file, you will need to run SC-Track from the folder containing the image and JSON files. The command to call SC-Track is as follows: 
+When the segmentation results are contained in a VIA2 compatible JSON file, you will need to run SC-Track from the folder
+containing the image and JSON files. The command to call SC-Track is as follows: 
 ```
 sctrack -i /path/to/image.tif -a /path/to/annotation.json
 ```
-The file "image.tif" corresponds to the microscopy timelapse image stack, "mask.tif" represents the greyscale segmented cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding png image folder containing the labelled cell linages.
+The file "image.tif" corresponds to the microscopy timelapse image stack, "mask.tif" represents the greyscale segmented
+cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. SC-Track can run without the
+corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding
+png image folder containing the labelled cell linages.
 
 
 If you run with this command, and solve the related dependency problem, you should be able to get the following output:
@@ -56,7 +62,7 @@ If you run with this command, and solve the related dependency problem, you shou
 The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process,
  the `track_visualization.tif` folder contains the visual image information of the tracking(if you close the
 visualization option, this content will not be generated), and `track.csv` is a detailed table of the tracking results.
-For specific information about the track.csv, see [https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb](https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb).
+For specific information about the track.csv, see [quick-start](https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb).
 The content of `result_with_track.json` is consistent with the structure of annotation.json, but result_with_track.json
 contains track information and smoothed classification information (if exists).
 
