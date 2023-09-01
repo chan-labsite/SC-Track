@@ -100,8 +100,7 @@ For details on dependencies, you can view https://github.com/chan-labsite/SC-Tra
 ### Usage
 
 
-We provide a command line tool, you only need to run the sctrack tool on the command line. To automate 
-batch processing of a large number of files, please refer to our source code for additional documentation.
+To automate SC-Track for batch processing, please refer to our source code for additional documentation.
 Its basic usage is:
 
 ```python
