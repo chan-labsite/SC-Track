@@ -30,7 +30,7 @@
 
 ### How to use SC-Track?
 
-````markdown
+
 If you have a single-channel segmentation result, the segmentation results should be in a grayscale 2D+t tiff file with
 each segmented cell instance containing a unique pixel value with the beackground given a pixel value of 0. You will need
 to run SC-Track from the folder containing the image and mask TIFF files. The command to call SC-Track is as follows:
@@ -50,7 +50,7 @@ png image folder containing the labelled cell linages.
 
 
 If you run with this command, and solve the related dependency problem, you should be able to get the following output:
-
+```markdown
 |__image.tif
 |__annotation.json
 |__tracking_output\
@@ -58,6 +58,7 @@ If you run with this command, and solve the related dependency problem, you shou
    └─track_visualization.tif\
    └─track.csv
    └─result_with_track.json
+```
    
 The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process,
  the `track_visualization.tif` folder contains the visual image information of the tracking(if you close the
@@ -68,9 +69,9 @@ contains track information and smoothed classification information (if exists).
 
 Normally, when the visualization results are exported, running our demo data set will take no more than `3` minutes
 from start to finish; if the visualization results are not exported, the running time will not exceed `2` minutes.
-````
 
-For the demo dataset, you can visit [zenodo](https://zenodo.org/record/8284987)  to download. 
+
+To access our demo dataset, you can visit [here](https://zenodo.org/record/8284987). 
 
 
 
@@ -137,3 +138,12 @@ For more information, please see the [reference documents](https://htmlpreview.g
 
 
 
+<!-- 
+
+Please cite our paper if you found this package useful. 
+```
+SC-Track: a robust cell tracking algorithm for generating accurate single cell linages from diverse cell segmentations
+Chengxin Li，Shuang Shuang Xie，Jiaqi Wang，Septavera Sharvia，Kuan Yoow Chan
+```
+
+ -->
