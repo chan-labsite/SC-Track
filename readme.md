@@ -62,7 +62,7 @@ If you run with this command, and solve the related dependency problem, you shou
 The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process,
  the `track_visualization.tif` folder contains the visual image information of the tracking(if you close the
 visualization option, this content will not be generated), and `track.csv` is a detailed table of the tracking results.
-For specific information about the track.csv, see [quick-start](https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb).
+For specific information about the track.csv, see https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb.
 The content of `result_with_track.json` is consistent with the structure of annotation.json, but result_with_track.json
 contains track information and smoothed classification information (if exists).
 
