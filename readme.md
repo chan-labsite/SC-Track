@@ -31,12 +31,12 @@ SC-Track allows users to use two different segmentation results as input. It can
 
 If you have a single-channel segmentation result, the segmentation results should be in a grayscale 2D+t tiff file with each segmented cell instance containing a unique pixel value with the beackground given a pixel value of 0. You will need to run SC-Track from the folder containing the image and mask TIFF files. The command to call SC-Track is as follows:
 ```
-sctrack -p image.tif -a mask.tif
+sctrack -i image.tif -a mask.tif
 ```
 
 When the segmentation results are contained in a VIA2 compatible JSON file, you will need to run SC-Track from the folder containing the image and JSON files. The command to call SC-Track is as follows: 
 ```
-sctrack -p image.tif -a annotation.json
+sctrack -i image.tif -a annotation.json
 ```
 The file "image.tif" corresponds to the microscopy timelapse image stack, "mask.tif" represents the greyscale segmented cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding png image folder containing the labelled cell linages.
 
