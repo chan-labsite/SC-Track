@@ -62,8 +62,8 @@ The `track_visualization.tif` folder contains the png images visualising the tra
 of the tracking results.
 
 For specific information about the track.csv, see https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb.
-The content of `result_with_track.json` is consistent with the structure of annotation.json, but result_with_track.json
-contains track information and smoothed classification information (if exists).
+The content of `result_with_track.json` is a copy of the annotation.json file containing the cell track information and corrected 
+cell classification information (if this information was provided in the "annotation.json" file).
 
 SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding
 `track_visualization.tif` folder containing the labelled cell linages.
