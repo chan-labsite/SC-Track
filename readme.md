@@ -44,12 +44,9 @@ containing the image and JSON files. The command to call SC-Track is as follows:
 sctrack -i /path/to/image.tif -a /path/to/annotation.json
 ```
 The file "image.tif" corresponds to the microscopy timelapse image stack, "mask.tif" represents the greyscale segmented
-cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. SC-Track can run without the
-corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding
-png image folder containing the labelled cell linages.
+cell instances and "annotation.json" is the VIA2 compatible JSON annotation files. 
 
-
-If you run with this command, and solve the related dependency problem, you should be able to get the following output:
+Below is the expected outputs from the tracking results assuming that the "image.tif" and "annotation.json" file was provided.
 ```markdown
 |__image.tif
 |__annotation.json
@@ -60,16 +57,16 @@ If you run with this command, and solve the related dependency problem, you shou
    └─result_with_track.json
 ```
    
-The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process,
- the `track_visualization.tif` folder contains the visual image information of the tracking(if you close the
-visualization option, this content will not be generated), and `track.csv` is a detailed table of the tracking results.
+The `TrackTree` folder contains the detailed information of each TrackTree built during the tracking process.
+The `track_visualization.tif` folder contains the png images visualising the tracking results, and `track.csv` is a detailed table 
+of the tracking results.
+
 For specific information about the track.csv, see https://github.com/chan-labsite/SC-Track/blob/master/notebook/quick-start.ipynb.
 The content of `result_with_track.json` is consistent with the structure of annotation.json, but result_with_track.json
 contains track information and smoothed classification information (if exists).
 
-Normally, when the visualization results are exported, running our demo data set will take no more than `3` minutes
-from start to finish; if the visualization results are not exported, the running time will not exceed `2` minutes.
-
+SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding
+`track_visualization.tif` folder containing the labelled cell linages.
 
 To access our demo dataset, you can visit [here](https://zenodo.org/record/8284987). 
 
@@ -88,15 +85,13 @@ Linux/Macos: pip3 isntall SC-Track
 For details on dependencies, you can view https://github.com/chan-labsite/SC-Track/blob/master/requirements.txt
 ```
 
--   Note： On `Windows`, the requirement package `pylibtiff `cannot directly install by pip, please install with this command:
+-   Note： On `Windows`, the required package `pylibtiff `cannot directly install by pip, please install with this command:
 
     `conda install libtiff`
 
-    or you can download the wheel package from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pylibtiff), and then using `pip install pylibtiff.whl` to install.
+    or you can download the wheel package from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pylibtiff), and then using `pip install pylibtiff.whl` to install the package.
 
-    On `Linux` or `Macos`, just using `pip install pylibtiff` to install, all requirement packages will be automatically installed.
-
-    In the case of a good network, the installation process usually takes no more than 5 minutes.
+    On `Linux` or `macOS`, you can use the command `pip install pylibtiff`.
 
 
 
@@ -104,11 +99,12 @@ For details on dependencies, you can view https://github.com/chan-labsite/SC-Tra
 
 ### Usage
 
-```python
+
 We provide a command line tool, you only need to run the sctrack tool on the command line. To automate 
-batch processing of a large number of files, please refer to our source code documentation.
+batch processing of a large number of files, please refer to our source code for additional documentation.
 Its basic usage is:
-    
+
+```python
 from SCTrack.track import start_track
 
 image = 'path/to/image.tif'
