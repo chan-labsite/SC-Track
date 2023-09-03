@@ -68,7 +68,7 @@ cell classification information (if this information was provided in the "annota
 SC-Track can run without the corresponding "image.tif" file. In this case, SC-Track will output the tracking results without a corresponding
 `track_visualization.tif` folder containing the labelled cell linages.
 
-To access our demo dataset, you can visit [here](https://zenodo.org/record/8284987). 
+To access our demo dataset, you can visit [here](https://zenodo.org/record/8310572). 
 
 
 
