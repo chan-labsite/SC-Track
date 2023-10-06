@@ -135,12 +135,11 @@ For more information, please see the [reference documents](https://htmlpreview.g
 
 
 
-<!-- 
 
 Please cite our paper if you found this package useful. 
 ```
 SC-Track: a robust cell tracking algorithm for generating accurate single cell linages from diverse cell segmentations
 Chengxin Li，Shuang Shuang Xie，Jiaqi Wang，Septavera Sharvia，Kuan Yoow Chan
+https://doi.org/10.1101/2023.10.03.560639
 ```
 
- -->
