@@ -79,8 +79,8 @@ To access our demo dataset, you can visit [here](https://zenodo.org/record/83105
 ```
 Requirement: Python >= 3.7
 
-Windows: pip isntall SC-Track
-Linux/Macos: pip3 isntall SC-Track
+Windows: pip install SC-Track
+Linux/Macos: pip3 install SC-Track
 
 For details on dependencies, you can view https://github.com/chan-labsite/SC-Track/blob/master/requirements.txt
 ```
