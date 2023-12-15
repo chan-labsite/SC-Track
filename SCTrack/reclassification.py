@@ -439,6 +439,39 @@ def pares_single_tree(tree: TrackingTree):
             # print(cell_lineage)
     return parser
 
+def paste(tree_pre: TrackingTree, paste_node: CellNode, tree_next: TrackingTree):
+    tree_pre.paste(paste_node.nid, tree_next)
+
+
+def find_combinations_objects(A, B, gap_threshold):
+    # A is the root node list
+    # B is the leaves node list
+    result = []
+    b_frames_set = {obj.cell.frame for obj in B}
+    for a_obj in A:
+        for diff in range(1, gap_threshold + 1):
+            if a_obj.cell.frame - diff in b_frames_set:
+                result.append([a_obj, next(obj for obj in B if obj.cell.frame == a_obj.cell.frame + diff)])
+    return result
+
+
+def relink_tree(tracker, gap_threshold=3):
+    """When the frame rate of the root node of a tree is greater than the frame rate of the leaf node of another tree,
+    and the difference between the two is within a certain range, it is judged whether the two trees can be relinked,
+    according to the similarity of this two cell"""
+    root_nodes = {}
+    leaves_nodes = {}
+    for tree in tracker.trees:
+        root_nodes[tree.get_node(tree.root)] = tree
+        for leaf in tree.leaves():
+            leaves_nodes[leaf] = tree
+    link_candidates = find_combinations_objects(root_nodes.keys(), leaves_nodes.keys(), gap_threshold)
+    # Note: this function maybe import new bug, or make the performance bad.
+    if link_candidates:
+        for pair in link_candidates:
+            if sum(tracker.matcher.match_similar(*pair).get('IoU')) > 0:
+                paste(leaves_nodes[pair[1]], pair[1], root_nodes[pair[0]])
+
 
 def run_track(annotation, track_range=None, dic=None, mcy=None, speed_filename=None):
     tracker = Tracker(annotation, dic=dic, mcy=mcy)
