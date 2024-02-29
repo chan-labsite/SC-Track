@@ -93,7 +93,7 @@ For details on dependencies, you can view https://github.com/chan-labsite/SC-Tra
 
     On `Linux` or `macOS`, you can use the command `pip install pylibtiff`.
 
-    If you encounter any issues with TIFF files during the installation process, such as ' Failed to find TIFF header file', please try running sudo `apt-get install libtiff5-dev`
+    If you encounter any issues with TIFF files during the installation process, such as ' Failed to find TIFF header file', please try running `sudo apt-get install libtiff5-dev`
 
     The installation times on a "normal" desktop computer should not exceed 5 minutes assuming that the computer is connected to a reasonably fast (10 Mbps) broadband connection. 
 
