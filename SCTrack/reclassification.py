@@ -451,7 +451,10 @@ def find_combinations_objects(A, B, gap_threshold):
     for a_obj in A:
         for diff in range(1, gap_threshold + 1):
             if a_obj.cell.frame - diff in b_frames_set:
-                result.append([a_obj, next(obj for obj in B if obj.cell.frame == a_obj.cell.frame + diff)])
+                try:
+                    result.append([a_obj, next(obj for obj in B if obj.cell.frame == a_obj.cell.frame + diff)])
+                except StopIteration:
+                    pass
     return result
 
 
