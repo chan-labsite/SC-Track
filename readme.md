@@ -83,8 +83,8 @@ Windows: pip install SC-Track
 Linux/Macos: pip3 install SC-Track
 
 For details on dependencies, you can view https://github.com/chan-labsite/SC-Track/blob/master/requirements.txt
-Due to file size constraints, the 'example' folder is not included in the package when installing from pypi.
-Please download the folder from our GitHub repository.
+Due to file size constraints, the 'example' folder is not included when installing SC-Track from PyPI.
+You can view and download the "example" folder from our GitHub repository if required.
 ```
 
 -   Note： On `Windows`, the required package `pylibtiff` cannot be installed directly by pip. Please use the following command instead:
