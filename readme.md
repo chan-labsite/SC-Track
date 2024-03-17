@@ -97,8 +97,8 @@ You can view and download the "example" folder from our GitHub repository if req
 
     The installation times on a "normal" desktop computer should not exceed 5 minutes assuming that the computer is connected to a reasonably fast (10 Mbps) broadband connection.
 
-    If you install SC-Track from the GitHub repository using the command `python setup.py install`, you may encounter the following error `ValueError: Failed to find TIFF header file`.
-    To fix this error you can run `sudo apt-get install libtiff5-dev`.
+    If you install SC-Track from the GitHub repository using the command `python setup.py install`, it is important that you also install the `pylibtiff` package as well.
+    If you encounter the following error `ValueError: Failed to find TIFF header file`, you can try running `sudo apt-get install libtiff5-dev` to fix the error.
 
 -----------------------
 
